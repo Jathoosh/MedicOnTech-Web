@@ -1,8 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const data_db = require('../.data_db')
-//Import lines from .Data_Db file
+const data_db = require('./.data_db')
 
 const {Sequelize} = require('sequelize');
 const { status } = require('express/lib/response');
