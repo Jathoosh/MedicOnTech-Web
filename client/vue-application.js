@@ -1,5 +1,6 @@
 const Home = window.httpVueLoader('./components/Home.vue')
 const Annexe = window.httpVueLoader('./components/Annexe.vue')
+const PatientHome = window.httpVueLoader('./components/PatientHome.vue')
 
 const routes = [
   { path: '/', component: Home },
