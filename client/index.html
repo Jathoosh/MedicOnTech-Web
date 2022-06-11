@@ -21,21 +21,65 @@
 <body>
   <div id="app">
     <header>
-      <!--Import Svg for logo-->
-      <img src="ressources/MedicOnTech_Logo.svg" alt="Logo MedicOnTech, 2 serpents bleus clair enroulés autour d'un aiguille ailé bleu foncé sur un fond cyan" id="logo">
-      <h1>MedicOnTech</h1>
-      <nav>
-        <router-link to='/annexe'>Page Annexe</router-link>
-        <router-link to='/annexe'>Page Deux</router-link>
-        <router-link to='/annexe'>Page Trois</router-link>
-        <router-link to='/annexe'>Page Quatre</router-link>
-      </nav>
+      <div id="header_top">
+        <div id="logo_title">
+          <img src="ressources/MedicOnTech_Logo.svg"
+            alt="Logo MedicOnTech, 2 serpents bleus clair enroulés autour d'un aiguille ailé bleu foncé sur un fond cyan"
+            id="logo">
+          <h1>MedicOnTech</h1>
+        </div>
+      </div>
+
+      <div class="band">
+        <nav>
+          <router-link to='/annexe'>Page Annexe</router-link>
+          <router-link to='/annexe2'>Page Deux</router-link>
+          <router-link to='/annexe2'>Page Trois</router-link>
+          <router-link to='/annexe2'>Page Quatre</router-link>
+        </nav>
+      </div>
     </header>
+
     <main>
       <router-view></router-view>
     </main>
+
     <footer>
-      <p>Copyright © 2019 - Tous droits réservés</p>
+      <hr>
+      <div class="container-h">
+        <div class="contSec center" id="rs_footer">
+          <a href="https://www.youtube.com/user/MedicOnTech">
+            <img src="ressources/youtube.png" alt="Logo Youtube" width="15%" height="15%">
+          </a>
+          <a href="https://www.instagram.com/medicontech/">
+            <img src="ressources/instagram.png" alt="Logo Instagram" width="15%" height="15%">
+          </a>
+          <a href="https://www.linkedin.com/in/medicontech/">
+            <img src="ressources/linkedin.png" alt="Logo Linkedin" width="15%" height="15%">
+          </a>
+        </div>
+        <div class="contPri center">
+          <h1>MedicOnTech</h1>
+          <p>jathooshthvrs@gmail.com</p>
+        </div>
+        <div class="contSec center">
+          <ul class="simple-list">
+            <li>
+              <router-link to='/annexe2'>A propos</router-link>
+            </li>
+            <li>
+              <router-link to='/annexe2'>Mentions légales</router-link>
+            </li>
+            <li>
+              <router-link to='/annexe2'>Contact</router-link>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="band center">
+        <p>Copyright © 2022 par MedicOnTech - Tous droits réservés</p>
+      </div>
     </footer>
   </div>
   <script src="/vue-application.js"></script>
