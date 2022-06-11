@@ -4,6 +4,10 @@
 
 
 <script>
+module.exports = {
+    name: 'Ordonnance',
+    
+}
 
 </script>
 
