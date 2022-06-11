@@ -1,0 +1,40 @@
+body {
+    font-family: 'Questrial', sans-serif;
+}
+
+header {
+    background-color: #ffffff;
+    color: rgb(65, 65, 65);
+    padding: 10px;
+    text-align: left;
+}
+
+/*make the nav tag a flex box*/
+nav {
+    display: flex;
+    justify-content: flex-start;
+    background-color: #c6c6c6;
+    padding: 10px;
+}
+
+/*Apply also on router-link (Main Purpose)*/
+a{
+    color: rgb(49, 49, 49);
+    text-decoration: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 7px;
+}
+
+a.router-link-exact-active.router-link-active{
+    background-color: #9e9e9e;
+}
+
+a:hover, a.router-link-exact-active.router-link-active:hover{
+    background-color: #b1b1b1;
+    transition: background-color 0.5s;
+}
