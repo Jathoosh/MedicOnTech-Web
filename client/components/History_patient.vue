@@ -1,12 +1,12 @@
 <template>
     <div>
-        <p>Home medecin</p>
+        <p>oui</p>
     </div>
 </template>
 
 <script>
 module.exports = {
-    name: 'Annexe',
+    name: 'History_patient',
 
 }
 </script>
