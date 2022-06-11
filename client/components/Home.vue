@@ -2,19 +2,16 @@
     <div>
         <p>La page d'accueil</p>
         
-        <div class="child1">
-            <img src="ressources/salle_dattente.jpg" alt="Image">
+        <div>
+            <img class="image" src="ressources/salle_attente.jpg" alt="Image">
         </div>
         
-        <div class="child2">
+        <div class="imageSuperposee" >
             <div id= "rectangle"> 
-                <br><span class = "title"> Connectez-vous avec France connect </span> 
-                <br><br>
-                <a href = "#">
-                <img src="ressources/france_connect.png" alt="Image">
-                </a>
-                <br><br><span> En cas de problème n'hésitez pas à <em>nous contacter</em> </span> 
-                <br>
+                <div class = "title" id= "flexbox"> Connectez-vous avec France connect</div>
+                <div id= "flexbox">
+                <a href = "#"> <img class = "franceConnect" src="ressources/france_connect.png" alt="Image"> </a> </div>
+                <div id= "flexbox" class = "titleContact"> En cas de problème n'hésitez pas à nous contacter. </div>
             </div> 
         </div>
 
@@ -29,20 +26,20 @@ module.exports = {
 </script>
 
 <style>
-    
-    .child1 {
+        
+    .image{
         position: absolute;
         width: 100%;
-        height: 100%;
+        height: 80%;
         opacity: 0.5;
         text-align: center;
     }
-    .child2 {
-        margin-top: 200px;
+
+    .imageSuperposee {
+        margin-top: 250px;
         width: 100%;
         text-align: center;
         position : absolute;
-        z-index: 20;
     }
 
     #rectangle {
@@ -50,18 +47,30 @@ module.exports = {
         margin-top: 10px;
         margin-left: auto;
         margin-right: auto;
-        width: 400px;
-	    height: 200px;
+        width: 620px;
+	    height: 280px;
         background: white;
     }
   
     .title{
         color: green;
-        font: 20px "Questriallt", "Zapfino", cursive;
+        font: 30px "Verdana", "Arial", cursive;   
     }
 
-    em { 
-        text-decoration:underline; 
+    .franceConnect{
+        width: 120%;
+    }
+
+    .titleContact{
+        font: 20px "Verdana", "Arial", cursive;  
+    }
+
+    #flexbox{
+        display: flex;
+        justify-content: center;
+        padding-top: 20px;
+        margin-top: 30px;
+        align-items: start; 
     }
 
 </style>
