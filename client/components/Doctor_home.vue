@@ -8,7 +8,7 @@
                
             </div>
              <div id="button_more">
-                   <button v:onclick="test()">Historique</button>
+                   <button @click="redirectionToHistoryPatient()">Historique</button>
                 </div>
         </div>
     </div>
@@ -40,8 +40,8 @@ module.exports = {
         }      
     },
     methods: {
-        test() {
-            alert("OUI");
+        redirectionToHistoryPatient() {
+            this.$router.push('/History_patient');
         }
     },
     computed: function (){
