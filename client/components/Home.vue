@@ -1,25 +1,17 @@
 <template>
   <div>
-    <p>La page d'accueil</p>
+    <div id="background">
+      <div class="imageSuperposee">
+        <div id="rectangle">
+          <p class="title">Connectez-vous avec France connect</p>
 
-    <div>
-      <img class="image" src="ressources/salle_attente.jpg" alt="Image" />
-    </div>
-
-    <div class="imageSuperposee">
-      <div id="rectangle">
-        <div class="title" id="flexbox">Connectez-vous avec France connect</div>
-        <div id="flexbox">
           <a href="#">
-            <img
-              class="franceConnect"
-              src="ressources/france_connect.png"
-              alt="Image"
-            />
+            <img class="franceConnect" src="ressources/france_connect.png" alt="Image"/>
           </a>
-        </div>
-        <div id="flexbox" class="titleContact">
-          En cas de problème n'hésitez pas à nous contacter.
+
+          <p class="titleContact">
+            En cas de problème n'hésitez pas à nous contacter.
+          </p>
         </div>
       </div>
     </div>
@@ -29,33 +21,37 @@
 <script>
 module.exports = {
   name: "Home",
+  mounted: function() {
+    document.getElementById("main").style.width = "100%";
+  }
 };
 </script>
 
-<style>
-.image {
-  position: absolute;
-  width: 100%;
-  height: 80%;
-  opacity: 0.5;
-  text-align: center;
+<style scoped>
+#background {
+  background: url("../ressources/salle_attente.jpg");
 }
 
 .imageSuperposee {
-  margin-top: 250px;
+  padding-top: 10%;
+  padding-bottom: 10%;
   width: 100%;
   text-align: center;
-  position: absolute;
+  background-color: rgba(255, 255, 255  , 0.5);
 }
 
 #rectangle {
-  display: block;
-  margin-top: 10px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
   width: 620px;
   height: 280px;
   background: white;
+  box-shadow: 0px 0px 10px #000000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  align-items: center;
 }
 
 .title {
@@ -64,18 +60,10 @@ module.exports = {
 }
 
 .franceConnect {
-  width: 120%;
+  width: 100%;
 }
 
 .titleContact {
   font: 20px "Verdana", "Arial", cursive;
-}
-
-#flexbox {
-  display: flex;
-  justify-content: center;
-  padding-top: 20px;
-  margin-top: 30px;
-  align-items: start;
 }
 </style>
