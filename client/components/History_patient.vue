@@ -1,5 +1,6 @@
 <template>
     <div>
+         <input class="SearchBar" type="search" v-model="search" placeholder="Rechercher un nom de patient" size="28"/>
         <div id="global">
             <h3>Ordannances passées de Nom Prenom</h3>
             <div class="prescription_info"> <!--v-for="patient in patients" :key="patient.last_name">-->
@@ -35,6 +36,11 @@
 <script>
 module.exports = {
     name: 'History_patient',
+    computed: function (){
+        return this.patients.filter(function(patient){
+            return patient.last_name.toLowerCase().indexOf(this.search.toLowerCase());
+        });
+    }
 }
 </script>
 

@@ -2,14 +2,17 @@
     <div>
         <h3>Dr {{doctor.first_name}} {{doctor.last_name}}| {{doctor.speciality}}</h3>
         <input class="SearchBar" type="search" v-model="search" placeholder="Rechercher un nom de patient" size="28"/>
+        
+        <button @click="redirectionToEditPrescription()">Rédiger une ordonnance</button>
+
         <div id="global">
             <div class="patient_case" v-for="patient in patients" :key="patient.last_name">
                 <h3>{{patient.first_name}} {{patient.last_name}} | {{patient.id}}</h3>
-               
             </div>
-             <div id="button_more">
+
+            <div id="button_more">
                    <button @click="redirectionToHistoryPatient()">Historique</button>
-                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -42,6 +45,9 @@ module.exports = {
     methods: {
         redirectionToHistoryPatient() {
             this.$router.push('/History_patient');
+        },
+        redirectionToEditPrescription() {
+            this.$router.push('/Edit_prescription');
         }
     },
     computed: function (){
