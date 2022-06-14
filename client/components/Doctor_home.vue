@@ -8,11 +8,9 @@
         <div id="global">
             <div class="patient_case" v-for="patient in patients" :key="patient.last_name">
                 <h3>{{patient.first_name}} {{patient.last_name}} | {{patient.id}}</h3>
+                 <button @click="redirectionToHistoryPatient()">Historique</button>
             </div>
 
-            <div id="button_more">
-                   <button @click="redirectionToHistoryPatient()">Historique</button>
-            </div>
         </div>
     </div>
 </template>
@@ -21,24 +19,24 @@
 module.exports = {
     name: 'Medecin_home',
     props: {
-            patients: {type: Array},
-            doctors: {type: Array},
+            //patients: {type: Array,}, // chaque bloc est un patient  venant du back
+            //doctor: {type: Array}, // ca vient du back
 
     },
     data() {
         return {
             search: '',
-            patients: { //peut-etre pas necessaire
-                first_name: "",
-                last_name: "",
-                id: "",
-                birth_date:"",
-                email_adress:""
-            },
+            patients: [{ //peut-etre pas necessaire
+                first_name: "Nathan",
+                last_name: "DOLY",
+                id: "43572653",
+                birth_date:"22/04/2001",
+                email_adress:"bonsoirnon@gmail.com"
+            }],
             doctor: {
-                first_name: "",
-                last_name: "",
-                speciality: "",
+                first_name: "Nathan",
+                last_name: "DOLY",
+                speciality: "général",
             }
         }      
     },

@@ -1,23 +1,26 @@
 <template>
     <div>
-         <input class="SearchBar" type="search" v-model="search" placeholder="Rechercher un nom de patient" size="28"/>
-        <div id="global">
-            <h3>Ordannances passées de Nom Prenom</h3>
-            <div class="prescription_info"> <!--v-for="patient in patients" :key="patient.last_name">-->
-                <h2>Le creation_date | used </h2>
-                <p>Pour X X</p>
-                <h5>Medicament x mg quantité</h5>
-                <p>Notes :</p>
-                <p>Dr X X</p>
+        <input class="SearchBar" type="search" v-model="search" placeholder="Rechercher un nom de patient" size="28"/>
+        <h3>Historique des ordannances passées </h3>
+
+        <div id="global" v-for="(patient, index) in patients" :key="index">
+            
+            <div class="prescription_info">
+                <h2>Pour {{patient.first_name}} {{patient.last_name}},fait le {{prescription.creation_date }}</h2>
+                <p>Medicament(s) {{prescription.drug}} Quantité {{prescription.quantity}}</p>
+                <p>Notes : {{prescription.notes}}</p>
+                <p>Dr<span> {{doctor.first_name}} {{doctor.last_name}}</span></p>
             </div>
-        
-            <div class="filtre">
+
+        </div>
+
+        <div class="filtre">
                 <h3>Filtres</h3>
                 <div class="filtre_info">
                     <h4>Date</h4>
-                    <input type="date" v-model="date" placeholder="Date" size="28"/>
+                    <input type="date" placeholder="Date" size="28"/>
                     <h4>Medicaments</h4>
-                    <input type="text" v-model="medicament" placeholder="Medicament" size="15"/>
+                    <input type="text" placeholder="Medicament" size="15"/>
                     <h4>Quantité</h4>
                     <select>
                         <option value="1">1</option>
@@ -27,19 +30,46 @@
                         <option value="5">5</option>
                     </select>
                 </div>
-            </div>
 
-        </div>
     </div>
 </template>
 
 <script>
 module.exports = {
     name: 'History_patient',
-    computed: function (){
-        return this.patients.filter(function(patient){
-            return patient.last_name.toLowerCase().indexOf(this.search.toLowerCase());
-        });
+    data () {
+        return {
+            prescription: {
+                creation_date: "20/04/2022",
+                drug: "Doliprane",
+                quantity: "2",
+                notes: "2 fois par jour pendant 3 jours",
+            },
+            patients: [{
+                first_name: "Paul",
+                last_name: "Pierre",
+                id: "43572653",
+            }],
+            doctor: {
+                first_name: "Truc",
+                last_name: "Muche",
+                speciality: "général",
+            },
+
+            search: '',
+        }
+    },
+    methods:{
+        test:function(){
+            console.log(prescription.creation_date);
+        }
+    },
+    computed: {
+            filteredPatients() {
+                return this.patient.filter(patient => {
+                    return patient.last_name.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+                })
+            }
     }
 }
 </script>
@@ -61,7 +91,6 @@ body {
     padding-bottom: 40px;
     margin-top: 7vh;
     margin-bottom: 25px;
-   
 }
 
 .filtre {

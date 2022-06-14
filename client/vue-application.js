@@ -23,6 +23,7 @@ var app = new Vue( {
   {
     doctors : [],
     patients : [],
+    prescriptions : [],
   },
   components: 
   {

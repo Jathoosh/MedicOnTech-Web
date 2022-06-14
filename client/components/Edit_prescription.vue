@@ -15,7 +15,7 @@
                         <h2>Ajout d'un médicament</h2>
                         <!--input pour ajouter le médicament-->
                         <form v-on:submit.prevent="addDrug">
-                            <input type="text" v-model="newDrug_name" placeholder="Nom du médicament" required />
+                            <input type="text" v-model="newDrug_name" placeholder="Nom du médicament"/>
                             <input type="number" v-model="newDrug_quantity" placeholder="Quantité" required />
                             <button>Ajouter</button>
                         </form>
@@ -24,12 +24,15 @@
                         <ul>
                             <li v-for="(drug, index) in drugs" :key="index">
                                 <span>{{drug.drug_name}}  Quantité : {{drug.drug_quantity}}</span>
-                                
+                                <input type="text" v-model="drug.drug_quantity" v-if="hideQuantity === false" placeholder="Nom du médicament"/>
+                                <button @click="editQuantity(drug)" v-if="hideQuantity === true">Modifier</button>
+                                <button v-else @click="finishEditQuantity(drug)">Terminer</button>
                                 <button @click="removeDrug(drug)">Supprimer</button>
                             </li>
                         </ul>
                     </div>
 
+                    
 
                     <br>
                     <label>Notes</label>
@@ -58,26 +61,38 @@ module.exports = {
             reusable : false,
             drugs: [
                 {drug_name:"Dopliprane 1000mg", drug_quantity: "1"},
-                
             ],
             newDrug_name: "",
-            newDrug_quantity: "",
-            hide: false,
+            newDrug_quantity: "",   
+
+            editDrug:{
+                drug_quantity: "",
+            },
+            hideQuantity: true,
+
         }
     },
     methods: {
-        addDrug() {
+        addDrug(){
             // ajout dans la liste de la vue les mediacaments ajoutés
             this.drugs.push({drug_name: this.newDrug_name, drug_quantity: this.newDrug_quantity});
             // vider les champs de saisie
             this.newDrug_name = "";
             this.newDrug_quantity = "";
         },
-        removeDrug(drug) {
+        removeDrug(drug){
             // suppression dans la liste de la vue les mediacaments ajoutés
             this.drugs.splice(this.drugs.indexOf(drug), 1);
+        },
+        editQuantity(){
+            this.hideQuantity = false;
+        }, 
+        finishEditQuantity(drug){
+            this.hideQuantity = true;
+            this.editDrug.drug_quantity = drug.drug_quantity;
+            console.log("non");
         }
-    },
+    }
 }
 </script>
 
