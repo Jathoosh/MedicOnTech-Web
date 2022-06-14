@@ -1,6 +1,6 @@
 <template>
     <div>
-        <router-link to='/'> Deconnection </router-link>
+        <router-link to='/'> Deconnexion </router-link>
                
         <!-- affichage des données du pharmacien -->
         <p>{{ id_pharmacist }}</p> <!-- numéro d'identification -->
@@ -8,7 +8,7 @@
         <p>{{ first_name }}</p>
 
         <!-- affichage de l'ordonnance seulement si la fonction scanPrescription renvoit true -->
-        <p>Affichage de l'ordonnance</p>
+        <p v-if="scanPrescription == true"> Affichage de l'ordonnance </p>
 
     </div>
 </template>
@@ -18,7 +18,7 @@ module.exports = {
     name: 'Pharmacien',
     data(){
         return{
-            id_pharmacist: 1, // attention c'est un int et non un string - l'idée est de ne pas le voir sur la page
+            id_pharmacist: 1, // on ne doit pas le voir sur la page
             last_name: 'RAOUL',
             first_name: 'Lisa'            
         }
