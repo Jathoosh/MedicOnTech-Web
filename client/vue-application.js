@@ -1,11 +1,13 @@
 const Home = window.httpVueLoader('./components/Home.vue')
 const Annexe = window.httpVueLoader('./components/Annexe.vue')
 const Pharmacien = window.httpVueLoader('./components/Pharmacien.vue')
+const Login = window.httpVueLoader('./components/Login.vue')
 
 const routes = [
   { path: '/', component: Home },
   { path: '/annexe', name:'Annexe', component: Annexe },
-  { path: '/pharmacien', name:'Pharmacien', component: Pharmacien }
+  { path: '/pharmacien', name:'Pharmacien', component: Pharmacien }, 
+  { path: '/login', name:'Login', component: Login } 
 ]
 
 const router = new VueRouter({

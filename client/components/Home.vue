@@ -1,7 +1,9 @@
 <template>
     <div>
-        <p>La page d'accueil</p>
-        
+        <p>La page d'accueil </p>
+            <!-- <img @click="goToLogin()" class="image_profil" src="ressources/profil.png" alt="Image"> -->
+            <img class="image_profil" src="ressources/profil.png" alt="Image">
+        <br><br>
         <div>
             <img class="image" src="ressources/salle_attente.jpg" alt="Image">
         </div>
@@ -21,7 +23,16 @@
 <script>
 module.exports = {
     name: 'Home',
-
+    data(){
+        return{
+            Id_Person: 1, 
+        }
+    },
+    methods:{
+       goToLogin(){
+        //go to Login
+       }
+    }
 }
 </script>
 
@@ -71,6 +82,15 @@ module.exports = {
         padding-top: 20px;
         margin-top: 30px;
         align-items: start; 
+    }
+    
+    .image_profil{
+        height: 50px;
+        width: 50px;
+        border-radius: 100%;
+        border: 2px solid black;
+        margin-top : 5px;
+        float: right;
     }
 
 </style>
