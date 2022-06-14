@@ -19,8 +19,8 @@ module.exports = {
     data(){
         return{
             id_pharmacist: 1, // on ne doit pas le voir sur la page
-            last_name: 'RAOUL',
-            first_name: 'Lisa'            
+            last_name: '',
+            first_name: ''            
         }
     },
     mounted(){
