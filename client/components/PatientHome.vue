@@ -1,5 +1,5 @@
 <template>
-    <div id="mainContainer">
+    <div class="mainContainer">
         <div class="searchContainer">
             <form>
                 <input type="text" class="search-bar" placeholder="Rechercher Ordonnance - Date, médicaments ...">
@@ -7,12 +7,7 @@
         </div>
 
         <div class="ordonnanceContainer">
-            
-        </div>
-
-        <div id="buttons">
-            <button type="button">Envoyer la consultation par Mail</button>
-            <button type="button">Imprimer la consultation</button>
+            <Ordonnance class="box"/>
         </div>
     </div>
 </template>
@@ -21,38 +16,40 @@
 <script>
 module.exports = {
     name: 'PatientHome',
+    components: {
+        Ordonnance
+    },
 }
 </script>
 
 
 <style>
 
-    .mainCongtainer{
+    .mainContainer{
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-    }
-
-    form{
-        display : flex;
-        justify-content: center;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        width: auto;
-        height: auto;
+        align-content: center;
     }
 
     .searchContainer{
-        flex: 1 1;
-        margin-top: 30px;
-        width: 100%;
-        width: auto;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        margin: 30px;
+        width: 60%;
         height: auto;
     }
 
-    .search-bar{
+    form{
+        display: flex;
         width: 80%;
+    }
+
+    .search-bar{
+        width: 100%;
         height: 30px;
         border-radius: 4px;
         border: 1px solid #213a4a;
@@ -60,36 +57,5 @@ module.exports = {
         font-family: 'Lucida Sans';
         color: #213a4a;
     }
-
-    .buttons{
-        flex : 1 1;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: center;
-        padding-top: 30px;
-        justify-content: center;
-        text-align: center;
-        align-items: center;
-    }
-
-    button{
-        flex: 1 1;
-        background-color: #48A649;
-        border-radius: 4px;
-        border-style: none;
-        color: #fff;
-        font-family: 'Lucida Sans';
-        font-weight: bold;
-        min-height: 44px;
-        min-width: 10px;
-        text-align: center;
-        width: 40%;
-    }
-
-    button:hover{
-        opacity: 0.75;
-    }
-
 
 </style>
