@@ -1,21 +1,19 @@
 <template>
     <div>
-        <h1>Rédiger une ordonnace</h1>
-        <button @click="back">retour</button>
+
+        <h1>Rédiger une ordonnance</h1>
+        <button @click="back" id="backButton">retour</button>
         <div class="global">
             
              <div class="formulaire">
                 <form>
 
-                    <input type="text" 
-                    placeholder="Prénom et NOM du patient"
-                    required
-                    />
+                    <input id="inputName" type="text" placeholder="Prénom et NOM du patient" required/>
                     <label> Le</label>
                     <input type="date">
                     
-                    <div id="drug-list">
-                        <h2>Ajout d'un médicament</h2>
+                    
+                        <h4>Ajouter d'un médicament</h4>
                         <!--input pour ajouter le médicament-->
                         <form v-on:submit.prevent="addDrug">
                             <input type="text" v-model="newDrug_name" placeholder="Nom du médicament"/>
@@ -33,7 +31,7 @@
                                 <button @click="removeDrug(drug)">Supprimer</button>
                             </li>
                         </ul>
-                    </div>
+                    
 
                     
 
@@ -103,12 +101,7 @@ module.exports = {
 </script>
 
 <style>
-input {
-  border: 1px solid rgb(7, 7, 7);
-  border-top: none;
-  border-right: none;
-  border-left: none;
-}
+
 .formulaire {
     display: flex;
     flex-direction: column;
@@ -122,7 +115,7 @@ input {
     margin-top: 7vh;
     margin-bottom: 25px;
 }
-#drug-list {
+/* #drug-list {
     display: flex;
     flex-direction: column;
     max-width: 90%;
@@ -135,9 +128,30 @@ input {
     padding-bottom: 40px;
     margin-top: 7vh;
     margin-bottom: 25px;
-}
+} */
 /*enlever la puce*/
 ul {
     list-style: none;
+}
+
+#backButton{
+    color: rgb(49, 49, 49);
+    text-decoration: none;
+    padding: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 7px;
+    border: 0.4px solid rgb(49, 49, 49);
+}
+
+#backButton:hover {
+    background-color: #b1b1b1;
+    transition: background-color 0.5s;
+}
+
+#inputName{
+  border: 1px solid rgb(7, 7, 7);
+  
+  border-radius: 5px;
 }
 </style>
