@@ -1,7 +1,8 @@
 <template>
     <div>
+        <h3>Historique des ordonnances passées </h3>
         <input class="SearchBar" type="search" v-model="search" placeholder="Rechercher un nom de patient" size="28"/>
-        <h3>Historique des ordannances passées </h3>
+         <button @click="back">retour</button>
 
         <div id="global" v-for="(patient, index) in patients" :key="index">
             
@@ -62,7 +63,10 @@ module.exports = {
     methods:{
         test:function(){
             console.log(prescription.creation_date);
-        }
+        },
+        back:function(){
+            this.$router.push('/Doctor_home');
+        },
     },
     computed: {
             filteredPatients() {

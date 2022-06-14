@@ -1,6 +1,9 @@
 <template>
     <div>
+        <h1>Rédiger une ordonnace</h1>
+        <button @click="back">retour</button>
         <div class="global">
+            
              <div class="formulaire">
                 <form>
 
@@ -91,6 +94,9 @@ module.exports = {
             this.hideQuantity = true;
             this.editDrug.drug_quantity = drug.drug_quantity;
             console.log("non");
+        },
+        back(){
+            this.$router.push('/Doctor_home');
         }
     }
 }
