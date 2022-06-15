@@ -41,14 +41,13 @@
           Pour {{ patient.first_name }} {{ patient.last_name }}, fait le
           {{ prescription.creation_date }}
         </h2>
+        
         <p>
-          <strong>Medicament(s)</strong> {{ prescription.drug }} Quantité
-          {{ prescription.quantity }}
-        </p>
-        <p>Notes : {{ prescription.notes }}</p>
+          <strong>Quantité de médicaments : {{ prescription.quantity }}</strong>
         <p>
           Dr<span> {{ doctor.first_name }} {{ doctor.last_name }}</span>
         </p>
+        <button><strong>Voir le détail</strong></button> 
       </div>
     </div>
 
@@ -64,9 +63,7 @@ module.exports = {
     return {
       prescription: {
         creation_date: "20/04/2022",
-        drug: "Doliprane",
         quantity: "2",
-        notes: "2 fois par jour pendant 3 jours",
       },
       patients: [
         {
@@ -146,26 +143,6 @@ module.exports = {
     margin-left: 15px;
     margin-right: 15px;
 }
-/* .filtre {
-  flex-direction: column;
-  max-width: 10%;
-  box-shadow: 5px 5px 15px #eeecec, -5px 5px 5px #eeecec;
-  margin-left: auto;
-  padding: 20px;
-  margin-top: 7vh;
-  margin-bottom: 25px;
-} */
-
-/* #global {
-  width: 100%;
-}
-#global .prescription_info {
-  float: left;
-  width: 80%;
-} */
-
-
-
 
 
 button {
