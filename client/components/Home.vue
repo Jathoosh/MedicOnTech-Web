@@ -1,36 +1,53 @@
 <template>
     <div>
-        <p>La page d'accueil </p>
-            <!-- <img @click="goToLogin()" class="image_profil" src="ressources/profil.png" alt="Image"> -->
-            <img class="image_profil" src="ressources/profil.png" alt="Image">
+        <p>La page d'accueil </p>   
+
+        <!-- à mettre dans le header -->         
+        <img class="image_profil" src="ressources/profil.png" alt="Image" @click="activateCard()">   
+
         <br><br>
         <div>
             <img class="image" src="ressources/salle_attente.jpg" alt="Image">
         </div>
-        
         <div class="imageSuperposee" >
+            <!-- à rajuster pour que la card soit juste en dessous du profil --> 
+            <div id="carteSuperposee" class="cardPosition">
+                <login v-if="card == true"/> 
+            </div>
+            
             <div id= "rectangle"> 
-                <div class = "title" id= "flexbox"> Connectez-vous avec France connect</div>
+                <div class = "title" id= "flexbox"> Connectez-vous avec France connect </div>
                 <div id= "flexbox">
                 <a href = "#"> <img class = "franceConnect" src="ressources/france_connect.png" alt="Image"> </a> </div>
                 <div id= "flexbox" class = "titleContact"> En cas de problème n'hésitez pas à nous contacter. </div>
             </div> 
         </div>
-
+        
     </div>
 </template>
 
 <script>
+
+const login = window.httpVueLoader('./components/Login.vue');
 module.exports = {
     name: 'Home',
     data(){
         return{
-            Id_Person: 1, 
+            card: false,
+            Id_Person: 1 
         }
     },
+    components:{
+        login : login
+    },
     methods:{
-       goToLogin(){
-        //go to Login
+       activateCard(){
+        if(this.card == false){
+            this.card = true;
+        }
+        else{
+            this.card = false;
+        }
        }
     }
 }
@@ -52,6 +69,14 @@ module.exports = {
         text-align: center;
         position : absolute;
     }
+    
+    #imageSuperposee {
+        margin-top: 250px;
+        width: 100%;
+        text-align: center;
+        position : absolute;
+    }
+    
 
     #rectangle {
         display: block;
@@ -92,5 +117,19 @@ module.exports = {
         margin-top : 5px;
         float: right;
     }
+        
+    .cardPosition{
+        display: flex;
+        flex-direction: row-reverse;
+        position : static;
+    }
+
+    #carteSuperposee {
+        margin-top: 66px;
+        width: 100%;
+        text-align: center;
+        position : absolute;
+    }
+    
 
 </style>

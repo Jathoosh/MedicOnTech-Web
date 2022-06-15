@@ -16,8 +16,6 @@
             <p>{{ birth_date }}</p>
             <p>{{ email_adress }}</p>
         </div>
-
-        <!-- créer un formulaire : rentrer mutuelle - nom / numero de securité sociale -->
     </div>
 </template>
 
@@ -27,11 +25,14 @@ module.exports = {
     data(){
         return{
             Id_Person: 1,  // on ne doit pas le voir sur la page
-            last_name: 'Raoul',
-            first_name: 'Lisa',
-            birth_date: '20-06-2001',
-            email_adress: 'blabla@hotmail.com'
+            last_name: 'Nom de famille',
+            first_name: 'Prénom',
+            birth_date: 'Date de naissance',
+            email_adress: 'Adresse mail'
         }
+    },
+    mounted(){
+        // afficher caractéristiques de l'utilisateur de la table personne
     }
    
 }
@@ -39,8 +40,7 @@ module.exports = {
 
 <style>
   .card {
-    width: 30%; 
-    margin: 64px auto; 
+    width: 17%; 
     box-shadow: 0px 5px 20px rgb(81, 153, 220);
   }
   
