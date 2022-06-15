@@ -40,6 +40,9 @@ var app = new Vue( {
   },
   methods: 
   {
-
+    async FCMethod()
+    {
+      const res = await axios.post('/login-authorize');
+    }
   }
 })

@@ -33,9 +33,6 @@
       <div class="band">
         <nav>
           <router-link to='/annexe'>Page Annexe</router-link>
-          <router-link to='/annexe2'>Page Deux</router-link>
-          <router-link to='/annexe2'>Page Trois</router-link>
-          <router-link to='/annexe2'>Page Quatre</router-link>
           <router-link to='/pharmacien'>Page Pharmacien</router-link>
           <router-link to='/Doctor_home'>Page Médecin</router-link>
         </nav>
@@ -43,7 +40,9 @@
     </header>
 
     <main id="main">
-      <router-view></router-view>
+      <router-view
+      @fc-method = "FCMethod"
+      ></router-view>
     </main>
 
     <footer>
