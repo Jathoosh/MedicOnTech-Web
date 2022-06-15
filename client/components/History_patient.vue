@@ -134,6 +134,10 @@ module.exports = {
     margin-top:13px;
     margin-left: 15px;
     margin-right: 15px;
+
+    border-top:none;
+    border-left:none;
+    border-right:none;  
 }
 
 .filter_select {
