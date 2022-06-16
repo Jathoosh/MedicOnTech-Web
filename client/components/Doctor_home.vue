@@ -1,15 +1,24 @@
 <template>
     <div>
-        <h3>Dr {{doctor.first_name}} {{doctor.last_name}}| {{doctor.speciality}}</h3>
-        <input class="SearchBar" type="search" v-model="search" placeholder="Rechercher un nom de patient" size="28"/>
+        <h1>Accueil Dr {{doctor.first_name}} {{doctor.last_name}} | Médecine {{doctor.speciality}}</h1>
+        <h4>Mes patients</h4>
+        <hr>
+        <br/>
+        <input class="SearchBar" type="search" v-model="search" placeholder="Rechercher un patient" size="21"/>
         
-        <button @click="redirectionToEditPrescription()">Rédiger une ordonnance</button>
+        <button id="editPrescription" @click="redirectionToEditPrescription()">Rédiger une ordonnance</button>
 
         <div id="global">
             <div class="patient_case" v-for="patient in patients" :key="patient.last_name">
-                <h3>{{patient.first_name}} {{patient.last_name}} | {{patient.id}}</h3>
-                 <button @click="redirectionToHistoryPatient()">Historique</button>
+                <h2><strong>{{patient.first_name}} {{patient.last_name}}</strong> | {{currentAge(new Date(patient.birth_date))}} ans</h2>
+                <div id="container" v-for="p in prescription" :key="p.creation_date">
+                    <p>Dernière ordonnance le {{p.creation_date}} </p>
+                    <button id="historyButton" @click="redirectionToHistoryPatient()">Historique</button>
+                </div>
+
             </div>
+
+        
 
         </div>
     </div>
@@ -26,18 +35,23 @@ module.exports = {
     data() {
         return {
             search: '',
+            prescription: [{
+                creation_date: "20/04/2022"
+            }],
             patients: [{ //peut-etre pas necessaire
-                first_name: "Nathan",
-                last_name: "DOLY",
+                first_name: "Paul",
+                last_name: "Pierre",
                 id: "43572653",
-                birth_date:"22/04/2001",
+                birth_date: new Date("04-22-2001"),
                 email_adress:"bonsoirnon@gmail.com"
             }],
             doctor: {
-                first_name: "Nathan",
-                last_name: "DOLY",
-                speciality: "général",
-            }
+                first_name: "Truc",
+                last_name: "Muche",
+                speciality: "générale",
+            },
+            
+            
         }      
     },
     methods: {
@@ -46,12 +60,23 @@ module.exports = {
         },
         redirectionToEditPrescription() {
             this.$router.push('/Edit_prescription');
+        },
+        currentAge(birthDate) {
+            var today = new Date();
+            var todayYear = today.getFullYear();
+            var todayMonth = today.getMonth();
+            var birthDateYear = birthDate.getFullYear();
+            var birthDateMonth = birthDate.getMonth();
+            var age = todayYear - birthDateYear;
+            var month = todayMonth - birthDateMonth;
+            if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
         }
     },
-    computed: function (){
-        return this.patients.filter(function(patient){
-            return patient.last_name.toLowerCase().indexOf(this.search.toLowerCase());
-        });
+    computed:{ 
+       
     }
 
 }
@@ -83,16 +108,36 @@ module.exports = {
     margin-bottom: 25px;
    
 }
-#button_more {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
-}
+
 button{
-   float: right;
+    color: rgb(49, 49, 49);
+    text-decoration: none;
+    padding: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 7px;
+    border: 0.4px solid rgb(49, 49, 49);
 }
 
-body{
-    font-family: 'Verdana';
+button:hover {
+    background-color: #b1b1b1;
+    transition: background-color 0.5s;
 }
+#historyButton {
+    color: black;
+    float: right;
+    max-width: 20%;
+    max-height: 20%;
+}
+
+#editPrescription {
+    color: black;
+     float: right;
+}
+
+#container {
+    display: flex;  
+    justify-content: space-between;
+}
+
 </style>
