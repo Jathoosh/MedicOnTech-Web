@@ -4,11 +4,9 @@
       <div class="imageSuperposee">
         <div id="rectangle">
           <p class="title">Connectez-vous avec France connect</p>
-
-          <a href="#">
-            <img class="franceConnect" src="ressources/france_connect.png" alt="Image"/>
+          <a>
+            <img class="franceConnect" @click="FCMethod()" src="ressources/france_connect.png" alt="Image"/>
           </a>
-
           <p class="titleContact">
             En cas de problème n'hésitez pas à nous contacter.
           </p>
@@ -21,8 +19,14 @@
 <script>
 module.exports = {
   name: "Home",
-  mounted: function() {
+  mounted() {
     document.getElementById("main").style.width = "100%";
+  },
+  methods: {
+    FCMethod() {
+      this.$emit("fc-method");
+    }
+
   }
 };
 </script>
@@ -37,7 +41,7 @@ module.exports = {
   padding-bottom: 10%;
   width: 100%;
   text-align: center;
-  background-color: rgba(255, 255, 255  , 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 #rectangle {
