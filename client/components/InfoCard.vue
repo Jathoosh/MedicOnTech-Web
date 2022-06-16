@@ -21,7 +21,7 @@
 
 <script>
 module.exports = {
-    name: 'Login',
+    name: 'info-card',
     data(){
         return{
             Id_Person: 1,  // on ne doit pas le voir sur la page

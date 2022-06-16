@@ -19,6 +19,9 @@ module.exports = {
     components: {
         Ordonnance
     },
+    mounted() {
+        document.getElementById("main").style.width = "90%";
+    },
 }
 </script>
 

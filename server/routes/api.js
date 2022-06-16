@@ -34,14 +34,16 @@ router.use((req, res, next) => {
 })
 
 router.post('/login-authorize', (req, res) => {
-  const { eidasLevel } = req.body;
+  console.log("Not implemented yet");
+  res.status(200).json({message:'Not implemented'});
+  /*const { eidasLevel } = req.body;
   const scopes = Object.keys(req.body)
     .filter(key => key.startsWith('scope_'))
     .map(scope => scope.split('scope_').pop())
     .join(' ');
 
   const query = {
-    scope: scopes,
+    scope: scopes || "openid given_name family_name gender preferred_username birthdate",
     redirect_uri: `${config.FS_URL}${config.LOGIN_CALLBACK_FS_PATH}`,
     response_type: 'code',
     client_id: config.AUTHENTICATION_CLIENT_ID,
@@ -52,13 +54,13 @@ router.post('/login-authorize', (req, res) => {
   // Save requested scopes in the session
   req.session.scopes = scopes;
 
-  if (eidasLevel) {
-    query.acr_values = eidasLevel;
-  }
+
+  query.acr_values = eidasLevel || "eidas1";
+
 
   const url = `${config.FC_URL}${config.AUTHORIZATION_FC_PATH}`;
   const params = new URLSearchParams(query).toString();
-  return res.redirect(`${url}?${params}`);
+  return res.redirect(`${url}?${params}`);*/
 });
 
 module.exports = router
