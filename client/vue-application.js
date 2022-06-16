@@ -5,6 +5,7 @@ const History_patient = window.httpVueLoader('./components/History_patient.vue')
 const Edit_prescription = window.httpVueLoader('./components/Edit_prescription.vue') //Verifier TODO
 const Annexe2 = window.httpVueLoader('./components/Bonchour.vue')
 const Pharmacien = window.httpVueLoader('./components/Pharmacien.vue')
+const Dependent_patient = window.httpVueLoader('./components/Dependent_patient.vue')
 
 
 
@@ -15,7 +16,8 @@ const routes = [
   { path: '/History_patient', name:'History_patient', component: History_patient }, //Verifier TODO
   { path: '/Edit_prescription', name:'Edit_prescription', component: Edit_prescription }, //Verifier TODO
   { path: '/annexe2', name:'Annexe2', component: Annexe2 },
-  { path: '/pharmacien', name:'Pharmacien', component: Pharmacien }
+  { path: '/pharmacien', name:'Pharmacien', component: Pharmacien },
+  { path: '/dependent_patient', name:'Dependent_patient', component: Dependent_patient }
 ]
 
 const router = new VueRouter({
