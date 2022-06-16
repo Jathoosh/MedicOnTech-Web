@@ -18,17 +18,17 @@
 
 <script>
 module.exports = {
-  name: "Home",
-  mounted() {
-    document.getElementById("main").style.width = "100%";
-  },
-  methods: {
-    FCMethod() {
-      this.$emit("fc-method");
+    name: 'Home',
+    mounted() {
+      document.getElementById("main").style.width = "100%";
+    },
+    methods:{
+        FCMethod() {
+          this.$emit("fc-method");
+        }
     }
+}
 
-  }
-};
 </script>
 
 <style scoped>
@@ -77,6 +77,7 @@ module.exports = {
 
 .franceConnect {
   width: 100%;
+  cursor: pointer;
 }
 
 .titleContact {
