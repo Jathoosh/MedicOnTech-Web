@@ -1,7 +1,13 @@
 <template>
   <div>
+    <!-- à mettre dans le header -->         
+    <img class="image_profil" src="ressources/profil.png" alt="Image" @click="activateCard()">   
     <div id="background">
       <div class="imageSuperposee">
+        <!-- à rajuster pour que la card soit juste en dessous du profil --> 
+        <div id="carteSuperposee" class="cardPosition">
+            <login v-if="card == true"/> 
+        </div>
         <div id="rectangle">
           <p class="title">Connectez-vous avec France connect</p>
           <a>
@@ -17,18 +23,37 @@
 </template>
 
 <script>
-module.exports = {
-  name: "Home",
-  mounted() {
-    document.getElementById("main").style.width = "100%";
-  },
-  methods: {
-    FCMethod() {
-      this.$emit("fc-method");
-    }
 
-  }
-};
+const login = window.httpVueLoader('./components/Login.vue');
+module.exports = {
+    name: 'Home',
+    data(){
+        return{
+            card: false,
+            Id_Person: 1 
+        }
+    },
+    components:{
+        login : login
+    },
+    mounted() {
+      document.getElementById("main").style.width = "100%";
+    },
+    methods:{
+        FCMethod() {
+          this.$emit("fc-method");
+        },
+       activateCard(){
+        if(this.card == false){
+            this.card = true;
+        }
+        else{
+            this.card = false;
+        }
+       }
+    }
+}
+
 </script>
 
 <style scoped>
@@ -68,6 +93,29 @@ module.exports = {
   margin-top: 30px;
   margin-bottom: 30px;
 }
+    
+    .image_profil{
+        height: 50px;
+        width: 50px;
+        border-radius: 100%;
+        border: 2px solid black;
+        margin-top : 5px;
+        float: right;
+    }
+        
+    .cardPosition{
+        display: flex;
+        flex-direction: row-reverse;
+        position : static;
+    }
+
+    #carteSuperposee {
+        margin-top: 66px;
+        width: 100%;
+        text-align: center;
+        position : absolute;
+    }
+    
 
 #rectangle > .titleContact
 {
