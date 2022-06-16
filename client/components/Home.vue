@@ -1,29 +1,25 @@
 <template>
-    <div>
-        <p>La page d'accueil </p>   
-
-        <!-- à mettre dans le header -->         
-        <img class="image_profil" src="ressources/profil.png" alt="Image" @click="activateCard()">   
-
-        <br><br>
-        <div>
-            <img class="image" src="ressources/salle_attente.jpg" alt="Image">
+  <div>
+    <!-- à mettre dans le header -->         
+    <img class="image_profil" src="ressources/profil.png" alt="Image" @click="activateCard()">   
+    <div id="background">
+      <div class="imageSuperposee">
+        <!-- à rajuster pour que la card soit juste en dessous du profil --> 
+        <div id="carteSuperposee" class="cardPosition">
+            <login v-if="card == true"/> 
         </div>
-        <div class="imageSuperposee" >
-            <!-- à rajuster pour que la card soit juste en dessous du profil --> 
-            <div id="carteSuperposee" class="cardPosition">
-                <login v-if="card == true"/> 
-            </div>
-            
-            <div id= "rectangle"> 
-                <div class = "title" id= "flexbox"> Connectez-vous avec France connect </div>
-                <div id= "flexbox">
-                <a href = "#"> <img class = "franceConnect" src="ressources/france_connect.png" alt="Image"> </a> </div>
-                <div id= "flexbox" class = "titleContact"> En cas de problème n'hésitez pas à nous contacter. </div>
-            </div> 
+        <div id="rectangle">
+          <p class="title">Connectez-vous avec France connect</p>
+          <a>
+            <img class="franceConnect" @click="FCMethod()" src="ressources/france_connect.png" alt="Image"/>
+          </a>
+          <p class="titleContact">
+            En cas de problème n'hésitez pas à nous contacter.
+          </p>
         </div>
-        
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -40,7 +36,13 @@ module.exports = {
     components:{
         login : login
     },
+    mounted() {
+      document.getElementById("main").style.width = "100%";
+    },
     methods:{
+        FCMethod() {
+          this.$emit("fc-method");
+        },
        activateCard(){
         if(this.card == false){
             this.card = true;
@@ -51,63 +53,46 @@ module.exports = {
        }
     }
 }
+
 </script>
 
-<style>
-        
-    .image{
-        position: absolute;
-        width: 100%;
-        height: 80%;
-        opacity: 0.5;
-        text-align: center;
-    }
+<style scoped>
+#background {
+  background: url("../ressources/salle_attente.jpg");
+}
 
-    .imageSuperposee {
-        margin-top: 250px;
-        width: 100%;
-        text-align: center;
-        position : absolute;
-    }
-    
-    #imageSuperposee {
-        margin-top: 250px;
-        width: 100%;
-        text-align: center;
-        position : absolute;
-    }
-    
+.imageSuperposee {
+  padding-top: 10%;
+  padding-bottom: 10%;
+  width: 100%;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.5);
+}
 
-    #rectangle {
-        display: block;
-        margin-top: 10px;
-        margin-left: auto;
-        margin-right: auto;
-        width: 620px;
-	    height: 280px;
-        background: white;
-    }
-  
-    .title{
-        color: green;
-        font: 30px "Verdana", "Arial", cursive;   
-    }
+#rectangle {
+  margin: 0 auto;
+  width: 620px;
+  height: 280px;
+  background: white;
+  box-shadow: 0px 0px 10px #000000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  align-items: center;
+}
 
-    .franceConnect{
-        width: 120%;
-    }
+.title {
+  color: green;
+  font: 30px "Verdana", "Arial", cursive;
+}
 
-    .titleContact{
-        font: 20px "Verdana", "Arial", cursive;  
-    }
-
-    #flexbox{
-        display: flex;
-        justify-content: center;
-        padding-top: 20px;
-        margin-top: 30px;
-        align-items: start; 
-    }
+#rectangle > .title
+{
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
     
     .image_profil{
         height: 50px;
@@ -132,4 +117,17 @@ module.exports = {
     }
     
 
+#rectangle > .titleContact
+{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.franceConnect {
+  width: 100%;
+}
+
+.titleContact {
+  font: 20px "Verdana", "Arial", cursive;
+}
 </style>

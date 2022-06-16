@@ -1,28 +1,97 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="utf-8">
-        <title>MedicOnTech</title>
-        <!-- Load Vue followed by Vue Router -->
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/http-vue-loader/src/httpVueLoader.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    </head>
-    <body>
-        <div id="app">
-          <header>
-            <h1>MedicOnTech</h1>
-            <nav>
-              <router-link to='/annexe'>Page Annexe</router-link>
-              <router-link to='/pharmacien'>Page Pharmacien</router-link>
-              <router-link to='/login'>Page Login</router-link>
-            </nav>
-          </header>
-          <main>
-            <router-view></router-view>
-          </main>
+
+<head>
+  <meta charset="utf-8">
+  <title>MedicOnTech</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Load Vue followed by Vue Router -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/http-vue-loader/src/httpVueLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <!--Style CSS Temporaire TODO-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+</head>
+
+<body>
+  <div id="app">
+    <header>
+      <div id="header_top">
+        <div id="logo_title">
+          <img src="ressources/MedicOnTech_Logo.svg"
+            alt="Logo MedicOnTech, 2 serpents bleus clair enroulés autour d'un aiguille ailé bleu foncé sur un fond cyan"
+            id="logo">
+          <h1>MedicOnTech</h1>
         </div>
-        <script src="/vue-application.js"></script>
-    </body>
+      </div>
+
+      <div class="band">
+        <nav>
+          <router-link to='/annexe'>Page Annexe</router-link>
+          <router-link to='/pharmacien'>Page Pharmacien</router-link>
+          <router-link to='/Doctor_home'>Page Médecin</router-link>
+          <router-link to='/patientHome'>Page Patient</router-link>
+          <router-link to='/login'>Page Login</router-link>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <router-view
+      @fc-method = "FCMethod"
+      ></router-view>
+    </main>
+
+    <footer>
+      <hr>
+      <div class="container-h">
+        <div class="contSec center" id="rs_footer">
+          <a href="https://www.youtube.com/user/MedicOnTech">
+            <img src="ressources/youtube.png" alt="Logo Youtube" width="15%" height="15%">
+          </a>
+          <a href="https://www.instagram.com/medicontech/">
+            <img src="ressources/instagram.png" alt="Logo Instagram" width="15%" height="15%">
+          </a>
+          <a href="https://www.linkedin.com/in/medicontech/">
+            <img src="ressources/linkedin.png" alt="Logo Linkedin" width="15%" height="15%">
+          </a>
+        </div>
+        <div class="contPri center">
+          <h1>MedicOnTech</h1>
+          <p>jathooshthvrs@gmail.com</p>
+        </div>
+        <div class="contSec center">
+          <ul class="simple-list">
+            <li>
+              <router-link to='/annexe2'>A propos</router-link>
+            </li>
+            <li>
+              <router-link to='/annexe2'>Mentions légales</router-link>
+            </li>
+            <li>
+              <router-link to='/annexe2'>Contact</router-link>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="band center">
+        <p>Copyright © 2022 par MedicOnTech - Tous droits réservés</p>
+      </div>
+    </footer>
+  </div>
+  <script src="/vue-application.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+</body>
+
 </html>
