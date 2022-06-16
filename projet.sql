@@ -53,24 +53,32 @@ CREATE TABLE Person(
    last_name VARCHAR(50) NOT NULL,
    birth_date DATE NOT NULL,
    email_address VARCHAR(50),
-   password TEXT,
+   phone VARCHAR(50),
    Id_Postal_address INT NOT NULL,
    PRIMARY KEY(Id_Person),
    FOREIGN KEY(Id_Postal_address) REFERENCES Postal_address(Id_Postal_address)
+);
+
+CREATE TABLE Professional(
+   Id_Person INT,
+   password VARCHAR(100),
+   workplace_name VARCHAR(50),
+   PRIMARY KEY(Id_Person),
+   FOREIGN KEY(Id_Person) REFERENCES Person(Id_Person)
 );
 
 CREATE TABLE Pharmacist(
    Id_Pharmacist INT NOT NULL AUTO_INCREMENT,
    Id_Person INT NOT NULL,
    PRIMARY KEY(Id_Pharmacist),
-   FOREIGN KEY(Id_Person) REFERENCES Person(Id_Person)
+   FOREIGN KEY(Id_Person) REFERENCES Professional(Id_Person)
 );
 
 CREATE TABLE Doctor(
    Id_Doctor INT NOT NULL AUTO_INCREMENT,
    Id_Person INT NOT NULL,
    PRIMARY KEY(Id_Doctor),
-   FOREIGN KEY(Id_Person) REFERENCES Person(Id_Person)
+   FOREIGN KEY(Id_Person) REFERENCES Professional(Id_Person)
 );
 
 CREATE TABLE Patient(

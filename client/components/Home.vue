@@ -63,6 +63,18 @@ module.exports = {
   font: 30px "Verdana", "Arial", cursive;
 }
 
+#rectangle > .title
+{
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+#rectangle > .titleContact
+{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 .franceConnect {
   width: 100%;
 }
