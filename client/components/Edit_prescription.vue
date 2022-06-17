@@ -2,29 +2,32 @@
     <div>
 
         <h1>Rédiger une ordonnance</h1>
+        <hr>
         <button @click="back" id="backButton">retour</button>
         <div class="global">
 
             <div class="globalcontainer">
-                <div class="container">    
-                    <label>Nom et prénom<br></label>                
+                <div class="container">                   
                     <br>
                     <input class="inputName" type="text" placeholder="Nom" required/>
                     <input class="inputName" type="text" placeholder="Prénom" required/>
                 </div>
             
                 <div class="date_container">
-                    <label> Le</label> <input type="date">
+                    <p> Le <input type="date"></p>
                 </div>
             </div>
             <br>
             <div class="input_medicament_info">
-                <label>Ajouter d'un médicament</label>
+                <label style="font-size:30px; margin-bottom:5px"><strong>Ajouter d'un médicament</strong></label>
                 <!--input pour ajouter le médicament-->
                 <form v-on:submit.prevent="addDrug">
                     <input type="text" v-model="newDrug_name" placeholder="Nom du médicament"/>
                     <input type="number" v-model="newDrug_quantity" placeholder="Quantité" required />
-                    <input type="text" v-model="newDrug_notes" placeholder="Notes"/>
+                    <br>
+                    <br>
+                    <input id="notes_input" type="text" v-model="newDrug_notes" placeholder="Notes"/>
+                    <br>
                     <button>Ajouter</button>
                 </form>
                 <br>
@@ -56,12 +59,10 @@
                 </table>
             </div>
             <br>
-            <label>Notes</label>
-            <br>
-            <textarea placeholder="Notes"></textarea>
+            <textarea placeholder="Commentaires & services"></textarea>
             <br>
 
-            <label>Ordonnace rétuilisable <input type="checkbox" name="resuable" v-model="reusable"/></label>
+            <label>Ordonnance rétuilisable <input type="checkbox" name="resuable" v-model="reusable"/></label>
             <input id="reuse" type="number" placeholder="Nombre de réutilisations" v-if="reusable===true"/>
             <br>
             <button type="submit">Envoyer</button>
@@ -135,8 +136,14 @@ module.exports = {
 .globalcontainer {
     display: flex;
     justify-content: space-between;
+    margin-bottom:3px;
 
 }
+
+.date_container {
+    width: 20%;
+}
+
 
 table,td {
     border: 1px solid #333;
@@ -216,5 +223,15 @@ input[type="number"] {
 }
 #reuse{
 width: 20%;
+}
+
+.input_medicament_info {
+    margin-top: 10px;
+}
+
+#notes_input {
+    width:29%;
+    height:60px;
+    margin-bottom:20px;
 }
 </style>
