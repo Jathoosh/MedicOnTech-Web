@@ -188,7 +188,7 @@ module.exports = {
         border-radius: 4px;
         border-style: none;
         color: #fff;
-        font-family: 'Lucida Sans';
+        font-variant: 'Lucida Sans';
         font-weight: bold;
         min-height: 44px;
         min-width: 10px;

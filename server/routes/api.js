@@ -63,4 +63,20 @@ router.post('/login-authorize', (req, res) => {
   return res.redirect(`${url}?${params}`);*/
 });
 
+router.get('/motapp', (req, res) => {
+  res.status(200).json([{message:'Tu as réussi, hésite pas à me mp le code 59745 sur Discord',id:1},{message:'Hola Camron, como esta ?!',id:2},{message:'Hey, i can also talk english, what about you ?',id:3},{message:'WeshWesh, jai plus dinspi',id:4}]);
+})
+
+router.post('/motapp', (req, res) => {
+  console.log(req.body);
+  res.status(200).json({message:'Jai bien reçu ta requête en post et je lai affiché dans la console'});
+})
+
+router.get('/motapp/doctor', (req, res) => {
+  sequelize.query('SELECT Person.first_name, Person.last_name, Person.phone, Person.email_address, Person.Id_Person FROM `Doctor` JOIN `Person` ON Person.Id_Person = Doctor.Id_Person').then(result => {
+    console.log(result[0]);
+    res.status(200).json({result:result[0]});
+  })
+})
+
 module.exports = router

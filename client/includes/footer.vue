@@ -3,7 +3,7 @@
     <hr />
     <div class="container-h">
       <div class="contSec center" id="rs_footer">
-        <a href="https://www.youtube.com/user/MedicOnTech">
+        <a href="https://www.youtube.com/channel/UCmfFBwFw6xyORSaFwlfAgWg">
           <img
             src="ressources/youtube.png"
             alt="Logo Youtube"
@@ -11,7 +11,7 @@
             height="15%"
           />
         </a>
-        <a href="https://www.instagram.com/medicontech/">
+        <a href="https://instagram.com/team.medicontech">
           <img
             src="ressources/instagram.png"
             alt="Logo Instagram"
@@ -19,7 +19,7 @@
             height="15%"
           />
         </a>
-        <a href="https://www.linkedin.com/in/medicontech/">
+        <a href="https://www.linkedin.com/company/medicontech/">
           <img
             src="ressources/linkedin.png"
             alt="Logo Linkedin"
