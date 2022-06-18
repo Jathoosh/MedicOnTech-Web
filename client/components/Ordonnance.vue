@@ -1,7 +1,10 @@
 <template>
     <div class="ordonnanceContainer">
+
+        <button @click="back" id="buttons">Retour</button>
+
         <div class="ordonnance">
-            <div v-for="(ligne, index1) in listOrdonnance" :key="index1"><hr>
+            <div v-for="(ligne, index) in ordonnance" :key="index"><hr>
                 
                 <div class="headerOrdonnance">
                     <!-- Information du Docteur - Table Id_Doctor & Person-->
@@ -43,12 +46,11 @@
                     <p v-if="ligne.validity=='true'">Oronnance valide.</p>
                     <p v-if="ligne.reported=='true'">Ordonnance signalée.</p><br> 
                 </div> 
-
-                <div id="buttons">
-                    <button type="button">Imprimer l'ordonnance</button><hr> 
-                </div>     
+  
             </div>
         </div>
+        
+        <button type="button" id="buttons">Imprimer l'ordonnance</button><hr>   
     </div>
 </template>
 
@@ -56,7 +58,7 @@
 <script>
 module.exports = {
     name: 'Ordonnance',
-     data() {
+    data() {
         return {
             person: {
                 first_name: 'DUPONT',
@@ -72,7 +74,7 @@ module.exports = {
             speciality: {
                 speciality_name: 'Dentiste',
             },
-            listOrdonnance: [{
+            ordonnance: [{
                 Id_Prescription: 'Prescription 1',
                 creation_date: '01/01/2020',
                 date_of_use: '12/04/2020',
@@ -93,32 +95,13 @@ module.exports = {
                     {service_name: 'Service2',
                     quantity: '2'},
                 ],
-            },
-            {
-                Id_Prescription: 'Prescription 2',
-                creation_date: '11/01/2020',
-                date_of_use: '23/05/2020',
-                number_of_reuses: '2',
-                used: 'false',
-                validity: 'false',
-                note: 'La séance de kinésithérapie est nécessaire',
-                reported: 'false',
-                listDrug: [
-                    {drug_name: 'Medoc3',
-                    quantity: '3'},
-                    {drug_name: 'Medoc4',
-                    quantity: '4'}
-                ],
-                listService: [
-                    {service_name: 'Service3',
-                    quantity: '3'},
-                    {service_name: 'Service4',
-                    quantity: '4'},
-                ],
-
             }],
             
-
+        }
+    },
+    methods: {
+        back: function () {
+        this.$router.push("/PatientHome");
         }
     },
     mounted() {
@@ -135,12 +118,7 @@ module.exports = {
 
 
 <style>
-    .ordonnanceContainer{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
+
     .ordonnance{
         width: 80%;
     }
@@ -178,8 +156,8 @@ module.exports = {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: center;
-    justify-content: space-around;
+    align-items: flex-end;
+    justify-content: flex-end;
     padding-top: 30px;
     }
 

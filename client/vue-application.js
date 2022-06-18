@@ -23,7 +23,8 @@ const routes = [
   { path: '/History_patient', name:'History_patient', component: History_patient }, //Verifier TODO
   { path: '/Edit_prescription', name:'Edit_prescription', component: Edit_prescription }, //Verifier TODO
   { path: '/pharmacien', name:'Pharmacien', component: Pharmacien }, //Verifier TODO
-  { path: '/dependent_patient', name:'Dependent_patient', component: Dependent_patient } //Verifier TODO
+  { path: '/dependent_patient', name:'Dependent_patient', component: Dependent_patient }, //Verifier TODO
+  { path: '/Ordonnance', name:'Ordonnance', component: Ordonnance } //Verifier TODO  
 ]
 
 const router = new VueRouter({
