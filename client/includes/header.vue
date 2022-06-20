@@ -31,7 +31,7 @@
     </div>
     <!-- TODO à rajuster pour que la card soit juste en dessous du profil --> 
     <div id="carteSuperposee" class="cardPosition">
-      <infocard v-if="card == true" />
+      <infocard v-if="card == true" @disapear="disapear"/>
     </div>
   </div>
 </template>
@@ -51,7 +51,11 @@ module.exports = {
   methods: {
     activateCard(){
       this.card = !this.card;
+    }, 
+    disapear(){
+      this.card = false;
     }
+
   },
 };
 </script>
