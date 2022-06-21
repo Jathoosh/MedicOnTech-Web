@@ -1,15 +1,26 @@
 <template>
   <div>
     <div class = "rectangle">
-      <p> Votre profil </p>
+      <p class="title_profil"> Votre profil </p>
+    </div>
+    
+    <div class="buttonRetour">
+      <button @click="retourPagePrincipale" class="btn text-center" type="submit">Retour</button>
     </div>
 
     <div class = "card_patient">
       <p id = "informations" class="rectangle"> Vos informations </p>
       <!-- importer logo de la personne connectée -->
-      <div class = "image_formulaire">
-        <img src="ressources/formulaire.jpg" alt="Image">
+      <div class="position_formulaire">
+        <img class = "image_formulaire rounded" src="ressources/formulaire.jpg" alt="Image">
       </div>
+      
+      <div class="d-flex flex-row">
+        <!-- <img class="image_profil" src="ressources/profil.png" alt="Image"/> -->
+        <p class="image_profil text-center" id="nom_profil"> LR </p>
+      </div>
+      
+      
       <!-- données du patient -->
       <table class="table">
         <tbody>
@@ -51,8 +62,8 @@ module.exports = {
         return{
           patient:
             {
-              last_name: 'RAOUL',
-              first_name: 'Lisa',
+              last_name: 'Last name',
+              first_name: 'First name',
               birth_date: 'Date de naissance',
               email_adress: 'Adresse Mail',
               mutuelle: 0,
@@ -60,9 +71,13 @@ module.exports = {
         }
     },
     methods:{
-       modifyInformationsProfil: function(){
+      modifyInformationsProfil: function(){
         this.$emit("modify", this.patient);
         console.log(this.patient); //renvoie nouvelles informations Patient
+      },
+      retourPagePrincipale: function(){
+        this.$emit("retour page principale");
+        this.$router.push("/PatientHome");
       }
     }
    
@@ -71,10 +86,15 @@ module.exports = {
 
 <style>
 
-  p{
-    margin-top: 13px;
+  .title_profil{
+    margin-top: 10px;
+    font-size: 30px;
+  }
+
+  #nom_profil{
     margin-bottom: 0rem;
-    font-size: 20px;
+    padding-top: 14px;
+    font-size: 40px;
   }
 
   .rectangle{
@@ -85,7 +105,7 @@ module.exports = {
   .card_patient{
     position: relative;
     width: 1032px;
-    height: 470px;
+    height: 453px;
     left: 322px;
     background: rgba(216, 216, 216, 0.5);
     border-radius: 20px;
@@ -102,12 +122,14 @@ module.exports = {
   }
 
   .table>:not(caption)>*>* {
-    padding: 22px 80px;
+    padding: 15px 71px;
     border-bottom-width: 0px;
   }
+
   .table{
     width: 70%;
     margin: 0 auto;
+    margin-top: -190px;
     text-indent: 20%;
   }
 
@@ -120,13 +142,33 @@ module.exports = {
   }
 
   .image_formulaire{
-    display:flex;
-    align-items: flex-end;
-    position: relative;
-    max-width: 100px;
-    height: 8px;
-    left: 397px;
-    top: 379px;
+    position : relative;
+    width: 175px; 
+    height: auto;
   }
 
+  .position_formulaire{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 20px;
+  }
+
+  .image_profil {
+    height: 100px;
+    width: 100px;
+    border-radius: 100%;
+    border: 2px solid black;
+    margin-top: -39px;
+    margin-left: 29px;
+  }
+
+  .buttonRetour{
+    position: absolute;
+    width: fit-content;
+    left: 1509px;
+    top: 167px;
+
+    background: #D9D9D9;
+    border-radius: 20px;
+  }
 </style>
