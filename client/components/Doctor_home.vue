@@ -1,43 +1,31 @@
 <template>
   <div>
-    <h1>
-      Accueil Dr {{ doctor.first_name }} {{ doctor.last_name }} | Médecine
-      {{ doctor.speciality }}
-    </h1>
     <h4>Mes patients</h4>
     <hr />
-    <br />
-    <input
-      class="SearchBar"
-      type="search"
-      v-model="search"
-      placeholder="Rechercher un patient"
-      size="21"
-    />
+    <div id="global"> 
+      <div class="tbl-container bdr"> 
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Nom Prénom</th>
+                <th scope="col">Date</th>
+                <th scope="col"></th> 
+              </tr>
+            </thead>
 
-    <button id="editPrescription" @click="redirectionToEditPrescription()">
-      Rédiger une ordonnance
-    </button>
-
-    <div id="global">
-      <div
-        class="patient_case"
-        v-for="patient in patients"
-        :key="patient.last_name"
-      >
-        <h2>
-          <strong>{{ patient.first_name }} {{ patient.last_name }}</strong> |
-          {{ currentAge(new Date(patient.birth_date)) }} ans
-        </h2>
-        <div id="container" v-for="p in prescription" :key="p.creation_date">
-          <p>Dernière ordonnance le {{ p.creation_date }}</p>
-          <button id="historyButton" @click="redirectionToHistoryPatient()">
-            Historique
-          </button>
+            <tbody>
+              
+              <tr v-for="(prescription, index) in prescriptions" :key="index">
+                  <td>{{ getPatient(prescription.patientID).last_name }} {{ getPatient(prescription.patientID).first_name }}</td>
+                  <td>{{prescription.creation_date}}</td>
+                  <td><button class="btn">Historique</button></td>
+              </tr>
+              
+            </tbody>
+          </table>
         </div>
-      </div>
-    </div>
-  </div>
+      </div> 
+
 </template>
 
 <script>
@@ -50,29 +38,41 @@ module.exports = {
   data() {
     return {
       search: "",
-      prescription: [
-        {
-          creation_date: "20/04/2022",
-        },
+      prescriptions: [
+        {creation_date: "20/04/2022",
+        patientID: 1,},
+        {creation_date: "29/12/2022",
+        patientID: 2,},
+        {creation_date: "10/09/2022",
+        patientID: 3,},
+        {creation_date: "20/04/2021",
+        patientID: 1,},
+        
       ],
       patients: [
         {
-          //peut-etre pas necessaire
           first_name: "Paul",
           last_name: "Pierre",
-          id: "43572653",
-          birth_date: new Date("04-22-2001"),
-          email_adress: "bonsoirnon@gmail.com",
+          patientID: 1,
+        },
+        {
+          first_name: "Jean",
+          last_name: "Reynaud",
+          patientID: 2,
+        },
+        {
+          first_name: "georges",
+          last_name: "lebègue",
+          patientID: 3,
         },
       ],
-      doctor: {
-        first_name: "Truc",
-        last_name: "Muche",
-        speciality: "générale",
-      },
+      
     };
   },
   methods: {
+    getPatient(id) {
+      return this.patients.find((patient) => patient.patientID === id);
+    },
     redirectionToHistoryPatient() {
       this.$router.push("/History_patient");
     },
@@ -96,36 +96,42 @@ module.exports = {
   mounted() {
     document.getElementById("main").style.width = "90%";
   },
-  computed: {},
+  computed: {
+    // masquer occurence patientID
+    filteredPatients() {
+      return this.patients.filter((patient) => {
+        return patient.last_name.toLowerCase().indexOf(this.search.toLowerCase()) !== -1;
+      });
+    },
+  },
 };
 </script>
 
 <style>
-.SearchBar {
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  padding: 5px;
-  margin-bottom: 10px;
-  border-top: none;
-  border-right: none;
-  border-left: none;
+h4 {
+  padding-top: 15px;
+}
+hr {
+  border: 2px solid #D9D9D9;
+ }
+
+thead {
+  background-color: #01AA88;
+  border-radius: 25px;
+
 }
 
-.patient_case {
-  display: flex;
-  flex-direction: column;
-  max-width: 90%;
-  box-shadow: 5px 5px 15px #eeecec, -5px 5px 5px #eeecec;
-  border-radius: 5px;
-  background-color: white;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 20px;
-  padding-bottom: 40px;
-  margin-top: 7vh;
-  margin-bottom: 25px;
+.tbl-container {
+  max-width: 100%;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
+
+.bdr {
+  border-radius: 10px;
+  overflow: hidden;
+}
 button {
   color: rgb(49, 49, 49);
   text-decoration: none;
