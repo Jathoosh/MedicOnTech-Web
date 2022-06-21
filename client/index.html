@@ -27,12 +27,18 @@
 <body class="font-cera">
   <div id="app">
     <header>
-      <Head_comp></Head_comp>
+      <!-- TODO Partie DEVELOPMMENT, à supprimer -->
+      <head_comp
+      @modif-id-doctor="modif_id_doctor"></head_comp>
+      <!-- FIN TODO -->
+      <!-- <Head_comp></Head_comp> -->
     </header>
 
     <main id="main">
       <router-view
       @fc-method = "FCMethod"
+      :patients = "patients"
+      :doctor = "doctor"
       ></router-view>
     </main>
 

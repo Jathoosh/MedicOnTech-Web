@@ -1,8 +1,8 @@
 <template>
   <div>
     <h1>
-      Accueil Dr {{ doctor.first_name }} {{ doctor.last_name }} | Médecine
-      {{ doctor.speciality }}
+      Bonjour Dr {{ doctor.first_name }} {{ doctor.last_name }} |
+      {{ doctor.speciality_name }}
     </h1>
     <h4>Mes patients</h4>
     <hr />
@@ -22,8 +22,8 @@
     <div id="global">
       <div
         class="patient_case"
-        v-for="patient in patients"
-        :key="patient.last_name"
+        v-for="(patient,index) in patients"
+        :key="index"
       >
         <h2>
           <strong>{{ patient.first_name }} {{ patient.last_name }}</strong> |
@@ -44,8 +44,8 @@
 module.exports = {
   name: "Medecin_home",
   props: {
-    //patients: {type: Array,}, // chaque bloc est un patient  venant du back
-    //doctor: {type: Array}, // ca vient du back
+    patients: Array, // chaque bloc est un patient  venant du back
+    doctor: Object, // ca vient du back
   },
   data() {
     return {
@@ -55,21 +55,6 @@ module.exports = {
           creation_date: "20/04/2022",
         },
       ],
-      patients: [
-        {
-          //peut-etre pas necessaire
-          first_name: "Paul",
-          last_name: "Pierre",
-          id: "43572653",
-          birth_date: new Date("04-22-2001"),
-          email_adress: "bonsoirnon@gmail.com",
-        },
-      ],
-      doctor: {
-        first_name: "Truc",
-        last_name: "Muche",
-        speciality: "générale",
-      },
     };
   },
   methods: {
