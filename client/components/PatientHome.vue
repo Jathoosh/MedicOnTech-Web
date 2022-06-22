@@ -1,5 +1,7 @@
 <template>
     <div>
+        <button @click="goToPatientInCharge" id="buttons">Personnes à charge</button>
+
         <h3>Patient - Accueil</h3>
 
         <div id="container">
@@ -35,19 +37,23 @@
         </div>
 
         <div id="global" v-for="(ligne, index) in listOrdonnance" :key="index">
-            <div class="prescription_info">
-                <h2>
-                    Dr {{ doctor.first_name }} {{ doctor.last_name }}, fait le
-                    {{ ligne.creation_date }}
-                </h2>
-                
-                <div class="statePrescription">
-                    <p v-if="ligne.used=='true'">Utilisée le {{ ligne.date_of_use }}.</p>
-                    <p v-if="ligne.validity=='true'">Oronnance valide.</p>
-                    <p v-if="ligne.reported=='true'">Ordonnance signalée.</p> 
-                </div>
+            <div class="prescriptionCard">
+                <div>
+                    <h2>
+                        Dr {{ doctor.first_name }} {{ doctor.last_name }}, fait le
+                        {{ ligne.creation_date }}
+                    </h2>
+                    
+                    <div class="statePrescription">
+                        <p v-if="ligne.used=='true'">Utilisée le {{ ligne.date_of_use }}.</p>
+                        <p v-if="ligne.validity=='true'">Oronnance valide.</p>
+                        <p v-if="ligne.reported=='true'">Ordonnance signalée.</p> 
+                    </div>
 
-                <button @click="toOrdonnance"><strong>Voir le détail</strong></button> 
+                    <p> ID : {{ ligne.Id_Prescription }}</p>
+                </div> 
+
+                 <button id="detail" @click="toOrdonnance"><strong>Voir le détail</strong></button>
             </div>
         </div>
 
@@ -131,6 +137,9 @@ module.exports = {
     toOrdonnance: function () {
       this.$router.push("/Ordonnance");
     },
+    goToPatientInCharge: function () {
+      this.$router.push("/PatientInCharge");
+    },
   },
   computed: {
     filteredPatients() {
@@ -146,9 +155,9 @@ module.exports = {
 </script>
 
 <style>
-    .prescription_info {
+    .prescriptionCard {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         max-width: 97%;
         box-shadow: 5px 5px 15px #eeecec, -5px 5px 5px #eeecec;
         border-radius: 5px;
@@ -181,6 +190,13 @@ module.exports = {
         border-top:none;
         border-left:none;
         border-right:none;  
+    }
+
+    #detail {
+        align-self: center;
+        margin-left: auto;
+        margin-right: auto;
+        height: 10%;
     }
 
     .filter_select {

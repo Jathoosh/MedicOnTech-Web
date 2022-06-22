@@ -1,7 +1,7 @@
 <template>
     <div class="ordonnanceContainer">
 
-        <button @click="back" id="buttons">Retour</button>
+        <button @click="backHome" id="buttons">Retour</button>
 
         <div class="ordonnance">
             <div v-for="(ligne, index) in ordonnance" :key="index"><hr>
@@ -100,7 +100,7 @@ module.exports = {
         }
     },
     methods: {
-        back: function () {
+        backHome: function () {
         this.$router.push("/PatientHome");
         }
     },

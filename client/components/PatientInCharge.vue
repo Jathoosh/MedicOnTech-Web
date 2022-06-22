@@ -2,11 +2,15 @@
    <div>
     <br>
         <div class="container">
+            <div>
+                <button @click="backHome" id="buttons">Retour</button>
+            </div>
+
             <div class="card" style="width: 18rem;" v-for="(patient, index) in patients" :key="index">
                 <div class="card-body" >
                     <h5 class="card-title">{{patient.first_name}} {{patient.last_name}}</h5>
                     <p class="card-text">Tuteur : {{patient.id_tutor}}</p>
-                    <button class="btn btn-primary" @click="goTo">Ordonnances</button>
+                    <button class="btn btn-primary" @click="goToHomePatientInCHarge">Détails</button>
                 </div>
             </div>
         </div>
@@ -16,7 +20,7 @@
 
 <script>
 module.exports = {
-    name: 'Dependent_patient',
+    name: 'PatientInCharge',
     data() {
         return {
            patients: [
@@ -41,15 +45,32 @@ module.exports = {
                     id_tutor: "4357265334",
                     social_security_number: "987654321",
                 },
+                {
+                    first_name: "Jacques",
+                    last_name: "Pierre",
+                    id_patient: "123456789",
+                    id_tutor: "4357265334",
+                    social_security_number: "987654321",
+                },
+                {
+                    first_name: "Jacques",
+                    last_name: "Pierre",
+                    id_patient: "123456789",
+                    id_tutor: "4357265334",
+                    social_security_number: "987654321",
+                },
 
             ],
         }
     },
      methods: {
-                goTo: function () {
-                    this.$router.push("/annexe");
-                },
-            },
+        backHome: function () {
+        this.$router.push("/PatientHome");
+        },
+        goToHomePatientInCHarge: function () {
+            this.$router.push("/PatientHome");
+        }
+    },
 
 }
 </script>
