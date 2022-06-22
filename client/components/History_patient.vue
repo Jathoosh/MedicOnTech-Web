@@ -1,58 +1,36 @@
 <template>
   <div>
-    <h3>Historique des ordonnances passées</h3>
+    <br>
+    <div class="head">
 
-    <div id="container">
-      <input
-        class="SearchBar"
-        type="search"
-        v-model="search"
-        placeholder="Rechercher un nom de patient"
-        size="28"
-      />
-      <button @click="back">retour</button>
-    </div>
-
-    <h3>Filtres</h3>
-    <hr/>
-    <div class="filtre">
-      
-            <h4>Date</h4>
-            <input class="filter_date" type="date" placeholder="Date" size="28" />
-            <h4>Médicaments</h4>
-            <input class="filter_drug" type="text" placeholder="Medicament" size="15" />
-
-            <h4>Quantité</h4>
-
-            <select class="filter_select">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            </select>
-
-
-    </div>
-
-    <div id="global" v-for="(patient, index) in patients" :key="index">
-      <div class="prescription_info">
-        <h2>
-          Pour {{ patient.first_name }} {{ patient.last_name }}, fait le
-          {{ prescription.creation_date }}
-        </h2>
+      <div class="info">
+        <h3>Historique des ordonnances de {{patients[0].last_name}} {{patients[0].first_name}}</h3>
         
-        <p>
-          <strong>Quantité de médicaments : {{ prescription.quantity }}</strong>
-        <p>
-          Dr<span> {{ doctor.first_name }} {{ doctor.last_name }}</span>
-        </p>
-        <button><strong>Voir le détail</strong></button> 
+      </div>
+
+      <div class="buttonback"><button @click="back()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Retour</button></div>
+
+    </div>
+      <p id="search_adv">Recherche avancée</p>
+      <div class="container">
+        <input placeholder="Select date" type="date" class="form-control">
+      </div>
+
+  <br>
+  <br>
+  <br>
+
+    <div class="prescription_info">
+      <div class="detail" v-for="(patient, index) in patients" :key="index">
+        <h2>{{ patient.last_name }} {{ patient.first_name }}  - {{ prescription.creation_date }}</h2>
+        <p><strong>Etat ordonnance</strong></p>
+        <p style="color:grey;">id : {{ prescription.id }}</p>
+      </div>
+
+      <div class="buttonRedirect">
+          <button @click="redirectionToOrdonnance()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Voir le détail</button> 
       </div>
     </div>
-
-   
-
   </div>
 </template>
 
@@ -63,7 +41,7 @@ module.exports = {
     return {
       prescription: {
         creation_date: "20/04/2022",
-        quantity: "2",
+        id: 21374673265,
       },
       patients: [
         {
@@ -85,6 +63,9 @@ module.exports = {
     back: function () {
       this.$router.push("/Doctor_home");
     },
+    redirectionToOrdonnance: function () {
+      this.$router.push("/Ordonnance");
+    },
   },
   computed: {
     filteredPatients() {
@@ -100,51 +81,34 @@ module.exports = {
 </script>
 
 <style>
+/*recherche avancéd */
+#search_adv {
+  border-bottom: 5px solid #01AA88;
+  max-width: 10%;
+}
+
+/*bloc minimisé ordonnance*/
 .prescription_info {
   display: flex;
-  flex-direction: column;
-  max-width: 97%;
-  box-shadow: 5px 5px 15px #eeecec, -5px 5px 5px #eeecec;
-  border-radius: 5px;
-  background-color: white;
+  flex-direction: row;
+  
+  border-radius: 20px;
+  background-color: #D8D8D8;
+  opacity: 0.9;
   margin-left: auto;
   margin-right: auto;
   padding: 20px;
-  padding-bottom: 40px;
   margin-top: 7vh;
-  margin-bottom: 25px;
+  justify-content: space-between;
 }
 
-.filtre {
-    display:flex;
-    justify-content: row;
-}
-.filter_date {
-    max-height: 20px;
-    margin-top:15px;
-    margin-left: 15px;
-    margin-right: 15px;
-}
-
-.filter_drug {
-    max-height: 20px;
-    margin-top:13px;
-    margin-left: 15px;
-    margin-right: 15px;
-
-    border-top:none;
-    border-left:none;
-    border-right:none;  
-}
-
-.filter_select {
-    max-height: 20px;
-    margin-top: 19px;
-    margin-left: 15px;
-    margin-right: 15px;
+.buttonRedirect {
+  align-self:center;
+  margin-left : 10px;
 }
 
 
+/*bouton voir detail */
 button {
   color: rgb(49, 49, 49);
   text-decoration: none;
@@ -160,16 +124,21 @@ button:hover {
   transition: background-color 0.5s;
 }
 
-#container {
+
+/*Recherche avancée */
+.container {
+  max-width: 12%;
+  float: left;
+}
+
+input[type=text] {
+  max-width: 80%;
+}
+
+/*head */
+.head {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
 }
 
-#container .SearchBar {
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  max-width: 50%;
-}
 </style>

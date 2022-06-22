@@ -9,7 +9,7 @@
               <tr>
                 <th scope="col">Nom Prénom</th>
                 <th scope="col">Date</th>
-                <th scope="col"></th> 
+                
               </tr>
             </thead>
 
@@ -17,8 +17,8 @@
               
               <tr v-for="(prescription, index) in prescriptions" :key="index">
                   <td>{{ getPatient(prescription.patientID).last_name }} {{ getPatient(prescription.patientID).first_name }}</td>
-                  <td>{{prescription.creation_date}}</td>
-                  <td><button class="btn">Historique</button></td>
+                  <td>{{prescription.creation_date}} <button class="btn btn-outline-secondary" style="float:right;" @click="redirectionToHistoryPatient()">Historique</button></td>
+                  
               </tr>
               
             </tbody>
@@ -92,6 +92,7 @@ module.exports = {
       }
       return age;
     },
+    
   },
   mounted() {
     document.getElementById("main").style.width = "90%";
@@ -125,7 +126,9 @@ thead {
   max-width: 100%;
   margin-top: 10px;
   margin-left: 10px;
+
 }
+
 
 
 .bdr {

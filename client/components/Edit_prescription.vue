@@ -1,9 +1,12 @@
 <template>
     <div>
-
-        <h1>Rédiger une ordonnance</h1>
+        <br>
+        <div class="head">
+            <h4>Rédiger une ordonnance</h4>
+            <button @click="back" id="backButton" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">retour</button>
+        </div>
         <hr>
-        <button @click="back" id="backButton">retour</button>
+        
         <div class="global">
 
             <div class="globalcontainer">
@@ -14,7 +17,12 @@
                 </div>
             
                 <div class="date_container">
-                    <p> Le <input type="date"></p>
+                    <div style="margin-right:5px">
+                        <p>Le </p>
+                    </div>
+                    <div class="date">
+                        <input class="form-control" type="date" >
+                    </div>
                 </div>
             </div>
             <br>
@@ -50,22 +58,26 @@
                             </td>
                             <td>{{drug.drug_notes}}</td>
                             <td>
-                                <button @click="editQuantity(index)" v-if="drug.hideQuantity === true">Modifier</button>
-                                <button @click="finishEditQuantity(index)" v-else>Terminer</button>
-                                <button @click="removeDrug(drug)">Supprimer</button>
+                                <button class="btn btn-outline-secondary" @click="editQuantity(index)" v-if="drug.hideQuantity === true">Modifier</button>
+                                <button class="btn btn-outline-secondary" @click="finishEditQuantity(index)" v-else>Terminer</button>
+                                <button class="btn btn-outline-secondary" @click="removeDrug(drug)">Supprimer</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <br>
-            <textarea placeholder="Commentaires & services"></textarea>
+            <textarea placeholder="Commentaires & services" class="form-control"></textarea>
             <br>
-
-            <label>Ordonnance rétuilisable <input type="checkbox" name="resuable" v-model="reusable"/></label>
-            <input id="reuse" type="number" placeholder="Nombre de réutilisations" v-if="reusable===true"/>
+            <div class="reusable">
+                <label>Ordonnance renouvelable <input type="checkbox" name="resuable" v-model="reusable"/></label>
+                <input id="reuse" type="number" placeholder="Nombre de réutilisations" v-if="reusable===true"/>
+            </div>
             <br>
-            <button type="submit">Envoyer</button>
+            <br>
+            <div class="send" style="text-align:center; ">
+             <button type="submit" style="width:40%;">Envoyer</button>
+            </div>
         </div>
     </div>
 </template>
@@ -119,6 +131,11 @@ module.exports = {
 </script>
 
 <style>
+.head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .global {
     display: flex;
     flex-direction: column;
@@ -131,6 +148,7 @@ module.exports = {
     padding-bottom: 40px;
     margin-top: 7vh;
     margin-bottom: 25px;
+    border-radius: 20px;
 }
 
 .globalcontainer {
@@ -141,7 +159,8 @@ module.exports = {
 }
 
 .date_container {
-    width: 20%;
+    display: flex;
+    flex-direction: row;
 }
 
 
@@ -149,24 +168,8 @@ table,td {
     border: 1px solid #333;
 }
 
-#backButton{
-    color: rgb(49, 49, 49);
-    text-decoration: none;
-    padding: 10px;
-    margin-left: 5px;
-    margin-right: 5px;
-    border-radius: 7px;
-    border: 0.4px solid rgb(49, 49, 49);
-}
-
-#backButton:hover {
-    background-color: #b1b1b1;
-    transition: background-color 0.5s;
-}
-
 #inputName{
   border: 1px solid rgb(7, 7, 7);
-  
   border-radius: 5px;
 }
 
