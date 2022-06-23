@@ -38,7 +38,7 @@ var app = new Vue( {
     doctors : [],
     doctorId : 1,
     doctor : {},
-    patients : [{first_name:"ntm", last_name:"ntm", id:1, birth_date:"ntm", email_address:"ntm"}],
+    patients : [],
     prescriptions : [],
   },
   components: 
