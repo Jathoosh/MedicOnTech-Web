@@ -57,7 +57,7 @@ module.exports = {
         border-radius: 4px;
         border: 1px solid #213a4a;
         font-size: 15px;
-        font-family: 'Lucida Sans';
+        font-variant: 'Lucida Sans';
         color: #213a4a;
     }
 

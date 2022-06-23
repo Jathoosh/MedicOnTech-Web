@@ -4,8 +4,15 @@ html {
 }
 
 body {
-    font-family: 'Questrial', sans-serif;
     margin:0px;
+}
+
+.font-cera{
+
+    font-family: 'Cera Pro', sans-serif;
+    font-variant: "Verdana";
+    font-Variant: "Arial";
+    font-variant: cursive;
 }
 
 header {

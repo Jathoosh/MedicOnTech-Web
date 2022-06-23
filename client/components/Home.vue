@@ -60,7 +60,7 @@ module.exports = {
 
 .title {
   color: green;
-  font: 30px "Verdana", "Arial", cursive;
+  font-size: 30px;
 }
 
 #rectangle > .title
@@ -81,6 +81,6 @@ module.exports = {
 }
 
 .titleContact {
-  font: 20px "Verdana", "Arial", cursive;
+  font-size: 20px;
 }
 </style>

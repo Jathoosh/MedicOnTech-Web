@@ -12,7 +12,6 @@
                 
               </tr>
             </thead>
-
             <tbody>
               
               <tr v-for="(prescription, index) in prescriptions" :key="index">
@@ -32,8 +31,8 @@
 module.exports = {
   name: "Medecin_home",
   props: {
-    //patients: {type: Array,}, // chaque bloc est un patient  venant du back
-    //doctor: {type: Array}, // ca vient du back
+    patients: Array, // chaque bloc est un patient  venant du back
+    doctor: Object, // ca vient du back
   },
   data() {
     return {
@@ -66,7 +65,6 @@ module.exports = {
           patientID: 3,
         },
       ],
-      
     };
   },
   methods: {

@@ -59,7 +59,6 @@ module.exports = {
   }
 
   .card-title{
-    font-family: 'Century Schoolbook', serif;
     font-weight: bold;
   }
 
