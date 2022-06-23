@@ -33,6 +33,8 @@
     <div id="carteSuperposee" class="cardPosition">
       <infocard v-if="card == true" @disapear="disapear"/>
     </div>
+    <input type="number" v-model="id_doctor">
+    <button @click="modif_id_doctor">Changer Docteur ({{id_doctor}})</button>
   </div>
 </template>
 
@@ -42,13 +44,22 @@ module.exports = {
   data(){
     return{
       card: false,
-      Id_Person: 1 
+      Id_Person: 1,
+      //TODO PARTIE DEV
+      id_doctor: 1,
+      //FIN TODO
     }
   },
   components: {
     infocard: InfoCard
   },
   methods: {
+    //TODO Partie DEVELOPPEMENT, à supprimer quand le code sera terminé
+    modif_id_doctor()
+    {
+      this.$emit('modif-id-doctor', {id: this.id_doctor});
+    },
+    //FIN TODO
     activateCard(){
       this.card = !this.card;
     }, 

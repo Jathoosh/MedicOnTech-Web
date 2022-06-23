@@ -62,6 +62,10 @@ module.exports = {
     transform: translate(-50%, -50%);
   }
 
+  .card-title{
+    font-weight: bold;
+  }
+
   .card-body {
     text-align: center; 
     padding: 15px 20px; 

@@ -1,30 +1,41 @@
 <template>
     <div>
-
-        <h1>Rédiger une ordonnance</h1>
-        <button @click="back" id="backButton">retour</button>
+        <br>
+        <div class="head">
+            <h4>Rédiger une ordonnance</h4>
+            <button @click="back" id="backButton" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">retour</button>
+        </div>
+        <hr>
+        
         <div class="global">
 
             <div class="globalcontainer">
-                <div class="container">    
-                    <label>Nom et prénom<br></label>                
+                <div class="container">                   
                     <br>
                     <input class="inputName" type="text" placeholder="Nom" required/>
                     <input class="inputName" type="text" placeholder="Prénom" required/>
                 </div>
             
                 <div class="date_container">
-                    <label> Le</label> <input type="date">
+                    <div style="margin-right:5px">
+                        <p>Le </p>
+                    </div>
+                    <div class="date">
+                        <input class="form-control" type="date" >
+                    </div>
                 </div>
             </div>
             <br>
             <div class="input_medicament_info">
-                <label>Ajouter d'un médicament</label>
+                <label style="font-size:30px; margin-bottom:5px"><strong>Ajouter d'un médicament</strong></label>
                 <!--input pour ajouter le médicament-->
                 <form v-on:submit.prevent="addDrug">
                     <input type="text" v-model="newDrug_name" placeholder="Nom du médicament"/>
                     <input type="number" v-model="newDrug_quantity" placeholder="Quantité" required />
-                    <input type="text" v-model="newDrug_notes" placeholder="Notes"/>
+                    <br>
+                    <br>
+                    <input id="notes_input" type="text" v-model="newDrug_notes" placeholder="Notes"/>
+                    <br>
                     <button>Ajouter</button>
                 </form>
                 <br>
@@ -47,24 +58,26 @@
                             </td>
                             <td>{{drug.drug_notes}}</td>
                             <td>
-                                <button @click="editQuantity(index)" v-if="drug.hideQuantity === true">Modifier</button>
-                                <button @click="finishEditQuantity(index)" v-else>Terminer</button>
-                                <button @click="removeDrug(drug)">Supprimer</button>
+                                <button class="btn btn-outline-secondary" @click="editQuantity(index)" v-if="drug.hideQuantity === true">Modifier</button>
+                                <button class="btn btn-outline-secondary" @click="finishEditQuantity(index)" v-else>Terminer</button>
+                                <button class="btn btn-outline-secondary" @click="removeDrug(drug)">Supprimer</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <br>
-            <label>Notes</label>
+            <textarea placeholder="Commentaires & services" class="form-control"></textarea>
             <br>
-            <textarea placeholder="Notes"></textarea>
+            <div class="reusable">
+                <label>Ordonnance renouvelable <input type="checkbox" name="resuable" v-model="reusable"/></label>
+                <input id="reuse" type="number" placeholder="Nombre de réutilisations" v-if="reusable===true"/>
+            </div>
             <br>
-
-            <label>Ordonnace rétuilisable <input type="checkbox" name="resuable" v-model="reusable"/></label>
-            <input id="reuse" type="number" placeholder="Nombre de réutilisations" v-if="reusable===true"/>
             <br>
-            <button type="submit">Envoyer</button>
+            <div class="send" style="text-align:center; ">
+             <button type="submit" style="width:40%;">Envoyer</button>
+            </div>
         </div>
     </div>
 </template>
@@ -118,6 +131,11 @@ module.exports = {
 </script>
 
 <style>
+.head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .global {
     display: flex;
     flex-direction: column;
@@ -130,36 +148,28 @@ module.exports = {
     padding-bottom: 40px;
     margin-top: 7vh;
     margin-bottom: 25px;
+    border-radius: 20px;
 }
 
 .globalcontainer {
     display: flex;
     justify-content: space-between;
+    margin-bottom:3px;
 
 }
+
+.date_container {
+    display: flex;
+    flex-direction: row;
+}
+
 
 table,td {
     border: 1px solid #333;
 }
 
-#backButton{
-    color: rgb(49, 49, 49);
-    text-decoration: none;
-    padding: 10px;
-    margin-left: 5px;
-    margin-right: 5px;
-    border-radius: 7px;
-    border: 0.4px solid rgb(49, 49, 49);
-}
-
-#backButton:hover {
-    background-color: #b1b1b1;
-    transition: background-color 0.5s;
-}
-
 #inputName{
   border: 1px solid rgb(7, 7, 7);
-  
   border-radius: 5px;
 }
 
@@ -216,5 +226,15 @@ input[type="number"] {
 }
 #reuse{
 width: 20%;
+}
+
+.input_medicament_info {
+    margin-top: 10px;
+}
+
+#notes_input {
+    width:29%;
+    height:60px;
+    margin-bottom:20px;
 }
 </style>

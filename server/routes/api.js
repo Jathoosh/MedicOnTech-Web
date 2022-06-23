@@ -63,4 +63,49 @@ router.post('/login-authorize', (req, res) => {
   return res.redirect(`${url}?${params}`);*/
 });
 
+router.get('/patients/:doctorId', (req, res) => {
+  doctorId= req.params.doctorId;
+  let toreturn = [];  
+
+  sequelize.query(`SELECT Person.first_name, Person.last_name, Person.Id_Person, Person.birth_date, Person.email_address FROM assigned_doctor JOIN patient ON assigned_doctor.Id_Patient = Patient.Id_Patient JOIN Person ON Patient.Id_Person = Person.Id_Person WHERE Id_Doctor = ${doctorId}`)
+  .then(function(result) {
+    result[0].forEach(ligne => {
+      toreturn.push({
+        first_name: ligne.first_name,
+        last_name: ligne.last_name,
+        id: ligne.Id_Person,
+        birth_date: ligne.birth_date,
+        email_address: ligne.email_address
+      });
+    });
+    res.status(200).json(toreturn);
+  })
+})
+
+router.get("/doctor/:id", (req, res) => {
+  id = req.params.id;
+  sequelize.query(`SELECT Person.first_name, Person.last_name, Person.Id_Person, speciality.speciality_name FROM doctor JOIN doctor_speciality ON doctor_speciality.Id_Doctor = doctor.Id_Doctor JOIN speciality ON speciality.Id_Speciality = doctor_speciality.Id_Speciality JOIN Person ON doctor.Id_Person = Person.Id_Person WHERE doctor.Id_Doctor = ${id}`)
+  .then(function(result) {
+    res.status(200).json(result[0][0]);
+  })
+})
+
+// PARTIE APPLICATION
+
+router.get('/motapp', (req, res) => {
+  res.status(200).json([{message:'Tu as réussi, hésite pas à me mp le code 59745 sur Discord',id:1},{message:'Hola Camron, como esta ?!',id:2},{message:'Hey, i can also talk english, what about you ?',id:3},{message:'WeshWesh, jai plus dinspi',id:4}]);
+})
+
+router.post('/motapp', (req, res) => {
+  console.log(req.body);
+  res.status(200).json({message:'Jai bien reçu ta requête en post et je lai affiché dans la console'});
+})
+
+router.get('/motapp/doctor', (req, res) => {
+  sequelize.query('SELECT Person.first_name, Person.last_name, Person.phone, Person.email_address, Person.Id_Person FROM `Doctor` JOIN `Person` ON Person.Id_Person = Doctor.Id_Person').then(result => {
+    console.log(result[0]);
+    res.status(200).json({result:result[0]});
+  })
+})
+
 module.exports = router
