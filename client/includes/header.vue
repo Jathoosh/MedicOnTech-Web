@@ -20,20 +20,15 @@
           <router-link to="/patientHome">Page Patient</router-link>
         </nav>
         <div class="d-flex flex-row-reverse">
-          <img
-            class="image_profil"
-            src="ressources/profil.png"
-            alt="Image"
-            @click="activateCard()"
-          />
+          <p class="image_profil text-center" id="nom_img_profil" @click="activateCard()"> {{ initialesPatient() }} </p>
         </div>
       </div>
     </div>
     <!-- TODO à rajuster pour que la card soit juste en dessous du profil --> 
-    <!-- <div id="carteSuperposee" class="cardPosition">
+    <div id="carteSuperposee" class="cardPosition">
       <infocard v-if="card == true" @disapear="disapear"/>
     </div>
-    <input type="number" v-model="id_doctor">
+    <!-- <input type="number" v-model="id_doctor">
     <button @click="modif_id_doctor">Changer Docteur ({{id_doctor}})</button> -->
   </div>
 </template>
@@ -48,6 +43,9 @@ module.exports = {
       //TODO PARTIE DEV
       id_doctor: 1,
       //FIN TODO
+
+      last_name: 'Nom de famille',
+      first_name: 'Prénom',
     }
   },
   components: {
@@ -65,7 +63,11 @@ module.exports = {
     }, 
     disapear(){
       this.card = false;
-    }
+    },
+    initialesPatient: function(){
+        var String = this.last_name[0] + this.first_name[0];
+        return String;
+      }
 
   },
 };
@@ -148,5 +150,11 @@ nav > a.router-link-exact-active.router-link-active:hover {
   justify-content: flex-start;
   width: 90%;
   margin: 0 auto;
+}
+
+#nom_img_profil{
+  margin-bottom: 0px;
+  margin-top: 0px; 
+  font-size: 1.5em;
 }
 </style>

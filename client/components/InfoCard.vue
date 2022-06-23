@@ -2,7 +2,9 @@
     <div class="card">
         <!-- affichage des données d'une personne -->
         <div class="card-image">
-          <img src="ressources/profil.png" alt="Image">
+          <div class="d-flex flex-row">
+            <p class="image_profil text-center" id="nom_profil"> {{ initialesPatient() }} </p>
+          </div>
         </div>
         
         <div class="card-body">
@@ -34,6 +36,10 @@ module.exports = {
       modifyProfil: function(){
         this.$emit("disapear");
         this.$router.push("/Profil");
+      },
+      initialesPatient: function(){
+        var String = this.last_name[0] + this.first_name[0];
+        return String;
       }
     }
    
@@ -49,7 +55,6 @@ module.exports = {
   }
   
   .card-image {
-    height: 250px;
     position: relative;
   }
 
@@ -76,6 +81,32 @@ module.exports = {
     width: 138px;
     height: 33px;
     border-radius: 60px / 40px;
+  }
+
+    .image_formulaire{
+    position : relative;
+    width: 175px; 
+    height: auto;
+  }
+
+  .position_formulaire{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 20px;
+  }
+
+  .flex-row{
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image_profil {
+    height: 50px;
+    width: 50px;
+    border-radius: 100%;
+    border: 2px solid black;
+    margin-top: -39px;
+    
   }
 
 </style>
