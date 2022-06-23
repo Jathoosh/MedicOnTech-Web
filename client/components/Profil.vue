@@ -16,8 +16,7 @@
       </div>
       
       <div class="d-flex flex-row">
-        <!-- <img class="image_profil" src="ressources/profil.png" alt="Image"/> -->
-        <p class="image_profil text-center" id="nom_profil"> LR </p>
+        <p class="image_profil text-center" id="nom_profil"> {{ initialesPatient() }} </p>
       </div>
       
       
@@ -78,6 +77,10 @@ module.exports = {
       retourPagePrincipale: function(){
         this.$emit("retour page principale");
         this.$router.push("/PatientHome");
+      }, 
+      initialesPatient: function(){
+        var String = this.patient.last_name[0] + this.patient.first_name[0];
+        return String;
       }
     }
    
@@ -105,7 +108,7 @@ module.exports = {
   .card_patient{
     position: relative;
     width: 1032px;
-    height: 453px;
+    height: 464px;
     left: 322px;
     background: rgba(216, 216, 216, 0.5);
     border-radius: 20px;
