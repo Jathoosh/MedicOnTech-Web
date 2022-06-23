@@ -25,15 +25,15 @@
         <tbody>
           <tr>
             <th scope="row">Nom de famille</th>
-            <td><input v-model="patient.last_name"></td>
+            <td>{{patient.last_name}}</td>
           </tr>
           <tr>
             <th scope="row">Prénom</th>
-            <td><input v-model="patient.first_name"></td>
+            <td>{{patient.first_name}}</td>
           </tr>
           <tr>
             <th scope="row">Date de naissance</th>
-            <td><input v-model="patient.birth_date"></td>
+            <td>{{patient.birth_date}}</td>
           </tr>
           <tr>
             <th scope="row">Adresse mail</th>
