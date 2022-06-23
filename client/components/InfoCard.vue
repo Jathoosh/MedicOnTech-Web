@@ -6,15 +6,11 @@
         </div>
         
         <div class="card-body">
-            <p>{{ Id_Person }}</p>
-
-            <div class="card-title">
-              <p>{{ last_name }}</p>
-              <p>{{ first_name }}</p>
-            </div>
-
+            <p>{{ last_name }}</p>
+            <p>{{ first_name }}</p>
             <p>{{ birth_date }}</p>
             <p>{{ email_adress }}</p>
+            <button @click="modifyProfil"><strong>Modifier profil</strong></button>
         </div>
     </div>
 </template>
@@ -33,6 +29,12 @@ module.exports = {
     },
     mounted(){
         // afficher caractéristiques de l'utilisateur de la table personne
+    }, 
+    methods:{
+      modifyProfil: function(){
+        this.$emit("disapear");
+        this.$router.push("/Profil");
+      }
     }
    
 }
@@ -40,7 +42,9 @@ module.exports = {
 
 <style>
   .card {
-    width: 17%; 
+    width: 12%; 
+    top: -48px;
+    right: 21px;
     box-shadow: 0px 5px 20px rgb(81, 153, 220);
   }
   
@@ -66,6 +70,12 @@ module.exports = {
     text-align: center; 
     padding: 15px 20px; 
     box-sizing: border-box;
+  }
+
+  button{
+    width: 138px;
+    height: 33px;
+    border-radius: 60px / 40px;
   }
 
 </style>
