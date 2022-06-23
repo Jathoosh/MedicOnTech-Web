@@ -31,7 +31,7 @@
     </div>
     <!-- TODO à rajuster pour que la card soit juste en dessous du profil --> 
     <div id="carteSuperposee" class="cardPosition">
-      <infocard v-if="card == true" />
+      <infocard v-if="card == true" @disapear="disapear"/>
     </div>
     <input type="number" v-model="id_doctor">
     <button @click="modif_id_doctor">Changer Docteur ({{id_doctor}})</button>
@@ -62,7 +62,11 @@ module.exports = {
     //FIN TODO
     activateCard(){
       this.card = !this.card;
+    }, 
+    disapear(){
+      this.card = false;
     }
+
   },
 };
 </script>
