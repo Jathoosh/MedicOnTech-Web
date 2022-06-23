@@ -51,7 +51,7 @@
                         <p v-if="ligne.reported=='true'">Ordonnance signalée.</p> 
                     </div>
 
-                    <p> ID : {{ ligne.Id_Prescription }}</p>
+                    <p id="ID"> ID : {{ ligne.Id_Prescription }}</p>
                 </div> 
 
                  <button id="detail" @click="toOrdonnance"><strong>Voir le détail</strong></button>
@@ -244,6 +244,11 @@ module.exports = {
 
     .statePrescription {
         margin: 10px;
+        margin-left: 35px;
+    }
+
+    #ID{
+        color:grey;
         margin-left: 35px;
     }
 </style>
