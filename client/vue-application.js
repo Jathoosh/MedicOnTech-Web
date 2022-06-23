@@ -26,7 +26,7 @@ const routes = [
   { path: '/Edit_prescription', name:'Edit_prescription', component: Edit_prescription }, //Verifier TODO
   { path: '/pharmacien', name:'Pharmacien', component: Pharmacien }, //Verifier TODO
   { path: '/dependent_patient', name:'Dependent_patient', component: Dependent_patient }, //Verifier TODO
-  { path: '/profil', name:'Profil', component: Profil }
+  { path: '/profil', name:'Profil', component: Profil },
   { path: '/Ordonnance', name:'Ordonnance', component: Ordonnance }, //Verifier TODO  
   { path: '/PatientInCharge', name:'PatientInCharge', component: PatientInCharge } //Verifier TODO  
 ]

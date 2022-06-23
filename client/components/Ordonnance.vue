@@ -1,12 +1,12 @@
 <template>
     <div class="ordonnanceContainer">
 
-        <div class="topContainer">
+        <div class="topContainer" id="toDisapearForPrint">
             <h3>Détails de l'ordonnance</h3>
             <button @click="backHome" id="buttons">Retour</button>
         </div>
 
-        <div class="ordonnance">
+        <div class="ordonnance" id="ordonnanceForPrint">
             <div v-for="(ligne, index) in ordonnance" :key="index">
                 
                 <div class="headerOrdonnance">
@@ -53,7 +53,7 @@
             </div>
         </div>
         
-        <button type="button" id="imprimer">Imprimer l'ordonnance</button><hr>   
+        <button type="button" id="imprimer" @click="print()">Imprimer l'ordonnance</button><hr>   
     </div>
 </template>
 
@@ -105,6 +105,9 @@ module.exports = {
     methods: {
         backHome: function () {
         this.$router.push("/PatientHome");
+        },
+        print: function () {
+            window.print();
         }
     },
     mounted() {
@@ -112,6 +115,40 @@ module.exports = {
         //Afficher les données de la Prescription (tables Prescription, Drug et Service) dans la vue 
         //Afficher les données du Docteur (table Person et Speciality) dans la vue en haut à gauche de l'ordonnance
         //Afficher les données du Lieu de travail (table Doctor) dans la vue en hat à droite de l'ordonnance
+
+        //Pour Avoir une impression d'ordenance propre
+        //beforePrint
+        window.addEventListener('beforeprint', function () {
+            const header = document.getElementById('header');
+            const footer = document.getElementById('footer');
+            const toDisapearForPrint = document.getElementById('toDisapearForPrint');
+            const imprimer = document.getElementById('imprimer');
+            header.style.display = 'none';
+            footer.style.display = 'none';
+            toDisapearForPrint.style.display = 'none';
+            imprimer.style.display = 'none';
+
+            const ordonnanceForPrint = document.getElementById('ordonnanceForPrint');
+            ordonnanceForPrint.style.width = '100%';
+        });
+        //afterPrint
+        window.addEventListener('afterprint', function () {
+            const header = document.getElementById('header');
+            const footer = document.getElementById('footer');
+            const toDisapearForPrint = document.getElementById('toDisapearForPrint');
+            const imprimer = document.getElementById('imprimer');
+            header.style.display = 'block';
+            footer.style.display = 'block';
+            toDisapearForPrint.style.display = 'flex';
+            imprimer.style.display = 'flex';
+
+            const ordonnanceForPrint = document.getElementById('ordonnanceForPrint');
+            ordonnanceForPrint.style.width = '80%';
+        });
+        //failToPrint
+        window.addEventListener('failtoprint', function () {
+            console.log('failToPrint');
+        });
     },
 }
 
