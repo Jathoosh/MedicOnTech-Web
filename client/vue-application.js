@@ -39,7 +39,9 @@ var app = new Vue( {
   data: 
   {
     doctors : [],
-    patients : [],
+    doctorId : 1,
+    doctor : {},
+    patients : [{first_name:"ntm", last_name:"ntm", id:1, birth_date:"ntm", email_address:"ntm"}],
     prescriptions : [],
   },
   components: 
@@ -49,14 +51,37 @@ var app = new Vue( {
   },
   async mounted () 
   {
-
+    this.reloadData();
   },
   methods: 
   {
+    async reloadData()
+    {
+      this.patients = await this.getPatientsForDoctor();
+      this.doctor = await this.getDoctor();
+    },
+    //TODO Partie DEVELOPMMENT, à supprimer
+    modif_id_doctor(para)
+    {
+      this.doctorId = para.id;
+      console.log(this.doctorId);
+      this.reloadData();
+    },
+    //FIN TODO
     async FCMethod()
     {
       const res = await axios.post('api/login-authorize');
       alert(res.data.message);
+    },
+    async getPatientsForDoctor()
+    {
+      const res = await axios.get('api/patients/'+this.doctorId);
+      return res.data;
+    },
+    async getDoctor()
+    {
+      const res = await axios.get('api/doctor/'+this.doctorId);
+      return res.data;
     }
   }
 })

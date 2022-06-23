@@ -187,6 +187,7 @@ module.exports = {
         margin-right: 5px;
         border-radius: 7px;
         border: 0.4px solid rgb(49, 49, 49);
+
     }
 
     button:hover {

@@ -245,6 +245,7 @@ module.exports = {
     .statePrescription {
         margin: 10px;
         margin-left: 35px;
+
     }
 
     #ID{
