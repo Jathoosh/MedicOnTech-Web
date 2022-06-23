@@ -1,10 +1,13 @@
 <template>
     <div class="ordonnanceContainer">
 
-        <button @click="backHome" id="buttons">Retour</button>
+        <div class="topContainer">
+            <h3>Détails de l'ordonnance</h3>
+            <button @click="backHome" id="buttons">Retour</button>
+        </div>
 
         <div class="ordonnance">
-            <div v-for="(ligne, index) in ordonnance" :key="index"><hr>
+            <div v-for="(ligne, index) in ordonnance" :key="index">
                 
                 <div class="headerOrdonnance">
                     <!-- Information du Docteur - Table Id_Doctor & Person-->
@@ -50,7 +53,7 @@
             </div>
         </div>
         
-        <button type="button" id="buttons">Imprimer l'ordonnance</button><hr>   
+        <button type="button" id="imprimer">Imprimer l'ordonnance</button><hr>   
     </div>
 </template>
 
@@ -115,12 +118,27 @@ module.exports = {
 </script>
 
 
-
-
 <style>
+    .ordonnanceContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .topContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        width: 100%;
+    }
 
     .ordonnance{
         width: 80%;
+        background-color: #e0e0e0;
+        border-radius: 8px;
+        padding: 10px;
     }
 
     .headerOrdonnance{
@@ -152,29 +170,28 @@ module.exports = {
         margin-left: 100px;
     }
 
-    .buttons{
+    #imprimer{
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: flex-end;
     justify-content: flex-end;
-    padding-top: 30px;
+    margin-top: 30px;
     }
 
-    button{
-        background-color: #48A649;
-        border-radius: 4px;
-        border-style: none;
-        color: #fff;
-        font-family: 'Lucida Sans';
-        font-weight: bold;
-        min-height: 44px;
-        min-width: 10px;
-        text-align: center;
-        width: 40%;
+    button {
+        color: rgb(49, 49, 49);
+        text-decoration: none;
+        padding: 10px;
+        margin-left: 5px;
+        margin-right: 5px;
+        border-radius: 7px;
+        border: 0.4px solid rgb(49, 49, 49);
     }
 
-    button:hover{
-        opacity: 0.75;
+    button:hover {
+        background-color: #b1b1b1;
+        transition: background-color 0.5s;
+
     }
 </style>

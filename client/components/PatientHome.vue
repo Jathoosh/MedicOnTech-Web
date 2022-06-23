@@ -1,8 +1,9 @@
 <template>
     <div>
-        <button @click="goToPatientInCharge" id="buttons">Personnes à charge</button>
-
-        <h3>Patient - Accueil</h3>
+        <div class="topContainer">
+            <h3>Patient - Accueil</h3>
+            <button @click="goToPatientInCharge" id="buttons">Personnes à charge</button>
+        </div>
 
         <div id="container">
         <input
@@ -84,7 +85,7 @@ module.exports = {
                 speciality_name: 'Dentiste',
             },
             listOrdonnance: [{
-                Id_Prescription: 'Prescription 1',
+                Id_Prescription: '0362819304',
                 creation_date: '01/01/2020',
                 date_of_use: '12/04/2020',
                 number_of_reuses: '1',
@@ -106,7 +107,7 @@ module.exports = {
                 ],
             },
             {
-                Id_Prescription: 'Prescription 2',
+                Id_Prescription: '0274849139',
                 creation_date: '11/01/2020',
                 date_of_use: '23/05/2020',
                 number_of_reuses: '2',
@@ -155,6 +156,12 @@ module.exports = {
 </script>
 
 <style>
+    .topContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+    }
     .prescriptionCard {
         display: flex;
         flex-direction: row;
@@ -195,7 +202,7 @@ module.exports = {
     #detail {
         align-self: center;
         margin-left: auto;
-        margin-right: auto;
+        margin-right: 30px;
         height: 10%;
     }
 
