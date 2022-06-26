@@ -45,9 +45,16 @@
                     <p>Notes : {{ ligne.note }}</p><br>            
                     <p>Ordonnance renouvelable {{ ligne.number_of_reuses }} fois.</p><br><br>
 
-                    <p v-if="ligne.used=='true'">Utilisée le {{ ligne.date_of_use }}.</p>
-                    <p v-if="ligne.validity=='true'">Oronnance valide.</p>
-                    <p v-if="ligne.reported=='true'">Ordonnance signalée.</p><br> 
+                    <div class="statutContainer">
+                        <div>
+                            <p v-if="ligne.used=='true'">Utilisée le {{ ligne.date_of_use }}.</p>
+                            <p v-if="ligne.validity=='true'">Oronnance valide.</p>
+                            <p v-if="ligne.reported=='true'">Ordonnance signalée.</p><br> 
+                        </div>
+                        <div class="barCode">
+
+                        </div>  
+                    </div>  
                 </div> 
   
             </div>
@@ -146,26 +153,28 @@ module.exports = {
         flex-direction: row;
         justify-content: space-around;
         align-items: center;
+        margin-left: 5px;
+        margin-right: 5px;
     }
 
     #doctorContainer{
-        font-size: 1.3em;
+        font-size: 1em;
         font-weight: bold;
     }
 
     #workContainer{
-        font-size: 1.3em;
+        font-size: 1em;
         font-weight: bold;
         text-align: right;
     }
 
     #logo_MedicOnTech{
-        width: 40%;
+        width: 30%;
         height: auto;
     }
 
     .bodyOrdonnance{
-        font-size: 1.1em;
+        font-size: 0.9em;
         font-weight: bold;
         margin-left: 100px;
     }

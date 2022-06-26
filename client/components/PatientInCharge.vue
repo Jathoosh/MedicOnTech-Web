@@ -49,6 +49,19 @@ module.exports = {
                     id_patient: "123456789",
                     social_security_number: "987654321",
                 },
+                {
+                    first_name: "Jacques",
+                    last_name: "PIERRE",
+                    id_patient: "123456789",
+                    social_security_number: "987654321",
+                },
+                {
+                    first_name: "Jacques",
+                    last_name: "PIERRE",
+                    id_patient: "123456789",
+                    social_security_number: "987654321",
+                },
+                
 
             ],
         }
@@ -100,6 +113,13 @@ module.exports = {
     {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
         justify-content: space-around;
+    }
+
+    .card {
+        width: 18rem;
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
 </style>
