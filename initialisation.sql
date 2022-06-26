@@ -1,9 +1,9 @@
 /*FAITES ATTENTIONS A BIEN RECOMMENTER CE CODE. IL SERT POUR L'INITIALISATION UNIQUEMENT*/
 
-/*drop database if exists db_medicontech;
-CREATE DATABASE db_medicontech;*/
-
-/*Create Tables
+drop database if exists db_medicontech;
+CREATE DATABASE db_medicontech;
+use db_medicontech;
+-- Create Tables
 
 CREATE TABLE Postal_address(
    Id_Postal_address INT NOT NULL AUTO_INCREMENT,
@@ -163,9 +163,9 @@ CREATE TABLE Prescription_service(
    PRIMARY KEY(Id_Prescription, Id_Service),
    FOREIGN KEY(Id_Prescription) REFERENCES Prescription(Id_Prescription),
    FOREIGN KEY(Id_Service) REFERENCES Service(Id_Service)
-);*/
+);
 
-/*Insert Fictive Values For Testing TODO
+-- Insert Fictive Values For Testing TODO
 INSERT INTO Postal_address(number, road, zip_code, town, country) VALUES
 (15,"Chemin de la Vallée",27500,"Saint-Symphorien","France"),
 (35,"Route de Rouen",27140,"Gisors","France"),
@@ -445,9 +445,9 @@ INSERT INTO Patient(Id_tutor,social_security_number,Id_Mutual_insurance,Id_Perso
 (7,"1 20 01 21 944 198 98",13,21),
 (17,"2 18 08 37 598 601 46",51,25),
 (14,"1 16 09 79 334 424 40",43,28),
-(7,"1 13 05 73 453 460 51",13,30);*/
+(7,"1 13 05 73 453 460 51",13,30);
 
-/*INSERT INTO assigned_doctor VALUES
+INSERT INTO assigned_doctor VALUES
 (4,1),
 (2,2),
 (3,3),
@@ -519,4 +519,4 @@ INSERT INTO Service(service_name) VALUES
 ("Consultation diététicien"),
 ("Accompagnement par aide-soignante"),
 ("Accompagnement par Auxiliaire de puériculture"),
-("Attribution d'un Ambulancier");*/
+("Attribution d'un Ambulancier");
