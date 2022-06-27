@@ -90,8 +90,8 @@ module.exports = {
 <style>
 
   .title_profil{
-    margin-top: 10px;
-    font-size: 30px;
+    margin-top: 12px;
+    font-size: 24px;
   }
 
   #nom_profil{
