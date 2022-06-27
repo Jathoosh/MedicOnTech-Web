@@ -89,11 +89,10 @@ module.exports = {
 
 <style scoped>
 .image_profil {
-  height: 50px;
-  width: 50px;
+  height: 46px;
+  width: 53px;
   border-radius: 100%;
   border: 2px solid black;
-  margin-top: 5px;
   float: right;
 }
 
@@ -168,7 +167,8 @@ nav > a.router-link-exact-active.router-link-active:hover {
 
 #nom_img_profil{
   margin-bottom: 0px;
-  margin-top: 0px; 
+  margin-top: 7px; 
+  margin-right: 19px; 
   font-size: 1.5em;
 }
 </style>
