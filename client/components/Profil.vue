@@ -92,6 +92,7 @@ module.exports = {
   .title_profil{
     margin-top: 12px;
     font-size: 24px;
+    margin-left : -2px;
   }
 
   #nom_profil{
