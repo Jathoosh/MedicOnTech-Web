@@ -46,7 +46,7 @@ module.exports = {
 }
 </script>
 
-<style>
+<style scoped>
   .card {
     width: 12%; 
     top: -48px;

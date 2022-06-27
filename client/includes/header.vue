@@ -14,10 +14,18 @@
     <div class="band">
       <div class="d-flex flex-row">
         <nav>
-          <router-link to="/login">Connexion</router-link>
-          <router-link to="/pharmacien">Page Pharmacien</router-link>
-          <router-link to="/Doctor_home">Page Médecin</router-link>
-          <router-link to="/patientHome">Page Patient</router-link>
+          <router-link to="/login" v-if="solo_data.function_name===''">Connexion</router-link>
+          <router-link to="/pharmacien" v-if="solo_data.function_name===''">Page Pharmacien</router-link>
+          <router-link to="/Doctor_home" v-if="solo_data.function_name===''">Page Médecin</router-link>
+          <router-link to="/patientHome" v-if="solo_data.function_name===''">Page Patient</router-link>
+          <router-link to="/" v-if="solo_data.function_name==='Doctor'">Rédiger Ordonnance</router-link>
+          <router-link to="/" v-if="solo_data.function_name==='Doctor'">Mes patients</router-link>
+          <router-link to="/" v-if="solo_data.function_name==='Doctor'">Historique Ordonnance</router-link>
+          <router-link to="/" v-if="solo_data.function_name==='Patient'">Mes Ordonnances</router-link>
+          <router-link to="/" v-if="solo_data.function_name==='Patient'">Personnes à charges</router-link>
+          <router-link to="/" v-if="solo_data.function_name==='Patient'">Autre ?????</router-link>
+          <router-link to="/" v-if="solo_data.function_name==='Pharmacist'">Scanner Ordonnance</router-link>
+          <router-link to="/" v-if="solo_data.function_name==='Pharmacist'">Autre ?????</router-link>
         </nav>
         <div class="d-flex flex-row-reverse">
           <p class="image_profil text-center" id="nom_img_profil" @click="activateCard()"> {{ initialesPatient() }} </p>
@@ -28,14 +36,20 @@
     <div id="carteSuperposee" class="cardPosition">
       <infocard v-if="card == true" @disapear="disapear"/>
     </div>
-    <!-- <input type="number" v-model="id_doctor">
-    <button @click="modif_id_doctor">Changer Docteur ({{id_doctor}})</button> -->
+    {{solo_data}}
   </div>
 </template>
 
 <script>
 module.exports = {
   name: "header-component",
+  props: {
+    solo_data: {
+      type: Object,
+      required: false,
+      default: {},
+    },
+  },
   data(){
     return{
       card: false,
