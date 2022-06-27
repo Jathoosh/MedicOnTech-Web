@@ -8,7 +8,10 @@
         
       </div>
 
-      <div class="buttonback"><button @click="back()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Retour</button></div>
+      <div class="buttonback">
+        <button class="btn btn-outline-secondary" @click="redirectionToPatientInCharge()">Ajouter des personnes à charge</button>
+        <button @click="back()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Retour</button>
+      </div>
 
     </div>
       <p id="search_adv">Recherche avancée</p>
@@ -31,6 +34,7 @@
           <button @click="redirectionToOrdonnance()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Voir le détail</button> 
       </div>
     </div>
+    <br>
   </div>
 </template>
 
@@ -65,6 +69,9 @@ module.exports = {
     },
     redirectionToOrdonnance: function () {
       this.$router.push("/Ordonnance");
+    },
+    redirectionToPatientInCharge: function () {
+      this.$router.push("/PatientInCharge");
     },
   },
   computed: {
