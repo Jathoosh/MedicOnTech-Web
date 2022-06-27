@@ -7,6 +7,7 @@ const {Sequelize} = require('sequelize');
 const { status } = require('express/lib/response');
 
 const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 const { URLSearchParams } =  require ('url');
 const config = require ('../../config');
 
@@ -34,8 +35,24 @@ router.use((req, res, next) => {
 })
 
 router.post('/login-authorize', (req, res) => {
-  console.log("Not implemented yet");
-  res.status(200).json({message:'Not implemented'});
+  //pick a random number between 1 and 30
+  const randomNumber = Math.floor(Math.random() * 30) + 1;
+  //Partie temporaire pour la connexion de l'utilisateur
+
+  sequelize.query(`SELECT * FROM Person WHERE Id_Person=${randomNumber}`).then(result => {
+    res.status(200).json({
+      message: 'Not Yet Implemented',
+      connected: true,
+      Id_Person: randomNumber,
+      profession: {name:"Patient", id:1},
+      first_name: result[0][0].first_name,
+      last_name: result[0][0].last_name,
+      workplace_name: "Not Yeeeeeeeet", //Compacter l'addresse de la table postal_address
+      mail: result[0][0].email_address,
+    });
+  })
+
+  //Fin partie temporaire
   /*const { eidasLevel } = req.body;
   const scopes = Object.keys(req.body)
     .filter(key => key.startsWith('scope_'))
@@ -62,6 +79,44 @@ router.post('/login-authorize', (req, res) => {
   const params = new URLSearchParams(query).toString();
   return res.redirect(`${url}?${params}`);*/
 });
+
+//PARTIE OBTENTION INFO SELON CONNEXION
+
+router.post('/login', (req, res) => {
+  const { mail, password } = req.body;
+  sequelize.query(`SELECT professional.Id_Person FROM professional JOIN Person ON Person.Id_Person = professional.Id_Person WHERE email_address = '${mail}'`).then(result => {
+    if (result[0].length == 0)
+    {
+      res.status(200).json({message:'Professionel inconnu', connected:false});
+    }
+    else
+    {
+      const Id_Person = result[0][0].Id_Person;
+      sequelize.query(`SELECT first_name, last_name, workplace_name, password, Id_Doctor, Id_Pharmacist from professional LEFT JOIN doctor ON doctor.Id_Person = professional.Id_Person LEFT JOIN pharmacist ON pharmacist.Id_Person = professional.Id_Person LEFT JOIN Person ON Person.Id_Person = professional.Id_Person WHERE professional.Id_Person = '${Id_Person}'`).then(result2 => {
+        if (bcrypt.compareSync(password, result2[0][0].password))
+        {
+          res.status(200).json({
+            message : 'Connexion réussie',
+            connected : true,
+            Id_Person : Id_Person, 
+            first_name : result2[0][0].first_name,
+            last_name : result2[0][0].last_name,
+            workplace_name : result2[0][0].workplace_name, 
+            profession : result2[0][0].Id_Doctor==null?
+              {name:"Pharmacist",id:result2[0][0].Id_Pharmacist}:
+              {name:"Doctor",id:result2[0][0].Id_Doctor}
+          });
+        }
+        else
+        {
+          res.status(200).json({message:'Mot de passe incorrect', connected:false});
+        }
+      });
+    }
+  });
+})
+
+//PARTIE OBTENTIONS INFOS PERSONNES
 
 router.get('/patients/:doctorId', (req, res) => {
   doctorId= req.params.doctorId;

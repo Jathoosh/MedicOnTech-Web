@@ -2,14 +2,9 @@
   <div>
     <div id="background">
       <div class="imageSuperposee">
-        <div id="rectangle">
-          <p class="title">Connectez-vous avec France connect</p>
-          <a>
-            <img class="franceConnect" @click="FCMethod()" src="ressources/france_connect.png" alt="Image"/>
-          </a>
-          <p class="titleContact">
-            En cas de problème n'hésitez pas à nous contacter.
-          </p>
+        <div class="d-flex flex-row align-items-center justify-content-around flex-wrap">
+          <loginpar @fc-method="FCMethod"></loginpar>
+          <loginpro @login="login"></loginpro>
         </div>
       </div>
     </div>
@@ -22,9 +17,16 @@ module.exports = {
     mounted() {
       document.getElementById("main").style.width = "100%";
     },
+    components: {
+      loginpar : LoginPar,
+      loginpro : LoginPro,    
+    },
     methods:{
         FCMethod() {
           this.$emit("fc-method");
+        },
+        login(data){
+          this.$emit("login",data);
         }
     }
 }
@@ -47,14 +49,16 @@ module.exports = {
 #rectangle {
   margin: 0 auto;
   width: 620px;
-  height: 280px;
+  height: fit-content;
   background: white;
   box-shadow: 0px 0px 10px #000000;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   align-items: center;
 }
 
@@ -65,19 +69,13 @@ module.exports = {
 
 #rectangle > .title
 {
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 #rectangle > .titleContact
 {
   margin-top: 20px;
   margin-bottom: 20px;
-}
-
-.franceConnect {
-  width: 100%;
-  cursor: pointer;
 }
 
 .titleContact {

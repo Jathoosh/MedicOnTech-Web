@@ -20,6 +20,8 @@ SELECT * FROM professional; /*bon*/
 SELECT * FROM service; /*bon*/
 SELECT * from speciality; /*bon*/
 
+
+
 -- DROP TABLE IF EXISTS postal_address;
 -- DROP TABLE IF EXISTS Speciality;
 -- DROP TABLE IF EXISTS Person;

@@ -10,21 +10,25 @@
         <h1>MedicOnTech</h1>
       </div>
 
-
       <div class="nav-block">
          <nav>
-            <router-link to="/login">Connexion</router-link>
-            <router-link to="/pharmacien">Pharmacien</router-link>
-            <router-link to="/Doctor_home">Médecin</router-link>
-            <router-link to="/patientHome">Patient</router-link>
+            <router-link to="/login" v-if="solo_data.function_name===''">Connexion</router-link>
+            <router-link to="/pharmacien" v-if="solo_data.function_name===''">Page Pharmacien</router-link>
+            <router-link to="/Doctor_home" v-if="solo_data.function_name===''">Page Médecin</router-link>
+            <router-link to="/patientHome" v-if="solo_data.function_name===''">Page Patient</router-link>
+            <router-link to="/" v-if="solo_data.function_name==='Doctor'">Rédiger Ordonnance</router-link>
+            <router-link to="/" v-if="solo_data.function_name==='Doctor'">Mes patients</router-link>
+            <router-link to="/" v-if="solo_data.function_name==='Doctor'">Historique Ordonnance</router-link>
+            <router-link to="/" v-if="solo_data.function_name==='Patient'">Mes Ordonnances</router-link>
+            <router-link to="/" v-if="solo_data.function_name==='Patient'">Personnes à charges</router-link>
+            <router-link to="/" v-if="solo_data.function_name==='Patient'">Autre ?????</router-link>
+            <router-link to="/" v-if="solo_data.function_name==='Pharmacist'">Scanner Ordonnance</router-link>
+            <router-link to="/" v-if="solo_data.function_name==='Pharmacist'">Autre ?????</router-link>
           </nav>
 
-          <img
-              class="image_profil"
-              src="ressources/profil.png"
-              alt="Image"
-              @click="activateCard()"
-            />
+            <p class="image_profil text-center" 
+            id="nom_img_profil" 
+            @click="activateCard()"> {{ initialesPatient() }} </p>
         </div>
           
 
@@ -32,19 +36,23 @@
 
     <!-- TODO à rajuster pour que la card soit juste en dessous du profil --> 
     <div id="carteSuperposee" class="cardPosition">
-      <infocard v-if="card == true" />
+      <infocard v-if="card == true" @disapear="disapear"/>
     </div>
-    <br />
-    <div>
-    <input type="number" v-model="id_doctor">
-    <button @click="modif_id_doctor">Changer Docteur ({{id_doctor}})</button>
-    </div>
- </div>
+    {{solo_data}}
+  </div>
+
 </template>
 
 <script>
 module.exports = {
   name: "header-component",
+  props: {
+    solo_data: {
+      type: Object,
+      required: false,
+      default: {},
+    },
+  },
   data(){
     return{
       card: false,
@@ -52,6 +60,9 @@ module.exports = {
       //TODO PARTIE DEV
       id_doctor: 1,
       //FIN TODO
+
+      last_name: 'Nom de famille',
+      first_name: 'Prénom',
     }
   },
   components: {
@@ -66,7 +77,15 @@ module.exports = {
     //FIN TODO
     activateCard(){
       this.card = !this.card;
-    }
+    }, 
+    disapear(){
+      this.card = false;
+    },
+    initialesPatient: function(){
+        var String = this.last_name[0] + this.first_name[0];
+        return String;
+      }
+
   },
 };
 </script>
@@ -81,7 +100,6 @@ h1 {
   width: 50px;
   border-radius: 100%;
   border: 2px solid black;
-  margin-top: 5px;
   float: right;
   margin-left: 20px;
 }
@@ -203,6 +221,13 @@ nav > a:hover {
   flex-wrap: nowrap;
   width: 90px;
   padding-bottom: 3px;
+}
+
+#nom_img_profil{
+  margin-bottom: 0px;
+  margin-top: 7px; 
+  margin-right: 19px; 
+  font-size: 1.5em;
 }
 
 </style>

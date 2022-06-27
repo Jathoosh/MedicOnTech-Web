@@ -1,7 +1,13 @@
 <template>
     <div class="ordonnanceContainer">
-        <div class="ordonnance">
-            <div v-for="(ligne, index1) in listOrdonnance" :key="index1"><hr>
+
+        <div class="topContainer" id="toDisapearForPrint">
+            <h3>Détails de l'ordonnance</h3>
+            <button @click="backHome" id="buttons">Retour</button>
+        </div>
+
+        <div class="ordonnance" id="ordonnanceForPrint">
+            <div v-for="(ligne, index) in ordonnance" :key="index">
                 
                 <div class="headerOrdonnance">
                     <!-- Information du Docteur - Table Id_Doctor & Person-->
@@ -43,12 +49,11 @@
                     <p v-if="ligne.validity=='true'">Oronnance valide.</p>
                     <p v-if="ligne.reported=='true'">Ordonnance signalée.</p><br> 
                 </div> 
-
-                <div id="buttons">
-                    <button type="button">Imprimer l'ordonnance</button><hr> 
-                </div>     
+  
             </div>
         </div>
+        
+        <button type="button" id="imprimer" @click="print()">Imprimer l'ordonnance</button><hr>   
     </div>
 </template>
 
@@ -56,7 +61,7 @@
 <script>
 module.exports = {
     name: 'Ordonnance',
-     data() {
+    data() {
         return {
             person: {
                 first_name: 'DUPONT',
@@ -72,7 +77,7 @@ module.exports = {
             speciality: {
                 speciality_name: 'Dentiste',
             },
-            listOrdonnance: [{
+            ordonnance: [{
                 Id_Prescription: 'Prescription 1',
                 creation_date: '01/01/2020',
                 date_of_use: '12/04/2020',
@@ -93,32 +98,16 @@ module.exports = {
                     {service_name: 'Service2',
                     quantity: '2'},
                 ],
-            },
-            {
-                Id_Prescription: 'Prescription 2',
-                creation_date: '11/01/2020',
-                date_of_use: '23/05/2020',
-                number_of_reuses: '2',
-                used: 'false',
-                validity: 'false',
-                note: 'La séance de kinésithérapie est nécessaire',
-                reported: 'false',
-                listDrug: [
-                    {drug_name: 'Medoc3',
-                    quantity: '3'},
-                    {drug_name: 'Medoc4',
-                    quantity: '4'}
-                ],
-                listService: [
-                    {service_name: 'Service3',
-                    quantity: '3'},
-                    {service_name: 'Service4',
-                    quantity: '4'},
-                ],
-
             }],
             
-
+        }
+    },
+    methods: {
+        backHome: function () {
+        this.$router.push("/PatientHome");
+        },
+        print: function () {
+            window.print();
         }
     },
     mounted() {
@@ -126,23 +115,67 @@ module.exports = {
         //Afficher les données de la Prescription (tables Prescription, Drug et Service) dans la vue 
         //Afficher les données du Docteur (table Person et Speciality) dans la vue en haut à gauche de l'ordonnance
         //Afficher les données du Lieu de travail (table Doctor) dans la vue en hat à droite de l'ordonnance
+
+        //Pour Avoir une impression d'ordenance propre
+        //beforePrint
+        window.addEventListener('beforeprint', function () {
+            const header = document.getElementById('header');
+            const footer = document.getElementById('footer');
+            const toDisapearForPrint = document.getElementById('toDisapearForPrint');
+            const imprimer = document.getElementById('imprimer');
+            header.style.display = 'none';
+            footer.style.display = 'none';
+            toDisapearForPrint.style.display = 'none';
+            imprimer.style.display = 'none';
+
+            const ordonnanceForPrint = document.getElementById('ordonnanceForPrint');
+            ordonnanceForPrint.style.width = '100%';
+        });
+        //afterPrint
+        window.addEventListener('afterprint', function () {
+            const header = document.getElementById('header');
+            const footer = document.getElementById('footer');
+            const toDisapearForPrint = document.getElementById('toDisapearForPrint');
+            const imprimer = document.getElementById('imprimer');
+            header.style.display = 'block';
+            footer.style.display = 'block';
+            toDisapearForPrint.style.display = 'flex';
+            imprimer.style.display = 'flex';
+
+            const ordonnanceForPrint = document.getElementById('ordonnanceForPrint');
+            ordonnanceForPrint.style.width = '80%';
+        });
+        //failToPrint
+        window.addEventListener('failtoprint', function () {
+            console.log('failToPrint');
+        });
     },
 }
 
 </script>
 
 
-
-
 <style>
-    .ordonnanceContainer{
+    .ordonnanceContainer {
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
     }
+
+    .topContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
     .ordonnance{
         width: 80%;
+        background-color: #e0e0e0;
+        border-radius: 8px;
+        padding: 10px;
     }
 
     .headerOrdonnance{
@@ -174,29 +207,29 @@ module.exports = {
         margin-left: 100px;
     }
 
-    .buttons{
+    #imprimer{
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: center;
-    justify-content: space-around;
-    padding-top: 30px;
+    align-items: flex-end;
+    justify-content: flex-end;
+    margin-top: 30px;
     }
 
-    button{
-        background-color: #48A649;
-        border-radius: 4px;
-        border-style: none;
-        color: #fff;
-        font-variant: 'Lucida Sans';
-        font-weight: bold;
-        min-height: 44px;
-        min-width: 10px;
-        text-align: center;
-        width: 40%;
+    button {
+        color: rgb(49, 49, 49);
+        text-decoration: none;
+        padding: 10px;
+        margin-left: 5px;
+        margin-right: 5px;
+        border-radius: 7px;
+        border: 0.4px solid rgb(49, 49, 49);
+
     }
 
-    button:hover{
-        opacity: 0.75;
+    button:hover {
+        background-color: #b1b1b1;
+        transition: background-color 0.5s;
+
     }
 </style>
