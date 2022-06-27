@@ -1,7 +1,27 @@
 <template>
   <div>
-    <hr />
+
     <div class="container-h">
+
+      <div class="contSec center">
+        <ul class="simple-list">
+          <li>
+            <router-link to="/annexe2">A propos</router-link>
+          </li>
+          <li>
+            <router-link to="/annexe2">Mentions légales</router-link>
+          </li>
+          <li>
+            <router-link to="/annexe2">Contact</router-link>
+          </li>
+        </ul>
+      </div>
+
+      <div class="contPri center">
+        <h1><strong>MedicOnTech</strong></h1>
+        <p id="copyright">Copyright © 2022 par MedicOnTech - Tous droits réservés</p>
+      </div>
+
       <div class="contSec center" id="rs_footer">
         <a href="https://www.youtube.com/channel/UCmfFBwFw6xyORSaFwlfAgWg">
           <img
@@ -28,27 +48,12 @@
           />
         </a>
       </div>
-      <div class="contPri center">
-        <h1>MedicOnTech</h1>
-        <p>jathooshthvrs@gmail.com</p>
-      </div>
-      <div class="contSec center">
-        <ul class="simple-list">
-          <li>
-            <router-link to="/annexe2">A propos</router-link>
-          </li>
-          <li>
-            <router-link to="/annexe2">Mentions légales</router-link>
-          </li>
-          <li>
-            <router-link to="/annexe2">Contact</router-link>
-          </li>
-        </ul>
-      </div>
+     
+      
     </div>
 
     <div class="band center">
-      <p>Copyright © 2022 par MedicOnTech - Tous droits réservés</p>
+      
     </div>
   </div>
 </template>
@@ -88,6 +93,9 @@ li > a.router-link-exact-active.router-link-active:hover {
   transition: none;
 }
 
+#copyright {
+  font-weight: lighter;
+}
 .container-h {
   display: flex;
   flex-direction: row;
@@ -95,6 +103,9 @@ li > a.router-link-exact-active.router-link-active:hover {
   justify-content: center;
   width: 100%;
   height: 100%;
+  background-color: #D6D6D6;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .contPri {
@@ -112,12 +123,14 @@ li > a.router-link-exact-active.router-link-active:hover {
 
 .simple-list {
   list-style-type: none;
+  float: left;
 }
 
 .simple-list > li {
   padding: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
+  /* margin-left: 10px;
+  margin-right: 10px; */
   border-radius: 7px;
+  font-weight: lighter;
 }
 </style>

@@ -9,33 +9,37 @@
         />
         <h1>MedicOnTech</h1>
       </div>
+
+
+      <div class="nav-block">
+         <nav>
+            <router-link to="/login">Connexion</router-link>
+            <router-link to="/pharmacien">Pharmacien</router-link>
+            <router-link to="/Doctor_home">Médecin</router-link>
+            <router-link to="/patientHome">Patient</router-link>
+          </nav>
+
+          <img
+              class="image_profil"
+              src="ressources/profil.png"
+              alt="Image"
+              @click="activateCard()"
+            />
+        </div>
+          
+
     </div>
 
-    <div class="band">
-      <div class="d-flex flex-row">
-        <nav>
-          <router-link to="/login">Connexion</router-link>
-          <router-link to="/pharmacien">Page Pharmacien</router-link>
-          <router-link to="/Doctor_home">Page Médecin</router-link>
-          <router-link to="/patientHome">Page Patient</router-link>
-        </nav>
-        <div class="d-flex flex-row-reverse">
-          <img
-            class="image_profil"
-            src="ressources/profil.png"
-            alt="Image"
-            @click="activateCard()"
-          />
-        </div>
-      </div>
-    </div>
     <!-- TODO à rajuster pour que la card soit juste en dessous du profil --> 
     <div id="carteSuperposee" class="cardPosition">
       <infocard v-if="card == true" />
     </div>
+    <br />
+    <div>
     <input type="number" v-model="id_doctor">
     <button @click="modif_id_doctor">Changer Docteur ({{id_doctor}})</button>
-  </div>
+    </div>
+ </div>
 </template>
 
 <script>
@@ -68,13 +72,18 @@ module.exports = {
 </script>
 
 <style scoped>
+h1 {
+  padding-top: 10px;
+  font-size: 30px;
+}
 .image_profil {
-  height: 50px;
+  height:50px;
   width: 50px;
   border-radius: 100%;
   border: 2px solid black;
   margin-top: 5px;
   float: right;
+  margin-left: 20px;
 }
 
 .cardPosition {
@@ -90,16 +99,25 @@ module.exports = {
   position: absolute;
 }
 
-nav {
+
+/* nav {
   display: flex;
   justify-content: flex-start;
   padding: 10px;
   width: 90%;
   margin: 0 auto;
-}
+} */
 
-/*Apply also on router-link (Main Purpose)*/
 nav > a {
+  color: rgb(49, 49, 49);
+  text-decoration: none;
+  padding: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 7px;
+}
+/*Apply also on router-link (Main Purpose)*/
+/*nav > a {
   color: rgb(49, 49, 49);
   text-decoration: none;
   padding: 10px;
@@ -118,12 +136,12 @@ nav > a.router-link-exact-active.router-link-active:hover {
   background-color: #b1b1b1;
   transition: background-color 0.5s;
 }
-
+*/
 #logo {
-  width: 70px;
-  height: 70px;
-  margin-left: 10px;
-  margin-right: 10px;
+  width: 50px;
+  height: 50px;
+  /* margin-left: 5px;*/
+  margin-right: 15px; 
 }
 
 #logo_title {
@@ -131,18 +149,60 @@ nav > a.router-link-exact-active.router-link-active:hover {
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  width: 100%;
+
   height: 100%;
   margin-bottom: 10px;
   margin-top: 10px;
+  float: left;
+  margin-left: 25px;
 }
 
 #header_top {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 10px solid #01AA88;
+} 
+
+
+.nav-block, .d-flex{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   justify-content: flex-start;
-  width: 90%;
-  margin: 0 auto;
+
+  margin-bottom: 10px;
+  margin-top: 10px;
+  float: right;
 }
+
+.nav-block {
+  margin-right: 25px;
+}
+
+nav > a {
+  background-color: rgb(236, 235, 235);
+  margin: 5px;
+  padding: 15px;
+}
+nav > a:hover {
+  background-color: #b9b9b9;
+}
+
+.card_profil {
+  display: flex;
+  align-items: center;
+
+  background-color: #D9D9D9;
+  border-radius: 7px;
+  margin-left: 15px;
+  justify-content: space-around;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 90px;
+  padding-bottom: 3px;
+}
+
 </style>
