@@ -15,6 +15,7 @@ const Foot_comp = window.httpVueLoader('./includes/footer.vue');
 
 // Components
 const InfoCard = window.httpVueLoader('./components/InfoCard.vue');
+const Profil = window.httpVueLoader('./components/Profil.vue');
 
 const routes = [
   { path: '/login', component: Home },
@@ -25,6 +26,7 @@ const routes = [
   { path: '/Edit_prescription', name:'Edit_prescription', component: Edit_prescription }, //Verifier TODO
   { path: '/pharmacien', name:'Pharmacien', component: Pharmacien }, //Verifier TODO
   { path: '/dependent_patient', name:'Dependent_patient', component: Dependent_patient }, //Verifier TODO
+  { path: '/profil', name:'Profil', component: Profil },
   { path: '/Ordonnance', name:'Ordonnance', component: Ordonnance }, //Verifier TODO  
   { path: '/PatientInCharge', name:'PatientInCharge', component: PatientInCharge } //Verifier TODO  
 ]
@@ -41,7 +43,7 @@ var app = new Vue( {
     doctors : [],
     doctorId : 1,
     doctor : {},
-    patients : [{first_name:"ntm", last_name:"ntm", id:1, birth_date:"ntm", email_address:"ntm"}],
+    patients : [],
     prescriptions : [],
   },
   components: 

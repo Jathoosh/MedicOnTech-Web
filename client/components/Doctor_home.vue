@@ -15,7 +15,7 @@
             <tbody>
               
               <tr v-for="(prescription, index) in prescriptions" :key="index">
-                  <td>{{ getPatient(prescription.patientID).last_name }} {{ getPatient(prescription.patientID).first_name }}</td>
+                  <td>{{ getNamePatients(prescription.patientID) }}</td>
                   <td>{{prescription.creation_date}} <button class="btn btn-outline-secondary" style="float:right;" @click="redirectionToHistoryPatient()">Historique</button></td>
                   
               </tr>
@@ -39,37 +39,23 @@ module.exports = {
       search: "",
       prescriptions: [
         {creation_date: "20/04/2022",
-        patientID: 1,},
+        patientID: 8,},
         {creation_date: "29/12/2022",
-        patientID: 2,},
+        patientID: 10,},
         {creation_date: "10/09/2022",
-        patientID: 3,},
+        patientID: 17,},
         {creation_date: "20/04/2021",
-        patientID: 1,},
+        patientID: 21,},
+        {creation_date: "01/03/2019",
+        patientID: 23,},
         
-      ],
-      patients: [
-        {
-          first_name: "Paul",
-          last_name: "Pierre",
-          patientID: 1,
-        },
-        {
-          first_name: "Jean",
-          last_name: "Reynaud",
-          patientID: 2,
-        },
-        {
-          first_name: "georges",
-          last_name: "lebègue",
-          patientID: 3,
-        },
       ],
     };
   },
   methods: {
-    getPatient(id) {
-      return this.patients.find((patient) => patient.patientID === id);
+    getNamePatients(id) {
+      var pat = this.patients.find(patient => patient.id === id);
+      return pat!==undefined? (pat.last_name + " " + pat.first_name) : "";
     },
     redirectionToHistoryPatient() {
       this.$router.push("/History_patient");

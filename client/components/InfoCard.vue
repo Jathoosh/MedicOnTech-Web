@@ -2,19 +2,17 @@
     <div class="card">
         <!-- affichage des données d'une personne -->
         <div class="card-image">
-          <img src="ressources/profil.png" alt="Image">
+          <div class="d-flex flex-row">
+            <p class="image_profil text-center" id="nom_profil"> {{ initialesPatient() }} </p>
+          </div>
         </div>
         
         <div class="card-body">
-            <p>{{ Id_Person }}</p>
-
-            <div class="card-title">
-              <p>{{ last_name }}</p>
-              <p>{{ first_name }}</p>
-            </div>
-
+            <p>{{ last_name }}</p>
+            <p>{{ first_name }}</p>
             <p>{{ birth_date }}</p>
             <p>{{ email_adress }}</p>
+            <button @click="modifyProfil"><strong>Modifier profil</strong></button>
         </div>
     </div>
 </template>
@@ -33,6 +31,16 @@ module.exports = {
     },
     mounted(){
         // afficher caractéristiques de l'utilisateur de la table personne
+    }, 
+    methods:{
+      modifyProfil: function(){
+        this.$emit("disapear");
+        this.$router.push("/Profil");
+      },
+      initialesPatient: function(){
+        var String = this.last_name[0] + this.first_name[0];
+        return String;
+      }
     }
    
 }
@@ -40,12 +48,13 @@ module.exports = {
 
 <style>
   .card {
-    width: 17%; 
+    width: 12%; 
+    top: -48px;
+    right: 21px;
     box-shadow: 0px 5px 20px rgb(81, 153, 220);
   }
   
   .card-image {
-    height: 250px;
     position: relative;
   }
 
@@ -66,6 +75,38 @@ module.exports = {
     text-align: center; 
     padding: 15px 20px; 
     box-sizing: border-box;
+  }
+
+  button{
+    width: 138px;
+    height: 33px;
+    border-radius: 60px / 40px;
+  }
+
+    .image_formulaire{
+    position : relative;
+    width: 175px; 
+    height: auto;
+  }
+
+  .position_formulaire{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 20px;
+  }
+
+  .flex-row{
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image_profil {
+    height: 50px;
+    width: 50px;
+    border-radius: 100%;
+    border: 2px solid black;
+    margin-top: -39px;
+    
   }
 
 </style>
