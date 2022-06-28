@@ -13,7 +13,7 @@ SELECT * FROM doctor_service;
 SELECT * FROM doctor_speciality; /*bon*/
 SELECT * FROM pharmacist; /*bon*/
 SELECT * FROM pharmacy_item;
-SELECT * FROM prescription;
+SELECT * FROM prescription; /*bon*/
 SELECT * FROM prescription_drug;
 SELECT * FROM prescription_service;
 SELECT * FROM professional; /*bon*/
