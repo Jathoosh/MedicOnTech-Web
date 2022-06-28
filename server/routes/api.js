@@ -121,6 +121,17 @@ router.get("/motapp/ordonnance/:id", (req, res) => {
       res.status(200).json({ result: result[0] });
     });
 });
+router.get("/motapp/historique/:id", (req, res) => {
+  id = req.params.id;
+  sequelize
+    .query(
+      `SELECT pp.last_name as patient_lastname, pp.first_name as patient_firstname, dp.last_name as doctor_lastname, dp.first_name as doctor_firstname, creation_date, Id_Prescription from prescription join patient using(Id_Patient) join doctor using (Id_Doctor) join person dp ON dp.Id_Person = Doctor.Id_Person Join person pp on pp.Id_Person = patient.Id_Person where  used= true and Id_Patient = ${id}`
+    )
+    .then((result) => {
+      console.log(result[0]);
+      res.status(200).json({ result: result[0] });
+    });
+});
 
 router.get("/motapp/doctor", (req, res) => {
   sequelize
