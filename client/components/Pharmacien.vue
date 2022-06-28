@@ -3,15 +3,15 @@
         <p> Bonjour {{ infosPharmacist() }} </p>
         
         <div class="buttonDeconnexion">
-            <button @click="retourPagePrincipale" class="btn text-center" type="submit">Deconnexion</button>
+            <button @click="retourPagePrincipale" class="buttonTextSize btn text-center" type="submit">Deconnexion</button>
         </div>
         
-        <div class = "rectangle"> <p class="title_profil"> Recherche avancée </p> </div>    
+        <div class="rectangle"> <p id="title_profil"> Recherche avancée </p> </div>    
         
         <div id="container"> 
             <div>
                 <input class="buttonTextSize SearchBar" type="search" id="search" placeholder="ID ordonnance" size="28"/>
-                <button @click="rechercherID()" id = "buttonRechercher" class="buttonTextSize btn text-center">Rechercher</button>              
+                <button @click="rechercherID()" id="buttonRechercher" class="buttonTextSize btn text-center">Rechercher</button>              
             </div>
         </div>
 
@@ -22,20 +22,16 @@
             <button @click="validerOrdonnance" class="buttonTextSize btn text-center" type="submit">Valider ordonnance</button>
         </div>
 
-        <p class="signalement"> Signalement </p>
-        
+               
         <div id="containerInput"> 
+            <p class="signalement"> Signalement </p> 
             <div id="SignalContainer">
-                <input class="buttonTextPosition Signaler" id="signaler" placeholder="Cause du signalement, ... "> 
+                <form> <textarea class= "buttonTextSize" placeholder="Cause du signalement, ... ">  </textarea> </form>
                 <div class="buttonSignaler"> 
                     <button @click="signalerOrdonnance" class="buttonTextSize btn text-center" type="submit">Signaler</button> 
                 </div>
-            </div>
-            
-            
-        </div> 
-      
-
+            </div>    
+        </div>
     </div>
 </template>
 
@@ -84,19 +80,6 @@ module.exports = {
 
 <style>
 
-    .title_profil{
-        margin-top: 12px;
-        font-size: 24px;
-        margin-left: -2px;
-        margin-bottom: 0px;
-    }
-    
-    .rectangle{
-        width: fit-content;
-        border-bottom: 4px solid green;
-        margin-top: 20px;
-    }
-    
     .buttonDeconnexion{
         position: absolute;
         left: 1509px;
@@ -104,25 +87,56 @@ module.exports = {
         background: #D9D9D9;
         border-radius: 20px;
     }
-  
-    #container {        
+
+   .rectangle{
+        width: fit-content;
+        border-bottom: 4px solid green;
+        margin-top: 20px;
+    }
+     
+   #title_profil{
+        margin-top: 12px;
+        font-size: 24px;
+        margin-left: -2px;
+        margin-bottom: 0px;
+    }
+     
+    #container{        
         display: flex;
         flex-direction: row;
         justify-content: center;   
+        margin-right: -10px;
     }
 
-    #containerInput {
+    #containerInput{
         display: flex;
         flex-direction: column;
+        flex-wrap: wrap;
+        align-content: space-around;    
+        align-items: stretch;
     }
     
-    #container .SearchBar {
+    #container .SearchBar{
         border-top: none;
         border-left: none;
         border-right: none;
         margin-bottom: 15px;
         margin-top: 15px;
         width: 70%;
+    }
+
+    .buttonTextSize{
+        font-size: 17px;
+    }
+
+    
+    #buttonRechercher{
+        width: fit-content;
+        background: #D9D9D9;
+        border-radius: 20px; 
+        margin-right: -162px;
+        margin-top: -69px;
+        margin-left: 790px;
     }
 
     .buttonValiderOrdonnance{
@@ -135,16 +149,8 @@ module.exports = {
     .signalement{
         width: fit-content;
         height: 50px;
-        margin-left: 441px;
         font-weight: 800;
         font-size: 25px;
-    }
-
-    .buttonSignaler{
-        background: #D9D9D9;
-        border-radius: 20px;
-        max-width: 100px;
-        align-self: flex-end;
     }
 
     #containerInput .Signaler{
@@ -156,28 +162,27 @@ module.exports = {
         position: static;   
     }
 
-    #buttonRechercher{
-        width: fit-content;
-        margin-left: 790px;
-        background: #D9D9D9;
-        border-radius: 20px; 
-        margin-right: -162px;
-        margin-top: -69px;
-    }
-    
-    .buttonTextSize{
-        font-size: 20px;
-    }
-
-    .buttonTextPosition{
-        top: 0px;
-    }
-
     #SignalContainer{
         align-self: center;
         display: flex;
         flex-direction: column;
         justify-content: end;        
+    }
+
+    textarea {
+        width: 1022px;
+        height: 368px;
+        background: rgba(216, 216, 216, 0.5);
+        border-radius: 20px;
+        margin-top: 15px;  
+        margin-bottom: 30px;  
+    }
+
+    .buttonSignaler{
+        background: #D9D9D9;
+        border-radius: 20px;
+        max-width: 100px;
+        align-self: flex-end;
     }
 
 </style>
