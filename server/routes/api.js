@@ -121,6 +121,22 @@ router.get("/motapp/ordonnance/:id", (req, res) => {
       res.status(200).json({ result: result[0] });
     });
 });
+
+router.get("/motapp/prescription/:id", (req, res) => {
+  id = req.params.id;
+  sequelize
+    .query(
+      `SELECT Id_Drug,drug_name,quantity from prescription
+      join prescription_drug using (Id_Prescription) 
+      join drug using(Id_Drug)
+      where Id_Prescription = ${id}`
+    )
+    .then((result) => {
+      console.log(result[0]);
+      res.status(200).json({ result: result[0] });
+    });
+});
+
 router.get("/motapp/historique/:id", (req, res) => {
   id = req.params.id;
   sequelize
