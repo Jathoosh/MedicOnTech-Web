@@ -13,12 +13,12 @@
       <div class="nav-block">
          <nav>
             <router-link to="/login" v-if="sdatas.function_name===''">Connexion</router-link>
-            <router-link to="/pharmacien" v-if="sdatas.function_name===''">Page Pharmacien</router-link>
-            <router-link to="/Doctor_home" v-if="sdatas.function_name===''">Page Médecin</router-link>
-            <router-link to="/patientHome" v-if="sdatas.function_name===''">Page Patient</router-link>
-            <router-link to="/" v-if="sdatas.function_name==='Doctor'">Rédiger Ordonnance</router-link>
-            <router-link to="/" v-if="sdatas.function_name==='Doctor'">Mes patients</router-link>
-            <router-link to="/" v-if="sdatas.function_name==='Doctor'">Historique Ordonnance</router-link>
+            <router-link to="/pharmacist_home" v-if="sdatas.function_name===''">Page Pharmacien</router-link>
+            <router-link to="/doctor_home" v-if="sdatas.function_name===''">Page Médecin</router-link>
+            <router-link to="/patient_home" v-if="sdatas.function_name===''">Page Patient</router-link>
+            <router-link to="/edit_prescription" v-if="sdatas.function_name==='Doctor'">Rédiger Ordonnance</router-link>
+            <router-link to="//doctor_home" v-if="sdatas.function_name==='Doctor'">Mes patients</router-link>
+            <router-link to="/history_patient" v-if="sdatas.function_name==='Doctor'">Historique Ordonnance</router-link>
             <router-link to="/" v-if="sdatas.function_name==='Patient'">Mes Ordonnances</router-link>
             <router-link to="/" v-if="sdatas.function_name==='Patient'">Personnes à charges</router-link>
             <router-link to="/" v-if="sdatas.function_name==='Patient'">Autre ?????</router-link>
