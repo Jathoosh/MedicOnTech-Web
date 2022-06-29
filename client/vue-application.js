@@ -47,8 +47,10 @@ var app = new Vue( {
     doctors : [],
     doctorId : 1,
     doctor : {},
-    patients : [],
+    mdata : [],
     prescriptions : [],
+    index_patient : 0,
+    heya : "hola",
   },
   components: 
   {
@@ -58,13 +60,13 @@ var app = new Vue( {
   },
   async mounted () 
   {
-    this.reloadData();
+    //this.reloadData();
   },
   methods: 
   {
     async reloadData()
     {
-      this.patients = await this.getPatientsForDoctor();
+      this.mdata = await this.getPatientsForDoctor();
       this.doctor = await this.getDoctor();
     },
     //TODO Partie DEVELOPMMENT, à supprimer
@@ -121,6 +123,10 @@ var app = new Vue( {
     {
       const res = await axios.get('api/doctor/'+this.doctorId);
       return res.data;
+    },
+    getPrescriptions(data)
+    {
+      this.patientID = data;
     }
   }
 })
