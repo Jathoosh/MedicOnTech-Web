@@ -35,13 +35,13 @@
       <div class="contSec center">
         <ul class="simple-list">
           <li>
-            <router-link to="/annexe2">A propos</router-link>
+            <router-link to="/A_propos">A propos</router-link>
           </li>
           <li>
             <router-link to="/annexe2">Mentions légales</router-link>
           </li>
           <li>
-            <router-link to="/annexe2">Contact</router-link>
+            <router-link to="/Contact">Contact</router-link>
           </li>
         </ul>
       </div>
