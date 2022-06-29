@@ -9,7 +9,7 @@
       </div>
       <br>
       <div class="buttonback">
-        <button class="btn btn-outline-secondary" @click="redirectionToPatientInCharge()">Ajouter des personnes à charge</button>
+        <button @click="redirectToPac()" id="button">Ajouter une personne à charge</button>
         <button @click="back()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Retour</button>
       </div>
 
@@ -88,6 +88,9 @@ module.exports = {
     },
     redirectionToPatientInCharge: function () {
       this.$router.push("/PatientInCharge");
+    },
+    redirectToPac: function () {
+      this.$router.push("/Profil_PAC");
     },
   },
   computed: {

@@ -8,6 +8,7 @@ const Edit_prescription = window.httpVueLoader('./components/Edit_prescription.v
 const Pharmacien = window.httpVueLoader('./components/Pharmacien.vue')
 const Dependent_patient = window.httpVueLoader('./components/Dependent_patient.vue')
 const PatientInCharge = window.httpVueLoader('./components/PatientInCharge.vue')
+const Profil_PAC = window.httpVueLoader('./components/Profil_PAC.vue')
 
 // Header and Footer
 const Head_comp = window.httpVueLoader('./includes/header.vue');
@@ -30,7 +31,8 @@ const routes = [
   { path: '/dependent_patient', name:'Dependent_patient', component: Dependent_patient }, //Verifier TODO
   { path: '/profil', name:'Profil', component: Profil },
   { path: '/Ordonnance', name:'Ordonnance', component: Ordonnance }, //Verifier TODO  
-  { path: '/PatientInCharge', name:'PatientInCharge', component: PatientInCharge } //Verifier TODO  
+  { path: '/PatientInCharge', name:'PatientInCharge', component: PatientInCharge }, //Verifier TODO  
+  { path: '/Profil_PAC', name:'Profil_PAC', component: Profil_PAC }, //Verifier TODO
 ]
 
 const router = new VueRouter({
@@ -127,6 +129,9 @@ var app = new Vue( {
     getPrescriptions(data)
     {
       this.patientID = data;
+    },
+    sendPrescription(data){
+      
     }
   }
 })

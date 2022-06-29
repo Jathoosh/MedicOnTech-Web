@@ -1,11 +1,12 @@
 <template>
   <div>
+    <p>NRTIAEZHGIOEZH</p>
   <div class="main_container">
     <div class = "test"> <!-- TTTTTEEEEESSSSTTTT -->
-      <p class="title_profil"> Votre profil </p>
+      <p class="title_profil">Profil de {{patient.first_name}} {{patient.last_name}}</p>
 
       <div >
-        <button @click="retourPagePrincipale" class="btn btn-outline-dark ml-2" type="submit">Retour</button>
+        <button @click="redirectToHistoryPatient()" class="btn btn-outline-dark ml-2" type="submit">Retour</button>
       </div>
     </div>
     
@@ -13,13 +14,13 @@
 
   <div class="container">
     <div class = "card_patient">
-      <p id = "informations" class="rectangle"> Vos informations </p>
+      <p id = "informations" class="rectangle">Ajout d'une personne à charge</p>
       <div class="content_container">
         <!-- importer logo de la personne connectée -->
         
         
         <div class="d-flex flex-row">
-          <p class="image_profil text-center" id="nom_profil"> {{ initialesPatient() }} </p>
+          <p class="image_profil text-center" id="nom_profil"> New </p>
         </div>
         
         <div>
@@ -28,21 +29,18 @@
           <tbody>
               <tr>
                 <th scope="row">Nom de famille</th>
-                <td>{{patient.last_name}}</td>
+                <td><input v-model="patient.last_name"></td>
               </tr>
 
             <tr>
               <th scope="row">Prénom</th>
-              <td>{{patient.first_name}}</td>
+              <td><input v-model="patient.first_name"></td>
             </tr>
             <tr>
               <th scope="row">Date de naissance</th>
-              <td>{{patient.birth_date}}</td>
+              <td><input v-model="patient.birth_date" type="date"></td>
             </tr>
-            <tr>
-              <th scope="row">Adresse mail</th>
-              <td><input v-model="patient.email_adress"></td>
-            </tr>
+            
             <tr>
               <th scope="row">Mutuelle</th>
               <td><input v-model="patient.mutuelle"></td>
@@ -56,7 +54,7 @@
 
       </div>
       <div class="buttonModify">
-        <button @click="modifyInformationsProfil" class="btn btn-outline-dark ml-2" type="submit">Modifier</button>
+        <button @click="sendPac" class="btn btn-outline-dark ml-2" type="submit">Ajouter patient</button>
       </div>
     </div> 
     
@@ -68,7 +66,7 @@
 
 <script>
 module.exports = {
-    name: 'modify-card',
+    name: 'Profil_PAC',
     data(){
         return{
           patient:
@@ -90,10 +88,18 @@ module.exports = {
         this.$emit("retour page principale");
         this.$router.push("/PatientHome");
       }, 
+      redirectToHistoryPatient: function(){
+        this.$emit("redirect to history patient");
+        this.$router.push("/History_patient");
+     },
       initialesPatient: function(){
         var String = this.patient.last_name[0] + this.patient.first_name[0];
         return String;
-      }
+      },
+        sendPac: function(){
+            this.$emit("sendpac", this.patient);
+            this.$router.push("/History_patient");
+        }
     }
    
 }
