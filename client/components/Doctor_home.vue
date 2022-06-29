@@ -16,8 +16,7 @@
               
               <tr v-for="(prescription, index) in prescriptions" :key="index">
                   <td>{{ getNamePatients(prescription.patientID) }}</td>
-                  <td>{{prescription.creation_date}} <button class="btn btn-outline-secondary" style="float:right;" @click="redirectionToHistoryPatient()">Historique</button></td>
-                  
+                  <td>{{prescription.creation_date}} <button class="btn btn-outline-secondary" style="float:right;" @click="redirectionToHistoryPatient(index)">Historique</button></td>
               </tr>
               
             </tbody>
@@ -31,8 +30,14 @@
 module.exports = {
   name: "Medecin_home",
   props: {
-    patients: Array, // chaque bloc est un patient  venant du back
-    doctor: Object, // ca vient du back
+    sdatas: Object, // ca vient du back
+    mdatas: {
+      type: Array,
+      required: true,
+      default: function () {
+        return [];
+      }
+    }, // ca vient du back <= mdatas est une liste de patients avec chacun leur prescriptions
   },
   data() {
     return {
@@ -54,11 +59,12 @@ module.exports = {
   },
   methods: {
     getNamePatients(id) {
-      var pat = this.patients.find(patient => patient.id === id);
+      var pat = this.mdatas.find(patient => patient.id === id);
       return pat!==undefined? (pat.last_name + " " + pat.first_name) : "";
     },
-    redirectionToHistoryPatient() {
+    redirectionToHistoryPatient(index) {
       this.$router.push("/History_patient");
+      this.$emit('getprescriptions', {index:index});
     },
     redirectionToEditPrescription() {
       this.$router.push("/Edit_prescription");

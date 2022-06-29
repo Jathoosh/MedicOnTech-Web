@@ -3,7 +3,9 @@
         <!-- affichage des données d'une personne -->
         <div class="card-image">
           <div class="d-flex flex-row">
-            <p class="image_profil text-center" id="nom_profil"> {{ initialesPatient() }} </p>
+            <div class="image_profil text-center">
+              <p id="nom_image_profil"> {{ initialesPatient() }} </p>
+            </div>
           </div>
         </div>
         
@@ -46,7 +48,7 @@ module.exports = {
 }
 </script>
 
-<style>
+<style scoped>
   .card {
     width: 12%; 
     top: -48px;
@@ -83,7 +85,7 @@ module.exports = {
     border-radius: 60px / 40px;
   }
 
-    .image_formulaire{
+  .image_formulaire{
     position : relative;
     width: 175px; 
     height: auto;
@@ -101,12 +103,16 @@ module.exports = {
   }
 
   .image_profil {
-    height: 50px;
-    width: 50px;
+    height: 66px;
+    width: 72px;
     border-radius: 100%;
     border: 2px solid black;
-    margin-top: -39px;
-    
+    margin-top: 20px;    
+  }
+
+  #nom_image_profil{
+    margin-top: 20%;  
+    font-size: 1.5em;
   }
 
 </style>
