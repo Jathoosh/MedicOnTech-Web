@@ -165,9 +165,8 @@ CREATE TABLE Prescription_service(
    PRIMARY KEY(Id_Prescription, Id_Service),
    FOREIGN KEY(Id_Prescription) REFERENCES Prescription(Id_Prescription),
    FOREIGN KEY(Id_Service) REFERENCES Service(Id_Service)
-);*/
+);
 
-/*
 -- Insert Fictive Values For Testing TODO
 INSERT INTO Postal_address(number, road, zip_code, town, country) VALUES
 (15,"Chemin de la Vallée",27500,"Saint-Symphorien","France"),
