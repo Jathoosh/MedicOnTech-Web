@@ -149,11 +149,13 @@ router.get("/motapp/historique/:id", (req, res) => {
     });
 });
 
-router.get("/motapp/doctor", (req, res) => {
+router.get("/motapp/doctor/:id", (req, res) => {
+  id = req.params.id;
   sequelize
     .query(
-      "SELECT Person.first_name, Person.last_name, Person.phone, Person.email_address, Person.Id_Person FROM `Doctor` JOIN `Person` ON Person.Id_Person = Doctor.Id_Person"
+      "SELECT Person.first_name, Person.last_name, Person.phone, Person.email_address, Person.Id_Person FROM `Doctor` JOIN `Person` ON Person.Id_Person = Doctor.Id_Person INNER JOIN `assigned_doctor` ON assigned_doctor.Id_Doctor = Doctor.Id_Doctor WHERE assigned_doctor.Id_Patient = " +id
     )
+    
     .then((result) => {
       console.log(result[0]);
       res.status(200).json({ result: result[0] });
