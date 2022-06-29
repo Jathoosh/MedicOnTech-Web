@@ -54,7 +54,7 @@ var app = new Vue( {
   },
   async mounted () 
   {
-    this.reloadData();
+    //this.reloadData();
   },
   methods: 
   {

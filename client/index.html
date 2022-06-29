@@ -39,11 +39,14 @@
       <router-view
       @fc-method = "FCMethod"
       @login = "login"
-      :patients = "patients"
+      :mdata = "mdata"
       :doctor = "doctor"
+      @getPrescriptions = "getPrescriptions"
+      :index_patient = "index_patient"
+      :heya = "heya"
+      :solo_data = "solo_data"
       ></router-view>
     </main>
-
     <footer id="footer">
       <Foot_comp></Foot_comp>
     </footer>
