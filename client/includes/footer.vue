@@ -3,25 +3,6 @@
 
     <div class="container-h">
 
-      <div class="contSec center">
-        <ul class="simple-list">
-          <li>
-            <router-link to="/annexe2">A propos</router-link>
-          </li>
-          <li>
-            <router-link to="/annexe2">Mentions légales</router-link>
-          </li>
-          <li>
-            <router-link to="/annexe2">Contact</router-link>
-          </li>
-        </ul>
-      </div>
-
-      <div class="contPri center">
-        <h1><strong>MedicOnTech</strong></h1>
-        <p id="copyright">Copyright © 2022 par MedicOnTech - Tous droits réservés</p>
-      </div>
-
       <div class="contSec center" id="rs_footer">
         <a href="https://www.youtube.com/channel/UCmfFBwFw6xyORSaFwlfAgWg">
           <img
@@ -48,8 +29,23 @@
           />
         </a>
       </div>
-     
-      
+      <div class="contPri center">
+        <h1>MedicOnTech</h1>
+        <p>jathooshthvrs@gmail.com</p>
+      </div>
+      <div class="contSec center">
+        <ul class="simple-list">
+          <li>
+            <router-link to="/A_propos">A propos</router-link>
+          </li>
+          <li>
+            <router-link to="/annexe2">Mentions légales</router-link>
+          </li>
+          <li>
+            <router-link to="/Contact">Contact</router-link>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <div class="band center">
