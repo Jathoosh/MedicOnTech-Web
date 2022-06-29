@@ -3,8 +3,15 @@
     <br>
     <div class="head">
       <div class="info">
-        <h3>Historique des ordonnances de {{patients[0].last_name}} {{patients[0].first_name}}</h3>
-        
+
+        <!-- <h3>Historique des ordonnances de {{patients[0][0].last_name}} {{patients[0][0].first_name}}</h3> -->
+        <p>{{solo_data}}</p>
+      </div>
+      <br>
+      <div class="buttonback">
+        <button @click="redirectToPac()" id="button">Ajouter une personne à charge</button>
+        <button @click="back()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Retour</button>
+
       </div>
 
       <div class="buttonback"><button @click="back()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Retour</button></div>
@@ -72,6 +79,13 @@ module.exports = {
     redirectionToOrdonnance: function () {
       this.$router.push("/Ordonnance");
     },
+    redirectionToPatientInCharge: function () {
+      this.$router.push("/PatientInCharge");
+    },
+    redirectToPac: function () {
+      this.$router.push("/Profil_PAC");
+    },
+
   },
   computed: {
     filteredPatients() {
