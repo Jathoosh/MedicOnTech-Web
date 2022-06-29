@@ -17,7 +17,7 @@
             <router-link to="/doctor_home" v-if="sdatas.function_name===''">Page Médecin</router-link>
             <router-link to="/patient_home" v-if="sdatas.function_name===''">Page Patient</router-link>
             <router-link to="/edit_prescription" v-if="sdatas.function_name==='Doctor'">Rédiger Ordonnance</router-link>
-            <router-link to="//doctor_home" v-if="sdatas.function_name==='Doctor'">Mes patients</router-link>
+            <router-link to="/doctor_home" v-if="sdatas.function_name==='Doctor'">Mes patients</router-link>
             <router-link to="/history_patient" v-if="sdatas.function_name==='Doctor'">Historique Ordonnance</router-link>
             <router-link to="/" v-if="sdatas.function_name==='Patient'">Mes Ordonnances</router-link>
             <router-link to="/" v-if="sdatas.function_name==='Patient'">Personnes à charges</router-link>
