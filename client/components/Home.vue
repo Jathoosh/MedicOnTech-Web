@@ -17,6 +17,7 @@ module.exports = {
     mounted() {
       document.getElementById("main").style.width = "100%";
     },
+    
     components: {
       loginpar : LoginPar,
       loginpro : LoginPro,    

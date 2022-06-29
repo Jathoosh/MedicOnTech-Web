@@ -1,3 +1,4 @@
+
 <template>
     <div>
         <br>
@@ -7,8 +8,7 @@
         </div>
         <hr>
         
-        <div class="global">
-
+        <div class="global">       
             <div class="globalcontainer">
                 <div class="container">                   
                     <br>
@@ -22,6 +22,8 @@
                     </div>
                     <div class="date">
                         <input class="form-control" type="date" >
+                        <br>
+                        <img :src="randomBarCodeNumber()" alt="codebarre" style="width: 200px; height: 100px">
                     </div>
                 </div>
             </div>
@@ -85,6 +87,7 @@
 <script>
 module.exports = {
     name: 'Edit_prescription',
+    
     data() { 
         return {
             reusable : false,
@@ -99,7 +102,7 @@ module.exports = {
             editDrug:{
                 drug_quantity: "",
             },
-            
+            barcodeValue: 'TEST',
 
         }
     },
@@ -125,6 +128,15 @@ module.exports = {
         },
         back(){
             this.$router.push('/Doctor_home');
+        },
+
+        randomBarCodeNumber(){
+            var barcode = "";
+            for(var i = 0; i < 12; i++){
+                barcode += Math.floor(Math.random() * 10);
+            }
+            console.log(barcode);
+            return "http://bwipjs-api.metafloor.com/?bcid=ean13&text=" + barcode;
         }
     }
 }
