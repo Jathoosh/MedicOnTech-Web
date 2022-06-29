@@ -8,6 +8,8 @@ const Edit_prescription = window.httpVueLoader('./components/Edit_prescription.v
 const Pharmacien = window.httpVueLoader('./components/Pharmacien.vue')
 const Dependent_patient = window.httpVueLoader('./components/Dependent_patient.vue')
 const PatientInCharge = window.httpVueLoader('./components/PatientInCharge.vue')
+const Contact = window.httpVueLoader('./components/Contact.vue')
+const A_propos = window.httpVueLoader('./components/A_propos.vue')
 
 // Header and Footer
 const Head_comp = window.httpVueLoader('./includes/header.vue');
@@ -30,7 +32,9 @@ const routes = [
   { path: '/dependent_patient', name:'Dependent_patient', component: Dependent_patient }, //Verifier TODO
   { path: '/profil', name:'Profil', component: Profil },
   { path: '/ordonnance', name:'Ordonnance', component: Ordonnance }, //Verifier TODO  
-  { path: '/patientInCharge', name:'PatientInCharge', component: PatientInCharge } //Verifier TODO  
+  { path: '/patientInCharge', name:'PatientInCharge', component: PatientInCharge }, //Verifier TODO  
+  { path: '/Contact', name:'Contact', component: Contact }, //Verifier TODO  
+  { path: '/A_propos', name:'A_propos', component: A_propos } //Verifier TODO  
 ]
 
 const router = new VueRouter({
