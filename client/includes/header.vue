@@ -126,14 +126,7 @@ h1 {
   margin: 0 auto;
 } */
 
-nav > a {
-  color: rgb(49, 49, 49);
-  text-decoration: none;
-  padding: 10px;
-  margin-left: 5px;
-  margin-right: 5px;
-  border-radius: 7px;
-}
+
 /*Apply also on router-link (Main Purpose)*/
 /*nav > a {
   color: rgb(49, 49, 49);
@@ -175,6 +168,8 @@ nav > a.router-link-exact-active.router-link-active:hover {
   margin-left: 25px;
 }
 
+
+
 #header_top {
   display: flex;
   flex-direction: row;
@@ -202,11 +197,19 @@ nav > a.router-link-exact-active.router-link-active:hover {
 
 nav > a {
   background-color: rgb(236, 235, 235);
+  color: rgb(49, 49, 49);
   margin: 5px;
   padding: 15px;
+  text-decoration: none;
+  border-radius: 7px;
 }
 nav > a:hover {
   background-color: #b9b9b9;
+}
+nav > a.router-link-exact-active.router-link-active
+{
+  border-bottom: 5px solid #01AA88;
+  padding-bottom:10px;
 }
 
 .card_profil {
