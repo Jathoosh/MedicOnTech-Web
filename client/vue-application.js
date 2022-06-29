@@ -45,6 +45,8 @@ var app = new Vue( {
     doctor : {},
     patients : [],
     prescriptions : [],
+    index_pac : 0,
+    tutor_bool : true,
   },
   components: 
   {
@@ -84,6 +86,14 @@ var app = new Vue( {
     {
       const res = await axios.get('api/doctor/'+this.doctorId);
       return res.data;
+    },
+    saveIndexPAC(data)
+    {
+      this.index_pac = data;
+    },
+    tutorFalse()
+    {
+      this.tutor_bool = false;
     }
   }
 })

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="topContainer">
-            <h3>Patient - Accueil</h3>
+            <h3>Bonjour {{tutor.first_name}} {{tutor.last_name}} !</h3>
             <button @click="goToPatientInCharge" id="buttons">Personnes à charge</button>
         </div>
 
@@ -34,30 +34,54 @@
             <option value="5">5</option>
             </select>
 
-
         </div>
 
-        <div id="global" v-for="(ligne, index) in listOrdonnance" :key="index">
-            <div class="prescriptionCard">
-                <div>
-                    <h2>
-                        Dr {{ doctor.first_name }} {{ doctor.last_name }}, fait le
-                        {{ ligne.creation_date }}
-                    </h2>
-                    
-                    <div class="statePrescription">
-                        <p v-if="ligne.used=='true'">Utilisée le {{ ligne.date_of_use }}.</p>
-                        <p v-if="ligne.validity=='true'">Oronnance valide.</p>
-                        <p v-if="ligne.reported=='true'">Ordonnance signalée.</p> 
-                    </div>
+        <div v-if="tutorBool=='true'">
+            <div id="global" v-for="(ligne, index) in listOrdonnance" :key="index">
+                <div class="prescriptionCard">
+                    <div>
+                        <h2>
+                            Dr {{ doctor.first_name }} {{ doctor.last_name }}, fait le
+                            {{ ligne.creation_date }}
+                        </h2>
+                        
+                        <div class="statePrescription">
+                            <p v-if="ligne.used=='true'">Utilisée le {{ ligne.date_of_use }}.</p>
+                            <p v-if="ligne.validity=='true'">Oronnance valide.</p>
+                            <p v-if="ligne.reported=='true'">Ordonnance signalée.</p> 
+                        </div>
 
-                    <p id="ID"> ID : {{ ligne.Id_Prescription }}</p>
-                </div> 
+                        <p id="ID"> ID : {{ ligne.Id_Prescription }}</p>
+                    </div> 
 
-                 <button id="detail" @click="toOrdonnance"><strong>Voir le détail</strong></button>
+                    <button id="detail" @click="toOrdonnance"><strong>Voir le détail</strong></button>
+                </div>
             </div>
         </div>
 
+        <div v-else>
+        <!-- <div listPatient[indexPAC]> -->
+            <div id="global" v-for="(ligne, index) in tutor.listOrdonnance" :key="index">
+                <div class="prescriptionCard">
+                    <div>
+                        <h2>
+                            Dr {{ doctor.first_name }} {{ doctor.last_name }}, fait le
+                            {{ ligne.creation_date }}
+                        </h2>
+                        
+                        <div class="statePrescription">
+                            <p v-if="ligne.used=='true'">Utilisée le {{ ligne.date_of_use }}.</p>
+                            <p v-if="ligne.validity=='true'">Oronnance valide.</p>
+                            <p v-if="ligne.reported=='true'">Ordonnance signalée.</p> 
+                        </div>
+
+                        <p id="ID"> ID : {{ ligne.Id_Prescription }}</p>
+                    </div> 
+
+                    <button id="detail" @click="toOrdonnance"><strong>Voir le détail</strong></button>
+                </div>
+            </div>
+        <!-- </div> -->
     </div>
 </template>
 
@@ -66,11 +90,33 @@ module.exports = {
   name: "PatientHome",
     data() {
         return {
-            person: {
-                first_name: 'DUPONT',
-                last_name: 'Thomas',
+            tutor: {
+                first_name: 'Thomas',
+                last_name: 'DUPONT',
                 phone: '06-12-34-56-78',
-                email_address: 'testPatient.adresse@gmail.com'
+                email_address: 'testPatient.adresse@gmail.com',
+                listOrdonnance: [{
+                    Id_Prescription: '0362819304',
+                    creation_date: '01/01/2020',
+                    date_of_use: '12/04/2020',
+                    number_of_reuses: '1',
+                    used: 'true',
+                    validity: 'true',
+                    note: 'Le médicament est bon',
+                    reported: 'true',
+                    listDrug: [
+                        {drug_name: 'Medoc1',
+                        quantity: '1'},
+                        {drug_name: 'Medoc2',
+                        quantity: '2'},
+                    ],
+                    listService: [
+                        {service_name: 'Service1',
+                        quantity: '1'},
+                        {service_name: 'Service2',
+                        quantity: '2'},
+                    ],
+                },],
             },
             doctor: {
                 first_name: 'CHEVALIER',
@@ -84,74 +130,142 @@ module.exports = {
             speciality: {
                 speciality_name: 'Dentiste',
             },
-            listOrdonnance: [{
-                Id_Prescription: '0362819304',
-                creation_date: '01/01/2020',
-                date_of_use: '12/04/2020',
-                number_of_reuses: '1',
-                used: 'true',
-                validity: 'true',
-                note: 'Le médicament est bon',
-                reported: 'true',
-                listDrug: [
-                    {drug_name: 'Medoc1',
-                    quantity: '1'},
-                    {drug_name: 'Medoc2',
-                    quantity: '2'},
-                ],
-                listService: [
-                    {service_name: 'Service1',
-                    quantity: '1'},
-                    {service_name: 'Service2',
-                    quantity: '2'},
-                ],
-            },
+            listPatient: [
             {
-                Id_Prescription: '0274849139',
-                creation_date: '11/01/2020',
-                date_of_use: '23/05/2020',
-                number_of_reuses: '2',
-                used: 'false',
-                validity: 'false',
-                note: 'La séance de kinésithérapie est nécessaire',
-                reported: 'false',
-                listDrug: [
-                    {drug_name: 'Medoc3',
-                    quantity: '3'},
-                    {drug_name: 'Medoc4',
-                    quantity: '4'}
-                ],
-                listService: [
-                    {service_name: 'Service3',
-                    quantity: '3'},
-                    {service_name: 'Service4',
-                    quantity: '4'},
-                ],
+                first_name: 'ThomasBB',
+                last_name: 'DUPONT',
+                phone: '06-12-34-56-66',
+                email_address: 'testPatientInCharge.adresse@gmail.com',
+                listOrdonnance: [{
+                    Id_Prescription: '0362819304',
+                    creation_date: '01/01/2020',
+                    date_of_use: '12/04/2020',
+                    number_of_reuses: '1',
+                    used: 'true',
+                    validity: 'true',
+                    note: 'Le médicament est bon',
+                    reported: 'true',
+                    listDrug: [
+                        {drug_name: 'Medoc1',
+                        quantity: '1'},
+                        {drug_name: 'Medoc2',
+                        quantity: '2'},
+                    ],
+                    listService: [
+                        {service_name: 'Service1',
+                        quantity: '1'},
+                        {service_name: 'Service2',
+                        quantity: '2'},
+                    ],
+                },
+                {
+                    Id_Prescription: '0274849139',
+                    creation_date: '11/01/2020',
+                    date_of_use: '23/05/2020',
+                    number_of_reuses: '2',
+                    used: 'false',
+                    validity: 'false',
+                    note: 'La séance de kinésithérapie est nécessaire',
+                    reported: 'false',
+                    listDrug: [
+                        {drug_name: 'Medoc3',
+                        quantity: '3'},
+                        {drug_name: 'Medoc4',
+                        quantity: '4'}
+                    ],
+                    listService: [
+                        {service_name: 'Service3',
+                        quantity: '3'},
+                        {service_name: 'Service4',
+                        quantity: '4'},
+                    ],
 
-            }],
+                }],
+            },  
+            {
+                first_name: 'ThomasBBB',
+                last_name: 'DUPONT',
+                phone: '06-12-34-56-33',
+                email_address: 'testPatientInCharge2.adresse@gmail.com',
+                listOrdonnance: [{
+                    Id_Prescription: '0362819304',
+                    creation_date: '01/01/2020',
+                    date_of_use: '12/04/2020',
+                    number_of_reuses: '1',
+                    used: 'true',
+                    validity: 'true',
+                    note: 'Le médicament est bon',
+                    reported: 'true',
+                    listDrug: [
+                        {drug_name: 'Medoc1',
+                        quantity: '1'},
+                        {drug_name: 'Medoc2',
+                        quantity: '2'},
+                    ],
+                    listService: [
+                        {service_name: 'Service11',
+                        quantity: '1'},
+                        {service_name: 'Service22',
+                        quantity: '2'},
+                    ],
+                },
+                {
+                    Id_Prescription: '0274849139',
+                    creation_date: '11/01/2020',
+                    date_of_use: '23/05/2020',
+                    number_of_reuses: '2',
+                    used: 'false',
+                    validity: 'false',
+                    note: 'La séance de kinésithérapie est nécessaire',
+                    reported: 'false',
+                    listDrug: [
+                        {drug_name: 'Medoc33',
+                        quantity: '3'},
+                        {drug_name: 'Medoc44',
+                        quantity: '4'}
+                    ],
+                    listService: [
+                        {service_name: 'Service33',
+                        quantity: '3'},
+                        {service_name: 'Service44',
+                        quantity: '4'},
+                    ],
+
+                }],
+            },
+            ],
             
             search: "",
             
         }
     },
-  methods: {
-    toOrdonnance: function () {
-      this.$router.push("/Ordonnance");
+    methods: {
+        toOrdonnance: function () {
+        this.$router.push("/Ordonnance");
+        },
+        goToPatientInCharge: function () {
+        this.$router.push("/PatientInCharge");
+        },
     },
-    goToPatientInCharge: function () {
-      this.$router.push("/PatientInCharge");
+    computed: {
+        filteredPatients() {
+        return this.patient.filter((patient) => {
+            return (
+            patient.last_name.toLowerCase().indexOf(this.search.toLowerCase()) >
+            -1
+            );
+        });
+        },
     },
-  },
-  computed: {
-    filteredPatients() {
-      return this.patient.filter((patient) => {
-        return (
-          patient.last_name.toLowerCase().indexOf(this.search.toLowerCase()) >
-          -1
-        );
-      });
+    props:{
+        indexPAC: Number,
+        tutorBool: Boolean,
     },
-  },
+    mounted() {
+        //Afficher la liste des ordonnances en fonction du bon patient
+        //Soit le Tuteur 
+        //Soit la bonne personne à sa charge (en fonction du bouton appuyé dans PatientInCharge)
+    },  
 };
 </script>
 

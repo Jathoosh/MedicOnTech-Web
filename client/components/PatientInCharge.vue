@@ -10,7 +10,7 @@
                 <div class="card-body" >
                     <h5 class="card-title">{{patient.first_name}} {{patient.last_name}}</h5>
                     <p class="card-text">Tuteur : {{tutor.id_tutor}}</p>
-                    <button class="btn btn-primary" @click="goToHomePatientInCHarge">Détails</button>
+                    <button class="btn btn-primary" @click="goToHomePatientInCHarge(index)">Détails</button>
                 </div>
             </div>
         </div>
@@ -72,6 +72,9 @@ module.exports = {
         },
         goToHomePatientInCHarge: function () {
             this.$router.push("/PatientHome");
+            this.$emit('saveIndexPAC', {index:index});
+            this.$emit('tutorFalse');
+
         }
     },
 
@@ -114,12 +117,14 @@ module.exports = {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: space-around;
+        justify-content: flex-start;
     }
 
     .card {
         width: 18rem;
         margin-top: 20px;
         margin-bottom: 20px;
+        margin-left: 3%;
+        margin-right: 3%;
     }
 </style>
