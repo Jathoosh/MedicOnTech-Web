@@ -42,13 +42,9 @@ var app = new Vue( {
   el: '#app',
   data: 
   {
-    solo_data: {id:0, firstname:'', lastname:'', function_name:'', function_id:0, email_address:'', work_home:''},
-    multi_data: [],
-    doctors : [],
-    doctorId : 1,
-    doctor : {},
-    patients : [],
-    prescriptions : [],
+    sdatas: {id:0, firstname:'', lastname:'', function_name:'', function_id:0, email_address:'', work_home:''},
+    sdatas_comp: [], //???????????!
+    mdatas: []
   },
   components: 
   {
@@ -64,29 +60,21 @@ var app = new Vue( {
   {
     async reloadData()
     {
-      this.patients = await this.getPatientsForDoctor();
-      this.doctor = await this.getDoctor();
+      this.sdatas_comp = await this.getSdatas_Comp();
+      this.mdatas = await this.getMdatas();
     },
-    //TODO Partie DEVELOPMMENT, à supprimer
-    modif_id_doctor(para)
-    {
-      this.doctorId = para.id;
-      console.log(this.doctorId);
-      this.reloadData();
-    },
-    //FIN TODO
     async login(data)
     {
       var res = await axios.post('api/login', data);
       if(res.status == 200 && res.data.connected)
       {
-        this.solo_data.id = res.data.Id_Person;
-        this.solo_data.function_name = res.data.profession.name;
-        this.solo_data.function_id = res.data.profession.id;
-        this.solo_data.firstname = res.data.first_name;
-        this.solo_data.lastname = res.data.last_name;
-        this.solo_data.email_address = data.mail;
-        this.solo_data.work_home = res.data.workplace_name;
+        this.sdatas.id = res.data.Id_Person;
+        this.sdatas.function_name = res.data.profession.name;
+        this.sdatas.function_id = res.data.profession.id;
+        this.sdatas.firstname = res.data.first_name;
+        this.sdatas.lastname = res.data.last_name;
+        this.sdatas.email_address = data.mail;
+        this.sdatas.work_home = res.data.workplace_name;
       }
       else
       {
@@ -99,28 +87,39 @@ var app = new Vue( {
       alert(res.data.message);
       if (res.data.connected)
       {
-        this.solo_data.id = res.data.Id_Person;
-        this.solo_data.function_name = res.data.profession.name;
-        this.solo_data.function_id = res.data.profession.id;
-        this.solo_data.firstname = res.data.first_name;
-        this.solo_data.lastname = res.data.last_name;
-        this.solo_data.email_address = res.data.mail;
-        this.solo_data.work_home = res.data.workplace_name;
+        this.sdatas.id = res.data.Id_Person;
+        this.sdatas.function_name = res.data.profession.name;
+        this.sdatas.function_id = res.data.profession.id;
+        this.sdatas.firstname = res.data.first_name;
+        this.sdatas.lastname = res.data.last_name;
+        this.sdatas.email_address = res.data.mail;
+        this.sdatas.work_home = res.data.workplace_name;
       }
       else
       {
         alert("C vrmt pas normal la");
       }
     },
-    async getPatientsForDoctor()
+    async getSdatas_Comp()
     {
-      const res = await axios.get('api/patients/'+this.doctorId);
-      return res.data;
+      if (this.sdatas.function_name == "Patient")
+      {
+        const res = await axios.get('api/patient_comp_datas');
+        this.sdatas_comp = res.data;
+      }
     },
-    async getDoctor()
+    async getMdatas()
     {
-      const res = await axios.get('api/doctor/'+this.doctorId);
-      return res.data;
-    }
+      if (this.sdatas.function_name == "Patient")
+      {
+        const res = await axios.get('api/patient_mdatas');
+        this.mdatas = res.data;
+      }
+      else if (this.sdatas.function_name == "Doctor")
+      {
+        const res = await axios.get('api/doctor_mdatas');
+        this.mdatas = res.data;
+      }
+    },
   }
 })

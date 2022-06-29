@@ -11,6 +11,10 @@ const bcrypt = require('bcrypt');
 const { URLSearchParams } =  require ('url');
 const config = require ('../../config');
 
+const sdatas = {};
+const sdatas_comp = [];
+const mdatas = [];
+
 //Attention au nom de la table
 const sequelize = new Sequelize("db_medicontech",data_db.Username,data_db.Password, //Veuillez mettre le mot de passe de la base de donnée
 {
@@ -39,15 +43,18 @@ router.post('/login-authorize', (req, res) => {
   const randomNumber = Math.floor(Math.random() * 30) + 1;
   //Partie temporaire pour la connexion de l'utilisateur
 
-  sequelize.query(`SELECT * FROM Person WHERE Id_Person=${randomNumber}`).then(result => {
+  sequelize.query(`SELECT * FROM Person JOIN patient using(Id_Person) JOIN postal_address using (Id_Postal_address) WHERE Id_Person=${randomNumber}`).then(result => {
+    req.session.Id_Person = result[0][0].Id_Person;
+    req.session.function = "Patient";
+    req.session.function_id = result[0][0].Id_Patient;
     res.status(200).json({
       message: 'Not Yet Implemented',
       connected: true,
       Id_Person: randomNumber,
-      profession: {name:"Patient", id:1},
+      profession: {name:"Patient", id:result[0][0].Id_Patient},
       first_name: result[0][0].first_name,
       last_name: result[0][0].last_name,
-      workplace_name: "Not Yeeeeeeeet", //Compacter l'addresse de la table postal_address
+      workplace_name: {door_number:result[0][0].door_number, road_number:result[0][0].number, road_name:result[0][0].road, zip_code:result[0][0].zip_code, town:result[0][0].town, country:result[0][0].country}, //Compacter l'addresse de la table postal_address
       mail: result[0][0].email_address,
     });
   })
@@ -95,6 +102,9 @@ router.post('/login', (req, res) => {
       sequelize.query(`SELECT first_name, last_name, workplace_name, password, Id_Doctor, Id_Pharmacist from professional LEFT JOIN doctor ON doctor.Id_Person = professional.Id_Person LEFT JOIN pharmacist ON pharmacist.Id_Person = professional.Id_Person LEFT JOIN Person ON Person.Id_Person = professional.Id_Person WHERE professional.Id_Person = '${Id_Person}'`).then(result2 => {
         if (bcrypt.compareSync(password, result2[0][0].password))
         {
+          req.session.Id_Person = Id_Person;
+          req.session.function = result2[0][0].Id_Doctor != null ? "Doctor" : "Pharmacist";
+          req.session.function_id = result2[0][0].Id_Doctor != null ? result2[0][0].Id_Doctor : result2[0][0].Id_Pharmacist;
           res.status(200).json({
             message : 'Connexion réussie',
             connected : true,
@@ -118,6 +128,60 @@ router.post('/login', (req, res) => {
 
 //PARTIE OBTENTIONS INFOS PERSONNES
 
+router.get('/patient_comp_datas', (req,res) => {
+  const Id_Patient = req.session.function_id;
+  sequelize.query(`SELECT * from prescription WHERE Id_Patient = '${Id_Patient}'`).then(result => {
+    res.status(200).json({
+      message : 'Données récupérées',
+      datas : result[0]
+    });
+  })
+})
+
+router.get('/patient_mdatas', (req,res) => {
+  const Id_Patient = req.session.function_id;
+  mdatas = [];
+  sequelize.query(`SELECT * from Patient JOIN Person USING (Id_Person) WHERE Id_Tutor = '${Id_Patient}'`).then(result => {
+    result[0].forEach(pac => {
+      let temp = {};
+      sequelize.query(`SELECT * from prescription WHERE Id_Patient = '${pac.Id_Patient}'`).then(result2 => {
+        temp.infos_pac = pac;
+        temp.prescriptions = result2[0];
+      })
+      mdatas.push(temp);
+    });
+    res.status(200).json({
+      message : 'Données récupérées',
+      datas : mdatas
+    });
+  })
+})
+
+router.get('/doctor_mdatas', (req,res) => {
+  const Id_Doctor = req.session.function_id;
+  mdatas = [];
+  sequelize.query(`SELECT Person.* from assigned_doctor JOIN Patient USING (Id_Patient) JOIN Person USING (Id_Person) WHERE Id_Doctor = '${Id_Doctor}'`).then(result => {
+    let temp = {};
+    let tmp_prescriptions = [];
+    result[0].forEach(patient => {
+      temp = {};
+      sequelize.query(`SELECT * from prescription WHERE Id_Patient = '${patient.Id_Patient}'`).then(result2 => {
+        temp.infos_patient = patient;
+        result2[0].forEach(prescription => {
+          sequelize.query(`SELECT Drug.*, prescription_drug.quantity from prescription_drug JOIN Drug USING (Id_Drug) WHERE Id_Prescription = '${prescription.Id_Prescription}'`).then(result3 => {
+            
+          })
+        });
+      })
+      mdatas.push(temp);
+    });
+    res.status(200).json({
+      message : 'Données récupérées',
+      datas : mdatas
+    });
+  })
+})
+
 router.get('/patients/:doctorId', (req, res) => {
   doctorId= req.params.doctorId;
   let toreturn = [];  
@@ -134,14 +198,6 @@ router.get('/patients/:doctorId', (req, res) => {
       });
     });
     res.status(200).json(toreturn);
-  })
-})
-
-router.get("/doctor/:id", (req, res) => {
-  id = req.params.id;
-  sequelize.query(`SELECT Person.first_name, Person.last_name, Person.Id_Person, speciality.speciality_name FROM doctor JOIN doctor_speciality ON doctor_speciality.Id_Doctor = doctor.Id_Doctor JOIN speciality ON speciality.Id_Speciality = doctor_speciality.Id_Speciality JOIN Person ON doctor.Id_Person = Person.Id_Person WHERE doctor.Id_Doctor = ${id}`)
-  .then(function(result) {
-    res.status(200).json(result[0][0]);
   })
 })
 

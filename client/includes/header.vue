@@ -12,18 +12,18 @@
 
       <div class="nav-block">
          <nav>
-            <router-link to="/login" v-if="solo_data.function_name===''">Connexion</router-link>
-            <router-link to="/pharmacien" v-if="solo_data.function_name===''">Page Pharmacien</router-link>
-            <router-link to="/Doctor_home" v-if="solo_data.function_name===''">Page Médecin</router-link>
-            <router-link to="/patientHome" v-if="solo_data.function_name===''">Page Patient</router-link>
-            <router-link to="/" v-if="solo_data.function_name==='Doctor'">Rédiger Ordonnance</router-link>
-            <router-link to="/" v-if="solo_data.function_name==='Doctor'">Mes patients</router-link>
-            <router-link to="/" v-if="solo_data.function_name==='Doctor'">Historique Ordonnance</router-link>
-            <router-link to="/" v-if="solo_data.function_name==='Patient'">Mes Ordonnances</router-link>
-            <router-link to="/" v-if="solo_data.function_name==='Patient'">Personnes à charges</router-link>
-            <router-link to="/" v-if="solo_data.function_name==='Patient'">Autre ?????</router-link>
-            <router-link to="/" v-if="solo_data.function_name==='Pharmacist'">Scanner Ordonnance</router-link>
-            <router-link to="/" v-if="solo_data.function_name==='Pharmacist'">Autre ?????</router-link>
+            <router-link to="/login" v-if="sdatas.function_name===''">Connexion</router-link>
+            <router-link to="/pharmacien" v-if="sdatas.function_name===''">Page Pharmacien</router-link>
+            <router-link to="/Doctor_home" v-if="sdatas.function_name===''">Page Médecin</router-link>
+            <router-link to="/patientHome" v-if="sdatas.function_name===''">Page Patient</router-link>
+            <router-link to="/" v-if="sdatas.function_name==='Doctor'">Rédiger Ordonnance</router-link>
+            <router-link to="/" v-if="sdatas.function_name==='Doctor'">Mes patients</router-link>
+            <router-link to="/" v-if="sdatas.function_name==='Doctor'">Historique Ordonnance</router-link>
+            <router-link to="/" v-if="sdatas.function_name==='Patient'">Mes Ordonnances</router-link>
+            <router-link to="/" v-if="sdatas.function_name==='Patient'">Personnes à charges</router-link>
+            <router-link to="/" v-if="sdatas.function_name==='Patient'">Autre ?????</router-link>
+            <router-link to="/" v-if="sdatas.function_name==='Pharmacist'">Scanner Ordonnance</router-link>
+            <router-link to="/" v-if="sdatas.function_name==='Pharmacist'">Autre ?????</router-link>
           </nav>
 
             <p class="image_profil text-center" 
@@ -38,7 +38,7 @@
     <div id="carteSuperposee" class="cardPosition">
       <infocard v-if="card == true" @disapear="disapear"/>
     </div>
-    {{solo_data}}
+    {{sdatas}}
   </div>
 
 </template>
@@ -47,7 +47,7 @@
 module.exports = {
   name: "header-component",
   props: {
-    solo_data: {
+    sdatas: {
       type: Object,
       required: false,
       default: {},
