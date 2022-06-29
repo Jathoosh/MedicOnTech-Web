@@ -40,3 +40,11 @@ SELECT * from speciality; /*bon*/
 -- DROP TABLE IF EXISTS professional;
 -- DROP TABLE IF EXISTS service;
 -- DROP TABLE IF EXISTS speciality;
+        
+/*SELECT person.*, patient.Id_Patient, prescription.*, drug.*
+from prescription 
+join patient using (Id_Patient) 
+join person using (Id_Person) 
+right join prescription_drug Using (Id_Prescription) 
+join drug using (Id_Drug) 
+where Id_Patient IN (SELECT Id_Patient from assigned_doctor where Id_Doctor = 1);*/

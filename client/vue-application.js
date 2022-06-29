@@ -8,6 +8,7 @@ const Edit_prescription = window.httpVueLoader('./components/Edit_prescription.v
 const Pharmacien = window.httpVueLoader('./components/Pharmacien.vue')
 const Dependent_patient = window.httpVueLoader('./components/Dependent_patient.vue')
 const PatientInCharge = window.httpVueLoader('./components/PatientInCharge.vue')
+const Profil_PAC = window.httpVueLoader('./components/Profil_PAC.vue')
 const Contact = window.httpVueLoader('./components/Contact.vue')
 const A_propos = window.httpVueLoader('./components/A_propos.vue')
 
@@ -24,15 +25,20 @@ const LoginPro = window.httpVueLoader('./components/LoginPro.vue');
 const routes = [
   { path: '/login', component: Home },
   { path: '/annexe', name:'Annexe', component: Annexe },
-  { path: '/patientHome', name:'PatientHome', component: PatientHome }, //Verifier TODO
-  { path: '/Doctor_home', name:'Doctor', component: Doctor_home }, //Verifier TODO
-  { path: '/History_patient', name:'History_patient', component: History_patient }, //Verifier TODO
-  { path: '/Edit_prescription', name:'Edit_prescription', component: Edit_prescription }, //Verifier TODO
-  { path: '/pharmacien', name:'Pharmacien', component: Pharmacien }, //Verifier TODO
+  { path: '/patient_home', name:'PatientHome', component: PatientHome }, //Verifier TODO
+  { path: '/doctor_home', name:'Doctor', component: Doctor_home }, //Verifier TODO
+  { path: '/history_patient', name:'History_patient', component: History_patient }, //Verifier TODO
+  { path: '/edit_prescription', name:'Edit_prescription', component: Edit_prescription }, //Verifier TODO
+  { path: '/pharmacist_home', name:'Pharmacien', component: Pharmacien }, //Verifier TODO
   { path: '/dependent_patient', name:'Dependent_patient', component: Dependent_patient }, //Verifier TODO
   { path: '/profil', name:'Profil', component: Profil },
+
   { path: '/Ordonnance', name:'Ordonnance', component: Ordonnance }, //Verifier TODO  
-  { path: '/PatientInCharge', name:'PatientInCharge', component: PatientInCharge }, //Verifier TODO 
+  { path: '/PatientInCharge', name:'PatientInCharge', component: PatientInCharge }, //Verifier TODO  
+  { path: '/Profil_PAC', name:'Profil_PAC', component: Profil_PAC }, //Verifier TODO
+
+  { path: '/ordonnance', name:'Ordonnance', component: Ordonnance }, //Verifier TODO  
+  { path: '/patientInCharge', name:'PatientInCharge', component: PatientInCharge }, //Verifier TODO  
   { path: '/Contact', name:'Contact', component: Contact }, //Verifier TODO  
   { path: '/A_propos', name:'A_propos', component: A_propos } //Verifier TODO  
 ]
@@ -47,8 +53,8 @@ var app = new Vue( {
   data: 
   {
     sdatas: {id:0, firstname:'', lastname:'', function_name:'', function_id:0, email_address:'', work_home:''},
-    sdatas_comp: [], //???????????!
-    mdatas: []
+    sdatas_comp: [], //???????????!!!!!!
+    mdatas: [],
   },
   components: 
   {
@@ -58,7 +64,7 @@ var app = new Vue( {
   },
   async mounted () 
   {
-    //this.reloadData();
+    this.reloadData();
   },
   methods: 
   {
@@ -79,6 +85,8 @@ var app = new Vue( {
         this.sdatas.lastname = res.data.last_name;
         this.sdatas.email_address = data.mail;
         this.sdatas.work_home = res.data.workplace_name;
+        this.reloadData();
+        this.$router.push('/'+this.sdatas.function_name+'_home');
       }
       else
       {
@@ -98,6 +106,8 @@ var app = new Vue( {
         this.sdatas.lastname = res.data.last_name;
         this.sdatas.email_address = res.data.mail;
         this.sdatas.work_home = res.data.workplace_name;
+        this.reloadData();
+        this.$router.push('/'+this.sdatas.function_name+'_home');
       }
       else
       {
@@ -109,7 +119,7 @@ var app = new Vue( {
       if (this.sdatas.function_name == "Patient")
       {
         const res = await axios.get('api/patient_comp_datas');
-        this.sdatas_comp = res.data;
+        return res.data.datas;
       }
     },
     async getMdatas()
@@ -117,13 +127,21 @@ var app = new Vue( {
       if (this.sdatas.function_name == "Patient")
       {
         const res = await axios.get('api/patient_mdatas');
-        this.mdatas = res.data;
+        return res.data.datas;
       }
       else if (this.sdatas.function_name == "Doctor")
       {
         const res = await axios.get('api/doctor_mdatas');
-        this.mdatas = res.data;
+        return res.data.datas;
       }
     },
+    getPrescriptions(data)
+    {
+      this.patientID = data;
+    },
+    sendPrescription(data){
+      
+    }
+
   }
 })

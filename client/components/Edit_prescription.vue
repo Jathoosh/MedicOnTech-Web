@@ -9,6 +9,7 @@
         <hr>
         
         <div class="global">       
+            <form @submit.prevent="addprescription">
             <div class="globalcontainer">
                 <div class="container">                   
                     <br>
@@ -23,7 +24,7 @@
                     <div class="date">
                         <input class="form-control" type="date" >
                         <br>
-                        <img :src="randomBarCodeNumber()" alt="codebarre" style="width: 200px; height: 100px">
+                        <img :src="generateBarCodeNumber()" alt="codebarre" style="width: 200px; height: 100px">
                     </div>
                 </div>
             </div>
@@ -78,8 +79,10 @@
             <br>
             <br>
             <div class="send" style="text-align:center; ">
-             <button type="submit" style="width:40%;">Envoyer</button>
+             <button type="submit" style="width:40%;" @click="sendPrescription()">Envoyer</button>
+             <p v-if="sendMessage === true">Ordonannance envoyée</p>
             </div>
+            </form>
         </div>
     </div>
 </template>
@@ -102,17 +105,33 @@ module.exports = {
             editDrug:{
                 drug_quantity: "",
             },
-            barcodeValue: 'TEST',
+
+            newPrescription : {
+                patient_name: "",
+                patient_firstname: "",
+                date: "",
+                barcode: "",
+                drugs: [
+                    {drug_name:"Doliprane 1000mg", drug_quantity: "1", drug_notes: "3 fois par jour pendant 2 jours", hideQuantity: true},
+                    {drug_name:"Doliprane 500mg", drug_quantity: "1", drug_notes: "3 fois par jour pendant 2 jours", hideQuantity: true,},
+                ],
+                
+                notes: "",
+                reusable: false,
+                reuse: "",
+            },
+            sendMessage: false,
 
         }
     },
     methods: {
         addDrug(){
             // ajout dans la liste de la vue les mediacaments ajoutés
-            this.drugs.push({drug_name: this.newDrug_name, drug_quantity: this.newDrug_quantity});
+            this.drugs.push({drug_name: this.newDrug_name, drug_quantity: this.newDrug_quantity, drug_notes: this.newDrug_notes, hideQuantity: true});
             // vider les champs de saisie
             this.newDrug_name = "";
             this.newDrug_quantity = "";
+            this.newDrug_notes = "";
         },
         removeDrug(drug){
             // suppression dans la liste de la vue les mediacaments ajoutés
@@ -129,16 +148,22 @@ module.exports = {
         back(){
             this.$router.push('/Doctor_home');
         },
-
-        randomBarCodeNumber(){
-            var barcode = "";
-            for(var i = 0; i < 12; i++){
-                barcode += Math.floor(Math.random() * 10);
+        sendPrescription(){
+            //A PLACER DANS LE INDEX.HTML ET LE VUE APPLICATION
+            this.$emit('sendPrescription', this.newPrescription);
+            this.sendMessage = true;
+        },
+        generateBarCodeNumber(){
+            var prescription_ID = 13;
+            var barcode = prescription_ID.toString();
+            while (barcode.length < 12) {
+                barcode = "0" + barcode;
             }
             console.log(barcode);
             return "http://bwipjs-api.metafloor.com/?bcid=ean13&text=" + barcode;
         }
-    }
+    }, 
+
 }
 </script>
 

@@ -11,9 +11,9 @@ const bcrypt = require('bcrypt');
 const { URLSearchParams } =  require ('url');
 const config = require ('../../config');
 
-const sdatas = {};
-const sdatas_comp = [];
-const mdatas = [];
+var sdatas = {};
+var sdatas_comp = [];
+var mdatas = [];
 
 //Attention au nom de la table
 const sequelize = new Sequelize("db_medicontech",data_db.Username,data_db.Password, //Veuillez mettre le mot de passe de la base de donnée
@@ -159,22 +159,70 @@ router.get('/patient_mdatas', (req,res) => {
 
 router.get('/doctor_mdatas', (req,res) => {
   const Id_Doctor = req.session.function_id;
+  console.log(Id_Doctor);
   mdatas = [];
-  sequelize.query(`SELECT Person.* from assigned_doctor JOIN Patient USING (Id_Patient) JOIN Person USING (Id_Person) WHERE Id_Doctor = '${Id_Doctor}'`).then(result => {
-    let temp = {};
-    let tmp_prescriptions = [];
-    result[0].forEach(patient => {
-      temp = {};
-      sequelize.query(`SELECT * from prescription WHERE Id_Patient = '${patient.Id_Patient}'`).then(result2 => {
-        temp.infos_patient = patient;
-        result2[0].forEach(prescription => {
-          sequelize.query(`SELECT Drug.*, prescription_drug.quantity from prescription_drug JOIN Drug USING (Id_Drug) WHERE Id_Prescription = '${prescription.Id_Prescription}'`).then(result3 => {
-            
-          })
+  sequelize.query(`SELECT person.*, patient.Id_Patient, prescription.*, drug.* from prescription join patient using (Id_Patient) join person using (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) where Id_Patient IN (SELECT Id_Patient from assigned_doctor where Id_Doctor = '${Id_Doctor}');`).then(result => {
+    //Obtain unique Patient
+    let Id_Patients = [];
+    result[0].forEach(row => {
+      if (!Id_Patients.includes(row.Id_Patient))
+      {
+        Id_Patients.push(row.Id_Patient);
+        mdatas.push({
+          infos_patient : {
+            Id_Person : row.Id_Person,
+            first_name : row.first_name,
+            last_name : row.last_name,
+            birth_date : row.birth_date,
+            email_address : row.email_address,
+            phone : row.phone,
+            Id_Postal_address : row.Id_Postal_address
+          },
+          prescriptions : []
+        });
+      }
+    })
+    //Obtain unique Prescription according to Id_Patient
+    let Id_Prescriptions = [];
+    Id_Patients.forEach((Id_Patient,index) => {
+      Id_Prescriptions = [];
+      result[0].filter(row => row.Id_Patient == Id_Patient).forEach((row,n) => {
+        if (!Id_Prescriptions.includes(row.Id_Prescription))
+        {
+          Id_Prescriptions.push(row.Id_Prescription);
+          mdatas[index].prescriptions.push({
+            infos_prescription : {
+              Id_Prescription : row.Id_Prescription,
+              creation_date : row.creation_date,
+              expiration_date : row.expiration_date,
+              date_of_use : row.date_of_use,
+              frequency_of_reuse : row.frequency_of_reuse,
+              number_of_reuses : row.number_of_reuses,
+              used : row.used,
+              validity : row.validity,
+              note : row.note,
+              reported : row.reported,
+              report_note : row.report_note,
+            },
+            drugs : [],
+            services : []
+          });
+        }
+        mdatas[index].prescriptions[Id_Prescriptions.length-1].drugs.push({
+          Id_Drug : row.Id_Drug,
+          drug_name : row.drug_name,
+          drug_format : row.drug_format,
+          drug_application : row.drug_application,
+          autorisation_status : row.autorisation_status,
+          comercialised : row.comercialised,
+          comercialised_on : row.comercialised_on,
+          warning_stock : row.warning_stock,
+          comercialised_by : row.comercialised_by,
+          drug_price : row.drug_price,
+          reimbursement_rate : row.reimbursement_rate
         });
       })
-      mdatas.push(temp);
-    });
+    })
     res.status(200).json({
       message : 'Données récupérées',
       datas : mdatas
@@ -182,41 +230,68 @@ router.get('/doctor_mdatas', (req,res) => {
   })
 })
 
-router.get('/patients/:doctorId', (req, res) => {
-  doctorId= req.params.doctorId;
-  let toreturn = [];  
-
-  sequelize.query(`SELECT Person.first_name, Person.last_name, Person.Id_Person, Person.birth_date, Person.email_address FROM assigned_doctor JOIN patient ON assigned_doctor.Id_Patient = Patient.Id_Patient JOIN Person ON Patient.Id_Person = Person.Id_Person WHERE Id_Doctor = ${doctorId}`)
-  .then(function(result) {
-    result[0].forEach(ligne => {
-      toreturn.push({
-        first_name: ligne.first_name,
-        last_name: ligne.last_name,
-        id: ligne.Id_Person,
-        birth_date: ligne.birth_date,
-        email_address: ligne.email_address
-      });
-    });
-    res.status(200).json(toreturn);
-  })
-})
-
 // PARTIE APPLICATION
 
-router.get('/motapp', (req, res) => {
-  res.status(200).json([{message:'Tu as réussi, hésite pas à me mp le code 59745 sur Discord',id:1},{message:'Hola Camron, como esta ?!',id:2},{message:'Hey, i can also talk english, what about you ?',id:3},{message:'WeshWesh, jai plus dinspi',id:4}]);
-})
+router.get("/motapp", (req, res) => {
+  res.status(200).json([
+    {
+      message: "Tu as réussi, hésite pas à me mp le code 59745 sur Discord",
+      id: 1,
+    },
+    { message: "Hola Camron, como esta ?!", id: 2 },
+    { message: "Hey, i can also talk english, what about you ?", id: 3 },
+    { message: "WeshWesh, jai plus dinspi", id: 4 },
+  ]);
+});
 
-router.post('/motapp', (req, res) => {
-  console.log(req.body);
-  res.status(200).json({message:'Jai bien reçu ta requête en post et je lai affiché dans la console'});
-})
+router.get("/motapp/ordonnance/:id", (req, res) => {
+  id = req.params.id;
+  sequelize
+    .query(
+      `SELECT pp.last_name as patient_lastname, pp.first_name as patient_firstname, dp.last_name as doctor_lastname, dp.first_name as doctor_firstname, creation_date, Id_Prescription from prescription join patient using(Id_Patient) join doctor using (Id_Doctor) join person dp ON dp.Id_Person = Doctor.Id_Person Join person pp on pp.Id_Person = patient.Id_Person where  used= false and Id_Patient = ${id}`
+    )
+    .then((result) => {
+      console.log(result[0]);
+      res.status(200).json({ result: result[0] });
+    });
+});
 
-router.get('/motapp/doctor', (req, res) => {
-  sequelize.query('SELECT Person.first_name, Person.last_name, Person.phone, Person.email_address, Person.Id_Person FROM `Doctor` JOIN `Person` ON Person.Id_Person = Doctor.Id_Person').then(result => {
-    console.log(result[0]);
-    res.status(200).json({result:result[0]});
-  })
-})
+router.get("/motapp/prescription/:id", (req, res) => {
+  id = req.params.id;
+  sequelize
+    .query(
+      `SELECT Id_Drug,drug_name,quantity from prescription
+      join prescription_drug using (Id_Prescription) 
+      join drug using(Id_Drug)
+      where Id_Prescription = ${id}`
+    )
+    .then((result) => {
+      console.log(result[0]);
+      res.status(200).json({ result: result[0] });
+    });
+});
+
+router.get("/motapp/historique/:id", (req, res) => {
+  id = req.params.id;
+  sequelize
+    .query(
+      `SELECT pp.last_name as patient_lastname, pp.first_name as patient_firstname, dp.last_name as doctor_lastname, dp.first_name as doctor_firstname, creation_date, Id_Prescription from prescription join patient using(Id_Patient) join doctor using (Id_Doctor) join person dp ON dp.Id_Person = Doctor.Id_Person Join person pp on pp.Id_Person = patient.Id_Person where  used= true and Id_Patient = ${id}`
+    )
+    .then((result) => {
+      console.log(result[0]);
+      res.status(200).json({ result: result[0] });
+    });
+});
+
+router.get("/motapp/doctor", (req, res) => {
+  sequelize
+    .query(
+      "SELECT Person.first_name, Person.last_name, Person.phone, Person.email_address, Person.Id_Person FROM `Doctor` JOIN `Person` ON Person.Id_Person = Doctor.Id_Person"
+    )
+    .then((result) => {
+      console.log(result[0]);
+      res.status(200).json({ result: result[0] });
+    });
+});
 
 module.exports = router
