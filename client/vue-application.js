@@ -8,6 +8,7 @@ const Edit_prescription = window.httpVueLoader('./components/Edit_prescription.v
 const Pharmacien = window.httpVueLoader('./components/Pharmacien.vue')
 const Dependent_patient = window.httpVueLoader('./components/Dependent_patient.vue')
 const PatientInCharge = window.httpVueLoader('./components/PatientInCharge.vue')
+const Profil_PAC = window.httpVueLoader('./components/Profil_PAC.vue')
 const Contact = window.httpVueLoader('./components/Contact.vue')
 const A_propos = window.httpVueLoader('./components/A_propos.vue')
 
@@ -31,6 +32,11 @@ const routes = [
   { path: '/pharmacist_home', name:'Pharmacien', component: Pharmacien }, //Verifier TODO
   { path: '/dependent_patient', name:'Dependent_patient', component: Dependent_patient }, //Verifier TODO
   { path: '/profil', name:'Profil', component: Profil },
+
+  { path: '/Ordonnance', name:'Ordonnance', component: Ordonnance }, //Verifier TODO  
+  { path: '/PatientInCharge', name:'PatientInCharge', component: PatientInCharge }, //Verifier TODO  
+  { path: '/Profil_PAC', name:'Profil_PAC', component: Profil_PAC }, //Verifier TODO
+
   { path: '/ordonnance', name:'Ordonnance', component: Ordonnance }, //Verifier TODO  
   { path: '/patientInCharge', name:'PatientInCharge', component: PatientInCharge }, //Verifier TODO  
   { path: '/Contact', name:'Contact', component: Contact }, //Verifier TODO  
@@ -129,5 +135,13 @@ var app = new Vue( {
         return res.data.datas;
       }
     },
+    getPrescriptions(data)
+    {
+      this.patientID = data;
+    },
+    sendPrescription(data){
+      
+    }
+
   }
 })
