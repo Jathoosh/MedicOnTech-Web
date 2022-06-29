@@ -34,19 +34,14 @@
       <!-- FIN TODO -->
       <!-- <Head_comp></Head_comp> -->
     </header>
-
     <main id="main">
       <router-view
       @fc-method = "FCMethod"
       @login = "login"
-      :mdata = "mdata"
-      :doctor = "doctor"
-      @getPrescriptions = "getPrescriptions"
-      :index_patient = "index_patient"
-      :heya = "heya"
-      :solo_data = "solo_data"
+      :mdatas = "mdatas"
       ></router-view>
     </main>
+
     <footer id="footer">
       <Foot_comp></Foot_comp>
     </footer>

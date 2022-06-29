@@ -2,16 +2,12 @@
   <div>
     <br>
     <div class="head">
-
       <div class="info">
-        <!-- <h3>Historique des ordonnances de {{patients[0][0].last_name}} {{patients[0][0].first_name}}</h3> -->
-        <p>{{solo_data}}</p>
+        <h3>Historique des ordonnances de {{patients[0].last_name}} {{patients[0].first_name}}</h3>
+        
       </div>
-      <br>
-      <div class="buttonback">
-        <button class="btn btn-outline-secondary" @click="redirectionToPatientInCharge()">Ajouter des personnes à charge</button>
-        <button @click="back()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Retour</button>
-      </div>
+
+      <div class="buttonback"><button @click="back()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Retour</button></div>
 
     </div>
       <p id="search_adv">Recherche avancée</p>
@@ -22,7 +18,7 @@
   <br>
   <br>
   <br>
-    <!--
+
     <div class="prescription_info">
       <div class="detail" v-for="(patient, index) in patients" :key="index">
         <h2>{{ patient.last_name }} {{ patient.first_name }}  - {{ prescription.creation_date }}</h2>
@@ -33,8 +29,7 @@
       <div class="buttonRedirect">
           <button @click="redirectionToOrdonnance()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Voir le détail</button> 
       </div>
-    </div>-->
-    <br>
+    </div>
   </div>
 </template>
 
@@ -43,22 +38,13 @@ module.exports = {
   name: "History_patient",
   props:
   {
-    patients: {
-      type: Array,
-      required: true
-    },
-    prescriptions: {
-      type: Array,
-      required: true
-    },
-    drugs: {
+    mdatas: {
       type: Array,
       required: true
     }
   },
   data() {
     return {
-      /*
       prescription: {
         creation_date: "20/04/2022",
         id: 21374673265,
@@ -74,7 +60,7 @@ module.exports = {
         first_name: "Truc",
         last_name: "Muche",
         speciality: "général",
-      },*/
+      },
 
       search: "",
     };
@@ -85,9 +71,6 @@ module.exports = {
     },
     redirectionToOrdonnance: function () {
       this.$router.push("/Ordonnance");
-    },
-    redirectionToPatientInCharge: function () {
-      this.$router.push("/PatientInCharge");
     },
   },
   computed: {
@@ -100,9 +83,6 @@ module.exports = {
       });
     },
   },
-  props:{
-    index_patient : Number,
-  }
 };
 </script>
 
