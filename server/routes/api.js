@@ -2,14 +2,12 @@ const express = require('express')
 const router = express.Router()
 
 const data_db = require('./.data_db')
+const configRoutes = require('./configRoutes')
 
 const {Sequelize} = require('sequelize');
 const { status } = require('express/lib/response');
 
-const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-const { URLSearchParams } =  require ('url');
-const config = require ('../../config');
 
 var sdatas = {};
 var sdatas_comp = [];
@@ -39,52 +37,31 @@ router.use((req, res, next) => {
 })
 
 router.post('/login-authorize', (req, res) => {
-  //pick a random number between 1 and 30
-  const randomNumber = Math.floor(Math.random() * 30) + 1;
-  //Partie temporaire pour la connexion de l'utilisateur
+  const {given_name, family_name, birthdate} = req.body;
 
-  sequelize.query(`SELECT * FROM Person JOIN patient using(Id_Person) JOIN postal_address using (Id_Postal_address) WHERE Id_Person=${randomNumber}`).then(result => {
-    req.session.Id_Person = result[0][0].Id_Person;
-    req.session.function = "Patient";
-    req.session.function_id = result[0][0].Id_Patient;
-    res.status(200).json({
-      message: 'Not Yet Implemented',
-      connected: true,
-      Id_Person: randomNumber,
-      profession: {name:"Patient", id:result[0][0].Id_Patient},
-      first_name: result[0][0].first_name,
-      last_name: result[0][0].last_name,
-      workplace_name: {door_number:result[0][0].door_number, road_number:result[0][0].number, road_name:result[0][0].road, zip_code:result[0][0].zip_code, town:result[0][0].town, country:result[0][0].country}, //Compacter l'addresse de la table postal_address
-      mail: result[0][0].email_address,
-    });
+  sequelize.query(`SELECT * FROM Person JOIN patient using(Id_Person) WHERE birth_date='${birthdate}' and last_name='${family_name}' and first_name = '${given_name}'`).then(result => {
+    if(result[0].length != 0){  
+      req.session.Id_Person = result[0][0].Id_Person;
+      req.session.function = "Patient";
+      req.session.function_id = result[0][0].Id_Patient;
+      console.log(configRoutes.MAIN_URL+'/login_retrieve');
+      //redirect to youtube
+      res.status(200).redirect(configRoutes.MAIN_URL+'/login_retrieve');
+    }
+    else{
+      sequelize.query(`INSERT INTO postal_address (country) VALUES ("France")`).then(result => {
+        sequelize.query(`INSERT INTO Person (first_name, last_name, birth_date, Id_Postal_address) VALUES ('${given_name}', '${family_name}', '${birthdate}', '${result[0]}')`).then(result2 => {
+          sequelize.query(`INSERT INTO patient (Id_Person) VALUES ('${result2[0]}')`).then(result3 => {
+            req.session.Id_Person = result2[0];
+            req.session.function = "Patient";
+            req.session.function_id = result3[0];
+            console.log(configRoutes.MAIN_URL+'/login_retrieve');
+            res.status(200).redirect(configRoutes.MAIN_URL+'/login_retrieve');
+          })
+        })
+      })
+    }
   })
-
-  //Fin partie temporaire
-  /*const { eidasLevel } = req.body;
-  const scopes = Object.keys(req.body)
-    .filter(key => key.startsWith('scope_'))
-    .map(scope => scope.split('scope_').pop())
-    .join(' ');
-
-  const query = {
-    scope: scopes || "openid given_name family_name gender preferred_username birthdate",
-    redirect_uri: `${config.FS_URL}${config.LOGIN_CALLBACK_FS_PATH}`,
-    response_type: 'code',
-    client_id: config.AUTHENTICATION_CLIENT_ID,
-    state: `state${crypto.randomBytes(32).toString('hex')}`,
-    nonce: `nonce${crypto.randomBytes(32).toString('hex')}`,
-  };
-
-  // Save requested scopes in the session
-  req.session.scopes = scopes;
-
-
-  query.acr_values = eidasLevel || "eidas1";
-
-
-  const url = `${config.FC_URL}${config.AUTHORIZATION_FC_PATH}`;
-  const params = new URLSearchParams(query).toString();
-  return res.redirect(`${url}?${params}`);*/
 });
 
 //PARTIE OBTENTION INFO SELON CONNEXION
@@ -127,6 +104,30 @@ router.post('/login', (req, res) => {
 })
 
 //PARTIE OBTENTIONS INFOS PERSONNES
+
+router.get('/retrieve_person', (req, res) => {
+  const Id_Person = req.session.Id_Person;
+  const function_id = req.session.function_id;
+  const function_name = req.session.function;
+  if (Id_Person != null){
+    sequelize.query(`SELECT * FROM Person JOIN postal_address using (Id_Postal_address) WHERE Id_Person = '${Id_Person}'`).then(result => {
+      console.log(result[0][0]);
+      res.status(200).json({
+        connected : true,
+        Id_Person: Id_Person,
+        first_name : result[0][0].first_name,
+        last_name : result[0][0].last_name,
+        birth_date : result[0][0].birth_date,
+        mail : result[0][0].email_address,
+        profession: {name:function_name, id:function_id},
+        workplace_name : {door_number:result[0][0].door_number, road_number:result[0][0].number, road_name:result[0][0].road, zip_code:result[0][0].zip_code, town:result[0][0].town, country:result[0][0].country}, //Compacter l'addresse de la table postal_address
+      });
+    })
+  }
+  else{
+    res.status(200).json({connected:false});
+  }
+})
 
 router.get('/patient_comp_datas', (req,res) => {
   const Id_Patient = req.session.function_id;
