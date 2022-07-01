@@ -16,10 +16,13 @@ npm install
 ## Run the app (as dev)
 
 In the file .data_db (available only on local) you need to modify Username and Password (and Port in some case) to connect to the database.
+
 If you are running as dev (on local) you will need to launch Initialisation.sql file on your DBMS (Data Base Management System).
+
 Also, as dev you will need to launch start_server.bat, a file which allows to start two servers, one for the main website, the otherone for France Connect, as a bridge website, (as we are in developping phase, France Connect connexion ID, public and private, are both for demonstration and integration purpose)
 
 If, for any reason, you do not want to use start_server.bat file, you will need to be on the correct repertory and type :
+
 ```bash
 npm start
 ```
