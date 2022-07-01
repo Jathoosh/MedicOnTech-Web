@@ -16,9 +16,8 @@
             <router-link to="/pharmacist_home" v-if="sdatas.function_name===''">Page Pharmacien</router-link>
             <router-link to="/doctor_home" v-if="sdatas.function_name===''">Page Médecin</router-link>
             <router-link to="/patient_home" v-if="sdatas.function_name===''">Page Patient</router-link>
-            <router-link to="/edit_prescription" v-if="sdatas.function_name==='Doctor'">Rédiger Ordonnance</router-link>
             <router-link to="/doctor_home" v-if="sdatas.function_name==='Doctor'">Mes patients</router-link>
-            <router-link to="/history_patient" v-if="sdatas.function_name==='Doctor'">Historique Ordonnance</router-link>
+            <router-link to="/edit_prescription" v-if="sdatas.function_name==='Doctor'">Rédiger Ordonnance</router-link>
             <router-link to="/" v-if="sdatas.function_name==='Patient'">Mes Ordonnances</router-link>
             <router-link to="/" v-if="sdatas.function_name==='Patient'">Personnes à charges</router-link>
             <router-link to="/" v-if="sdatas.function_name==='Patient'">Autre ?????</router-link>
@@ -34,11 +33,13 @@
 
     </div>
 
+    <button @click="login({mail:'moreau.camille@medecin.fr',password:'123'})" >connexion docteur id 1</button>
+
     <!-- TODO à rajuster pour que la card soit juste en dessous du profil --> 
     <div id="carteSuperposee" class="cardPosition">
       <infocard v-if="card == true" @disapear="disapear"/>
     </div>
-    {{sdatas}}
+    <!-- {{sdatas}} -->
   </div>
 
 </template>
@@ -84,7 +85,10 @@ module.exports = {
     initialesPatient: function(){
         var String = this.last_name[0] + this.first_name[0];
         return String;
-      }
+      },
+    login: function(data){
+      this.$emit('login', data);
+    }
 
   },
 };
@@ -231,6 +235,7 @@ nav > a.router-link-exact-active.router-link-active
   margin-top: 7px; 
   margin-right: 19px; 
   font-size: 1.5em;
+  padding-top: 5px;
 }
 
 </style>
