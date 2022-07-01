@@ -4,8 +4,7 @@
     <div class="head">
       <div class="info">
 
-        <!-- <h3>Historique des ordonnances de {{patients[0][0].last_name}} {{patients[0][0].first_name}}</h3> -->
-        <p>{{solo_data}}</p>
+        <h3>Historique des ordonnances de {{mdatas[index_history_patient].infos_patient.last_name}} {{mdatas[index_history_patient].infos_patient.first_name}} </h3>
       </div>
       <br>
       <div class="buttonback">
@@ -14,7 +13,6 @@
 
       </div>
 
-      <div class="buttonback"><button @click="back()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Retour</button></div>
 
     </div>
       <p id="search_adv">Recherche avancée</p>
@@ -26,50 +24,47 @@
   <br>
   <br>
 
-    <div class="prescription_info">
-      <div class="detail" v-for="(patient, index) in patients" :key="index">
-        <h2>{{ patient.last_name }} {{ patient.first_name }}  - {{ prescription.creation_date }}</h2>
-        <p><strong>Etat ordonnance</strong></p>
-        <p style="color:grey;">id : {{ prescription.id }}</p>
+    <div class="prescription_info" v-for="(d, index_history_patient) in mdatas[index_history_patient].prescriptions" :key="index_history_patient">
+      <div class="detail" >
+        <h2>Fait le {{changeDate(d.infos_prescription.creation_date)}} - expire le {{changeDate(d.infos_prescription.expiration_date)}}</h2>
+        <p><strong>Etat ordonnance : {{statePres(d.infos_prescription.validity)}}</strong></p>
+        <p>Nombre de réutilisations : {{d.infos_prescription.frequency_of_reuse}}</p>
+        <p>Ordonnance signalée : {{reportedPres(d.infos_prescription.reported)}}</p>
+        <p  v-if="d.infos_prescription.reported == true">  Raisons du signalement : {{d.infos_prescription.report_note}}</p>
+        <p style="color:grey;">ID : {{generateBarCodeNumber(d.infos_prescription.Id_Prescription)}}</p>
       </div>
 
       <div class="buttonRedirect">
           <button @click="redirectionToOrdonnance()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Voir le détail</button> 
       </div>
     </div>
+    <br>
   </div>
 </template>
 
 <script>
 module.exports = {
   name: "History_patient",
-  props:
-  {
+ props: {
+    sdatas: Object,
     mdatas: {
       type: Array,
-      required: true
-    }
+      required: true,
+      default: function () {
+        return [];
+      }
+    },
+    index_history_patient: {
+      type: Number,
+      required: true,
+      default: function () {
+        return 0;
+      }
+    },
   },
+  
   data() {
     return {
-      prescription: {
-        creation_date: "20/04/2022",
-        id: 21374673265,
-      },
-      patients: [
-        {
-          first_name: "Paul",
-          last_name: "Pierre",
-          id: "43572653",
-        },
-      ],
-      doctor: {
-        first_name: "Truc",
-        last_name: "Muche",
-        speciality: "général",
-      },
-
-      search: "",
     };
   },
   methods: {
@@ -85,18 +80,35 @@ module.exports = {
     redirectToPac: function () {
       this.$router.push("/Profil_PAC");
     },
-
-  },
-  computed: {
-    filteredPatients() {
-      return this.patient.filter((patient) => {
-        return (
-          patient.last_name.toLowerCase().indexOf(this.search.toLowerCase()) >
-          -1
-        );
-      });
+    changeDate(date){
+      dateSplit = date.split('-');
+      return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
     },
+    generateBarCodeNumber(Id_Prescription){
+      var barcode = Id_Prescription.toString();
+      while (barcode.length < 12) {
+          barcode = "0" + barcode;
+      }
+      return barcode; 
+    },
+    reportedPres(reported){
+      if(reported == 1){
+        return "Oui";
+      }
+      else{
+        return "Non";
+      }
+    },
+    statePres(validity){
+      if(validity == 1){
+        return "Valide";
+      }
+      else{
+        return "Invalide";
+      }
+    }
   },
+  computed: {},
 };
 </script>
 

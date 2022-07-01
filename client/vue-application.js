@@ -55,6 +55,7 @@ var app = new Vue( {
     sdatas: {id:0, firstname:'', lastname:'', function_name:'', function_id:0, email_address:'', work_home:''},
     sdatas_comp: [], //???????????!!!!!!
     mdatas: [],
+    index_history_patient: 0,
   },
   components: 
   {
@@ -146,7 +147,10 @@ var app = new Vue( {
         //redirect to login
         this.$router.push('/login');
       }
+    },
+    infos_patient(data)
+    {
+      this.index_history_patient = data.index;
     }
-
   }
 })
