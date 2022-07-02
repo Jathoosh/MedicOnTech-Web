@@ -55,6 +55,8 @@ var app = new Vue( {
     sdatas: {id:0, firstname:'', lastname:'', function_name:'', function_id:0, email_address:'', work_home:''},
     sdatas_comp: [], //???????????!!!!!!
     mdatas: [],
+    index_pac: 0,
+    tutor_bool: true,
   },
   components: 
   {
@@ -141,6 +143,13 @@ var app = new Vue( {
     },
     sendPrescription(data){
       
+    },
+
+    save_index_pac(data){
+      this.index_pac = data.index;
+    },
+    tutor_false(){
+      this.tutor_bool = false;
     }
 
   }

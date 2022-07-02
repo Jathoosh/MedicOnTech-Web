@@ -4,8 +4,7 @@
 CREATE DATABASE db_medicontech;
 USE db_medicontech;*/
 
--- Create Tables
-/*
+/*-- Create Tables
 CREATE TABLE Postal_address(
    Id_Postal_address INT NOT NULL AUTO_INCREMENT,
    door_number VARCHAR(50),

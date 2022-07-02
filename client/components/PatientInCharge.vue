@@ -70,10 +70,11 @@ module.exports = {
         backHome: function () {
         this.$router.push("/PatientHome");
         },
-        goToHomePatientInCHarge: function () {
-            this.$router.push("/PatientHome");
-            this.$emit('saveIndexPAC', {index:index});
-            this.$emit('tutorFalse');
+        goToHomePatientInCHarge: function (index) {
+            this.$router.push("/PatientHome");            
+            this.$emit('save_index_pac', {index:index});
+            this.$emit('tutor_false');
+
 
         }
     },
