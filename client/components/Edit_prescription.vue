@@ -9,12 +9,12 @@
         <hr>
         
         <div class="global">       
-            <form @submit.prevent="addprescription">
+            <form>
             <div class="globalcontainer">
                 <div class="container">                   
                     <br>
-                    <input class="inputName" type="text" placeholder="Nom" required/>
-                    <input class="inputName" type="text" placeholder="Prénom" required/>
+                    <input class="inputName" v-model="newPatient_lastname" type="text" placeholder="Nom" required/>
+                    <input class="inputName" v-model="newPatient_firstname" type="text" placeholder="Prénom" required/>
                 </div>
             
                 <div class="date_container">
@@ -22,15 +22,13 @@
                         <p>Le </p>
                     </div>
                     <div class="date">
-                        <input class="form-control" type="date" >
-                        <br>
-                        <img :src="generateBarCodeNumber()" alt="codebarre" style="width: 200px; height: 100px">
+                        <input class="form-control" type="date" v-model="myDate">
                     </div>
                 </div>
             </div>
             <br>
             <div class="input_medicament_info">
-                <label style="font-size:30px; margin-bottom:5px"><strong>Ajouter d'un médicament</strong></label>
+                <label style="font-size:30px; margin-bottom:5px"><strong>Ajouter un médicament</strong></label>
                 <!--input pour ajouter le médicament-->
                 <form v-on:submit.prevent="addDrug">
                     <input type="text" v-model="newDrug_name" placeholder="Nom du médicament"/>
@@ -70,16 +68,16 @@
                 </table>
             </div>
             <br>
-            <textarea placeholder="Commentaires & services" class="form-control"></textarea>
+            <textarea placeholder="Commentaires & services" class="form-control" v-model="notes"></textarea>
             <br>
             <div class="reusable">
                 <label>Ordonnance renouvelable <input type="checkbox" name="resuable" v-model="reusable"/></label>
-                <input id="reuse" type="number" placeholder="Nombre de réutilisations" v-if="reusable===true"/>
+                <input id="reuse" type="number" min="1" placeholder="Nombre de réutilisations" v-model="reuse" v-if="reusable===true"/>
             </div>
             <br>
             <br>
             <div class="send" style="text-align:center; ">
-             <button type="submit" style="width:40%;" @click="sendPrescription()">Envoyer</button>
+             <button type="button" style="width:40%;" @click="sendPrescription()">Envoyer</button>
              <p v-if="sendMessage === true">Ordonannance envoyée</p>
             </div>
             </form>
@@ -90,37 +88,38 @@
 <script>
 module.exports = {
     name: 'Edit_prescription',
-    
     data() { 
         return {
             reusable : false,
-            drugs: [
-                {drug_name:"Doliprane 1000mg", drug_quantity: "1", drug_notes: "3 fois par jour pendant 2 jours", hideQuantity: true},
-                {drug_name:"Doliprane 500mg", drug_quantity: "1", drug_notes: "3 fois par jour pendant 2 jours", hideQuantity: true,},
+            reuse : 1,
+            // prescriptionNotes:"",
+            myDate : new Date().toISOString().slice(0,10),
+            drugs: [ // tableau des médicaments
+                {drug_name:"", drug_quantity: "", drug_notes: "", hideQuantity: true},
             ],
             newDrug_name: "",
             newDrug_quantity: "",   
             newDrug_notes: "",
+            newPatient_lastname: "",
+            newPatient_firstname: "",
+            notes: "",
 
             editDrug:{
                 drug_quantity: "",
             },
 
-            newPrescription : {
-                patient_name: "",
+            newPrescription : { // ordonnance à envoyer
+                patient_lastname: "",
                 patient_firstname: "",
                 date: "",
-                barcode: "",
                 drugs: [
-                    {drug_name:"Doliprane 1000mg", drug_quantity: "1", drug_notes: "3 fois par jour pendant 2 jours", hideQuantity: true},
-                    {drug_name:"Doliprane 500mg", drug_quantity: "1", drug_notes: "3 fois par jour pendant 2 jours", hideQuantity: true,},
+                    {drug_name:"", drug_quantity: "", drug_notes: "", hideQuantity: true}
                 ],
-                
                 notes: "",
                 reusable: false,
                 reuse: "",
             },
-            sendMessage: false,
+            sendMessage: false, // message de confirmation d'envoi de l'ordonnance
 
         }
     },
@@ -142,7 +141,6 @@ module.exports = {
         }, 
         finishEditQuantity(index){
             this.drugs[index].hideQuantity = true;
-            // this.drugs[index].drug_quantity = this.editDrug.drug_quantity;
             console.log("non");
         },
         back(){
@@ -150,19 +148,30 @@ module.exports = {
         },
         sendPrescription(){
             //A PLACER DANS LE INDEX.HTML ET LE VUE APPLICATION
-            this.$emit('sendPrescription', this.newPrescription);
+            // TODO : faire des conditions de verif des champs : nom, prenom, et au moins un médicament dans le tableau drugs
+ 
+            this.newPrescription.date = this.myDate;
+            this.newPrescription.drugs = this.drugs;
+            this.newPrescription.notes = this.notes;
+            this.newPrescription.reusable = this.reusable;
+            this.newPrescription.reuse = this.reuse;
+            this.newPrescription.patient_lastname = this.newPatient_lastname;
+            this.newPrescription.patient_firstname = this.newPatient_firstname;
             this.sendMessage = true;
+            
+            this.$emit('sendPrescription', this.newPrescription);
+            this.$router.push('/Doctor_home');
+            
+            console.log("VOILA CE QUE TU RECOIS : ",this.newPrescription);
         },
-        generateBarCodeNumber(){
-            var prescription_ID = 13;
-            var barcode = prescription_ID.toString();
-            while (barcode.length < 12) {
-                barcode = "0" + barcode;
-            }
-            console.log(barcode);
-            return "http://bwipjs-api.metafloor.com/?bcid=ean13&text=" + barcode;
-        }
     }, 
+    created: function(){
+                this.drugs = [];
+                this.newDrug_name = "";
+                this.newDrug_quantity = "";
+                this.newDrug_notes = "";
+                }
+    
 
 }
 </script>

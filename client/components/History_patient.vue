@@ -3,7 +3,6 @@
     <br>
     <div class="head">
       <div class="info">
-
         <h3>Historique des ordonnances de {{mdatas[index_history_patient].infos_patient.last_name}} {{mdatas[index_history_patient].infos_patient.first_name}} </h3>
       </div>
       <br>
