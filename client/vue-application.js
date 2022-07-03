@@ -71,9 +71,15 @@ var app = new Vue( {
   async mounted () 
   {
     this.reloadData();
+    // this.footerToBottom();
   },
   methods: 
   {
+    footertobottom(height)
+    {
+      var main = document.getElementById("main");
+      main.style.paddingBottom = height;
+    },
     async reloadData()
     {
       this.sdatas_comp = await this.getSdatas_Comp();
