@@ -6,6 +6,7 @@
   <title>MedicOnTech</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="./ressources/MedicOnTech - Logo.png">
 
   <!-- Load Vue followed by Vue Router -->
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -57,7 +58,9 @@
     </main>
 
     <footer id="footer">
-      <Foot_comp></Foot_comp>
+      <Foot_comp
+      @footertobottom = "footertobottom"
+      ></Foot_comp>
     </footer>
   </div>
   <script src="/vue-application.js"></script>
