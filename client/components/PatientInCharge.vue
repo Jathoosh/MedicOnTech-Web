@@ -10,7 +10,7 @@
                 <div class="card-body" >
                     <h5 class="card-title">{{patient.first_name}} {{patient.last_name}}</h5>
                     <p class="card-text">Tuteur : {{tutor.id_tutor}}</p>
-                    <button class="btn btn-primary" @click="goToHomePatientInCHarge">Détails</button>
+                    <button class="btn btn-primary" @click="goToHomePatientInCHarge(index)">Détails</button>
                 </div>
             </div>
         </div>
@@ -49,6 +49,19 @@ module.exports = {
                     id_patient: "123456789",
                     social_security_number: "987654321",
                 },
+                {
+                    first_name: "Jacques",
+                    last_name: "PIERRE",
+                    id_patient: "123456789",
+                    social_security_number: "987654321",
+                },
+                {
+                    first_name: "Jacques",
+                    last_name: "PIERRE",
+                    id_patient: "123456789",
+                    social_security_number: "987654321",
+                },
+                
 
             ],
         }
@@ -57,8 +70,12 @@ module.exports = {
         backHome: function () {
         this.$router.push("/PatientHome");
         },
-        goToHomePatientInCHarge: function () {
-            this.$router.push("/PatientHome");
+        goToHomePatientInCHarge: function (index) {
+            this.$router.push("/PatientHome");            
+            this.$emit('save_index_pac', {index:index});
+            this.$emit('tutor_false');
+
+
         }
     },
 
@@ -100,6 +117,15 @@ module.exports = {
     {
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .card {
+        width: 18rem;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        margin-left: 3%;
+        margin-right: 3%;
     }
 </style>

@@ -13,12 +13,14 @@ SELECT * FROM doctor_service;
 SELECT * FROM doctor_speciality; /*bon*/
 SELECT * FROM pharmacist; /*bon*/
 SELECT * FROM pharmacy_item;
-SELECT * FROM prescription;
-SELECT * FROM prescription_drug;
-SELECT * FROM prescription_service;
+SELECT * FROM prescription; /*bon*/
+SELECT * FROM prescription_drug; /*bon*/
+SELECT * FROM prescription_service; /*bon*/
 SELECT * FROM professional; /*bon*/
 SELECT * FROM service; /*bon*/
 SELECT * from speciality; /*bon*/
+
+
 
 -- DROP TABLE IF EXISTS postal_address;
 -- DROP TABLE IF EXISTS Speciality;

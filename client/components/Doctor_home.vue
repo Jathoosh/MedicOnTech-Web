@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>Bonjour</h1>
     <h4>Mes patients</h4>
     <hr />
     <div id="global"> 
@@ -8,16 +9,16 @@
             <thead>
               <tr>
                 <th scope="col">Nom Prénom</th>
-                <th scope="col">Date</th>
+                <th scope="col">Dernière ordonannce</th>
                 
               </tr>
             </thead>
             <tbody>
               
-              <tr v-for="(prescription, index) in prescriptions" :key="index">
-                  <td>{{ getNamePatients(prescription.patientID) }}</td>
-                  <td>{{prescription.creation_date}} <button class="btn btn-outline-secondary" style="float:right;" @click="redirectionToHistoryPatient()">Historique</button></td>
-                  
+              <tr v-for="(d, index) in mdatas" :key="index">
+                <td>{{ d.infos_patient.last_name}} {{d.infos_patient.first_name}}</td>
+                <td>{{displayLastPrescriptionDateOf(index)}}
+                <button class="btn btn-outline-secondary" style="float:right;" @click="redirectionToHistoryPatient(index)">Historique</button></td>
               </tr>
               
             </tbody>
@@ -31,8 +32,14 @@
 module.exports = {
   name: "Medecin_home",
   props: {
-    patients: Array, // chaque bloc est un patient  venant du back
-    doctor: Object, // ca vient du back
+    sdatas: Object, // ca vient du back
+    mdatas: {
+      type: Array,
+      required: true,
+      default: function () {
+        return [];
+      }
+    }, // ca vient du back <= mdatas est une liste de patients avec chacun leur prescriptions
   },
   data() {
     return {
@@ -54,11 +61,13 @@ module.exports = {
   },
   methods: {
     getNamePatients(id) {
-      var pat = this.patients.find(patient => patient.id === id);
+      var pat = this.mdatas.find(patient => patient.id === id);
       return pat!==undefined? (pat.last_name + " " + pat.first_name) : "";
     },
-    redirectionToHistoryPatient() {
-      this.$router.push("/History_patient");
+    redirectionToHistoryPatient(index) {
+      this.$router.push("/History_patient").catch(() => {});
+      
+      this.$emit('infos_patient', {index:index});
     },
     redirectionToEditPrescription() {
       this.$router.push("/Edit_prescription");
@@ -76,18 +85,30 @@ module.exports = {
       }
       return age;
     },
-    
+    displayLastPrescriptionDateOf(index)
+    {
+      let Dates = [];
+      //find latest date of Dates array
+      for(let i = 0; i < this.mdatas[index].prescriptions.length; i++)
+      {
+        Dates.push(this.mdatas[index].prescriptions[i].infos_prescription.creation_date);
+      }
+      //convert date string to date object
+      for(let i = 0; i < Dates.length; i++)
+      {
+        Dates[i] = new Date(Dates[i]);
+      }
+      //sort dates array
+      Dates.sort(function(a, b){return b-a});
+      //return first date among dates
+      // display Dates info
+      return Dates[0].getDate() + "/" + (Dates[0].getMonth()+1) + "/" + Dates[0].getFullYear();
+    },
   },
   mounted() {
     document.getElementById("main").style.width = "90%";
   },
   computed: {
-    // masquer occurence patientID
-    filteredPatients() {
-      return this.patients.filter((patient) => {
-        return patient.last_name.toLowerCase().indexOf(this.search.toLowerCase()) !== -1;
-      });
-    },
   },
 };
 </script>

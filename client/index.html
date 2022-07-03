@@ -29,17 +29,31 @@
     <header id="header">
       <!-- TODO Partie DEVELOPMMENT, à supprimer -->
       <head_comp
-      @modif-id-doctor="modif_id_doctor"></head_comp>
+      :sdatas="sdatas"
+      :mdatas="mdatas"
+      @login = "login"
+      ></head_comp>
       <!-- FIN TODO -->
       <!-- <Head_comp></Head_comp> -->
     </header>
-
     <main id="main">
       <router-view
       @fc-method = "FCMethod"
-      :patients = "patients"
-      :doctor = "doctor"
+      @login = "login"
+      :mdatas = "mdatas"
+      @load_data_fc = "loadDataFcCallback"
+      @infos_patient = "infos_patient"
+      :index_history_patient = "index_history_patient"
+      @save_index_pac = "save_index_pac"
+      :index_pac = "index_pac"
+      @tutor_false = "tutor_false"
+      :tutor_bool = "tutor_bool"
       ></router-view>
+      <!-- @getPrescriptions = "getPrescriptions"
+      :index_patient = "index_patient"
+      :heya = "heya"
+      :solo_data = "solo_data"
+      @sendPrescription = "sendPrescription" -->
     </main>
 
     <footer id="footer">
