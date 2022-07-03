@@ -59,6 +59,8 @@ var app = new Vue( {
     sdatas_comp: [], //???????????!!!!!!
     mdatas: [],
     index_history_patient: 0,
+    index_pac: 0,
+    tutor_bool: true,
   },
   components: 
   {
@@ -142,6 +144,12 @@ var app = new Vue( {
     infos_patient(data)
     {
       this.index_history_patient = data.index;
+    },
+    save_index_pac(data){
+      this.index_pac = data.index;
+    },
+    tutor_false(){
+      this.tutor_bool = false;
     }
   }
 })
