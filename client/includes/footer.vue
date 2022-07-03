@@ -102,6 +102,8 @@ li > a.router-link-exact-active.router-link-active:hover {
   background-color: #D6D6D6;
   padding-top: 20px;
   padding-bottom: 20px;
+
+
 }
 
 .contPri {

@@ -23,6 +23,9 @@ const Profil = window.httpVueLoader('./components/Profil.vue');
 const LoginPar = window.httpVueLoader('./components/LoginPar.vue');
 const LoginPro = window.httpVueLoader('./components/LoginPro.vue');
 
+// Page de fonctionnalités
+const LoginRetrieve = window.httpVueLoader('./pages/LoginRetrieve.vue');
+
 const routes = [
   { path: '/login', component: Home },
   { path: '/annexe', name:'Annexe', component: Annexe },
@@ -33,16 +36,14 @@ const routes = [
   { path: '/pharmacist_home', name:'Pharmacien', component: Pharmacien }, //Verifier TODO
   { path: '/dependent_patient', name:'Dependent_patient', component: Dependent_patient }, //Verifier TODO
   { path: '/profil', name:'Profil', component: Profil },
-
-  { path: '/Ordonnance', name:'Ordonnance', component: Ordonnance }, //Verifier TODO  
-  { path: '/PatientInCharge', name:'PatientInCharge', component: PatientInCharge }, //Verifier TODO  
   { path: '/Profil_PAC', name:'Profil_PAC', component: Profil_PAC }, //Verifier TODO
-
   { path: '/ordonnance', name:'Ordonnance', component: Ordonnance }, //Verifier TODO  
   { path: '/patientInCharge', name:'PatientInCharge', component: PatientInCharge }, //Verifier TODO  
   { path: '/Contact', name:'Contact', component: Contact }, //Verifier TODO  
   { path: '/A_propos', name:'A_propos', component: A_propos }, //Verifier TODO  
-  { path: '/Faq', name:'Faq', component: Faq } 
+  { path: '/Faq', name:'Faq', component: Faq },
+  { path: '/login_retrieve', name:'login-retrieve', component: LoginRetrieve } //Verifier TODO
+
 ]
 
 const router = new VueRouter({
@@ -54,9 +55,10 @@ var app = new Vue( {
   el: '#app',
   data: 
   {
-    sdatas: {id:0, firstname:'', lastname:'', function_name:'', function_id:0, email_address:'', work_home:''},
+    sdatas: {id:0, firstname:'', lastname:'', profession:{id:0,name:""}, function_id:0, email_address:'', work_home:''},
     sdatas_comp: [], //???????????!!!!!!
     mdatas: [],
+    index_history_patient: 0,
   },
   components: 
   {
@@ -80,13 +82,7 @@ var app = new Vue( {
       var res = await axios.post('api/login', data);
       if(res.status == 200 && res.data.connected)
       {
-        this.sdatas.id = res.data.Id_Person;
-        this.sdatas.function_name = res.data.profession.name;
-        this.sdatas.function_id = res.data.profession.id;
-        this.sdatas.firstname = res.data.first_name;
-        this.sdatas.lastname = res.data.last_name;
-        this.sdatas.email_address = data.mail;
-        this.sdatas.work_home = res.data.workplace_name;
+        this.sdatas = res.data.sdatas;
         this.reloadData();
         this.$router.push('/'+this.sdatas.function_name+'_home');
       }
@@ -97,24 +93,7 @@ var app = new Vue( {
     },
     async FCMethod()
     {
-      const res = await axios.post('api/login-authorize');
-      alert(res.data.message);
-      if (res.data.connected)
-      {
-        this.sdatas.id = res.data.Id_Person;
-        this.sdatas.function_name = res.data.profession.name;
-        this.sdatas.function_id = res.data.profession.id;
-        this.sdatas.firstname = res.data.first_name;
-        this.sdatas.lastname = res.data.last_name;
-        this.sdatas.email_address = res.data.mail;
-        this.sdatas.work_home = res.data.workplace_name;
-        this.reloadData();
-        this.$router.push('/'+this.sdatas.function_name+'_home');
-      }
-      else
-      {
-        alert("C vrmt pas normal la");
-      }
+      window.location.href = "http://localhost:3000/login";
     },
     async getSdatas_Comp()
     {
@@ -143,7 +122,26 @@ var app = new Vue( {
     },
     sendPrescription(data){
       
+    },
+    async loadDataFcCallback(data)
+    {
+      const res = await axios.get('api/retrieve_person');
+      if (res.data.connected)
+      {
+        this.sdatas = res.data.sdatas;
+        this.reloadData();
+        this.$router.push('/'+this.sdatas.function_name+'_home');
+      }
+      else
+      {
+        alert("Veuillez réessayer la connexion");
+        //redirect to login
+        this.$router.push('/login');
+      }
+    },
+    infos_patient(data)
+    {
+      this.index_history_patient = data.index;
     }
-
   }
 })

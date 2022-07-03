@@ -12,18 +12,17 @@
 
       <div class="nav-block">
          <nav>
-            <router-link to="/login" v-if="sdatas.function_name===''">Connexion</router-link>
-            <router-link to="/pharmacist_home" v-if="sdatas.function_name===''">Page Pharmacien</router-link>
-            <router-link to="/doctor_home" v-if="sdatas.function_name===''">Page Médecin</router-link>
-            <router-link to="/patient_home" v-if="sdatas.function_name===''">Page Patient</router-link>
-            <router-link to="/edit_prescription" v-if="sdatas.function_name==='Doctor'">Rédiger Ordonnance</router-link>
-            <router-link to="/doctor_home" v-if="sdatas.function_name==='Doctor'">Mes patients</router-link>
-            <router-link to="/history_patient" v-if="sdatas.function_name==='Doctor'">Historique Ordonnance</router-link>
-            <router-link to="/" v-if="sdatas.function_name==='Patient'">Mes Ordonnances</router-link>
-            <router-link to="/" v-if="sdatas.function_name==='Patient'">Personnes à charges</router-link>
-            <router-link to="/" v-if="sdatas.function_name==='Patient'">Autre ?????</router-link>
-            <router-link to="/" v-if="sdatas.function_name==='Pharmacist'">Scanner Ordonnance</router-link>
-            <router-link to="/" v-if="sdatas.function_name==='Pharmacist'">Autre ?????</router-link>
+            <router-link to="/login" v-if="sdatas.profession.name===''">Connexion</router-link>
+            <router-link to="/pharmacist_home" v-if="sdatas.profession.name===''">Page Pharmacien</router-link>
+            <router-link to="/doctor_home" v-if="sdatas.profession.name===''">Page Médecin</router-link>
+            <router-link to="/patient_home" v-if="sdatas.profession.name===''">Page Patient</router-link>
+            <router-link to="/doctor_home" v-if="sdatas.profession.name==='Doctor'">Mes patients</router-link>
+            <router-link to="/edit_prescription" v-if="sdatas.profession.name==='Doctor'">Rédiger Ordonnance</router-link>
+            <router-link to="/" v-if="sdatas.profession.name==='Patient'">Mes Ordonnances</router-link>
+            <router-link to="/" v-if="sdatas.profession.name==='Patient'">Personnes à charges</router-link>
+            <router-link to="/" v-if="sdatas.profession.name==='Patient'">Autre ?????</router-link>
+            <router-link to="/" v-if="sdatas.profession.name==='Pharmacist'">Scanner Ordonnance</router-link>
+            <router-link to="/" v-if="sdatas.profession.name==='Pharmacist'">Autre ?????</router-link>
           </nav>
 
             <p class="image_profil text-center" 
@@ -34,11 +33,13 @@
 
     </div>
 
+    <button @click="login({mail:'moreau.camille@medecin.fr',password:'123'})" >connexion docteur id 1</button>
+
     <!-- TODO à rajuster pour que la card soit juste en dessous du profil --> 
     <div id="carteSuperposee" class="cardPosition">
       <infocard v-if="card == true" @disapear="disapear"/>
     </div>
-    {{sdatas}}
+    <!-- {{sdatas}} -->
   </div>
 
 </template>
@@ -84,7 +85,10 @@ module.exports = {
     initialesPatient: function(){
         var String = this.last_name[0] + this.first_name[0];
         return String;
-      }
+      },
+    login: function(data){
+      this.$emit('login', data);
+    }
 
   },
 };
@@ -126,14 +130,7 @@ h1 {
   margin: 0 auto;
 } */
 
-nav > a {
-  color: rgb(49, 49, 49);
-  text-decoration: none;
-  padding: 10px;
-  margin-left: 5px;
-  margin-right: 5px;
-  border-radius: 7px;
-}
+
 /*Apply also on router-link (Main Purpose)*/
 /*nav > a {
   color: rgb(49, 49, 49);
@@ -175,6 +172,8 @@ nav > a.router-link-exact-active.router-link-active:hover {
   margin-left: 25px;
 }
 
+
+
 #header_top {
   display: flex;
   flex-direction: row;
@@ -202,11 +201,19 @@ nav > a.router-link-exact-active.router-link-active:hover {
 
 nav > a {
   background-color: rgb(236, 235, 235);
+  color: rgb(49, 49, 49);
   margin: 5px;
   padding: 15px;
+  text-decoration: none;
+  border-radius: 7px;
 }
 nav > a:hover {
   background-color: #b9b9b9;
+}
+nav > a.router-link-exact-active.router-link-active
+{
+  border-bottom: 5px solid #01AA88;
+  padding-bottom:10px;
 }
 
 .card_profil {
@@ -228,6 +235,7 @@ nav > a:hover {
   margin-top: 7px; 
   margin-right: 19px; 
   font-size: 1.5em;
+  padding-top: 5px;
 }
 
 </style>
