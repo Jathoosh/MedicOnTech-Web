@@ -4,8 +4,9 @@
 CREATE DATABASE db_medicontech;
 USE db_medicontech;*/
 
-/*-- Create Tables
-CREATE TABLE Postal_address(
+-- Create Tables
+
+/*CREATE TABLE Postal_address(
    Id_Postal_address INT NOT NULL AUTO_INCREMENT,
    door_number VARCHAR(50),
    number VARCHAR(50),
@@ -56,7 +57,7 @@ CREATE TABLE Person(
    birth_date DATE NOT NULL,
    email_address VARCHAR(50),
    phone VARCHAR(50),
-   Id_Postal_address INT NOT NULL,
+   Id_Postal_address INT,
    PRIMARY KEY(Id_Person),
    FOREIGN KEY(Id_Postal_address) REFERENCES Postal_address(Id_Postal_address)
 );
