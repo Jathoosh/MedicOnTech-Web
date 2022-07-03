@@ -1,8 +1,8 @@
 /*FAITES ATTENTIONS A BIEN RECOMMENTER CE CODE. IL SERT POUR L'INITIALISATION UNIQUEMENT*/
 
 /*drop database if exists db_medicontech;
-CREATE DATABASE db_medicontech;
-USE db_medicontech;*/
+CREATE DATABASE db_medicontech;*/
+USE db_medicontech;
 
 -- Create Tables
 
@@ -16347,6 +16347,7 @@ INSERT INTO prescription(creation_date,expiration_date,frequency_of_reuse,number
 ("2009-02-24","2009-05-24",321,0,false,false,"TODOTEXTE",false,"REPORTTODO",8,30),
 ("1993-01-28","1994-03-16",103,4,false,false,"TODOTEXTE",false,"REPORTTODO",8,30),
 ("2006-05-16","2009-01-04",241,4,false,false,"TODOTEXTE",false,"REPORTTODO",8,30);
+
 
 INSERT INTO prescription_drug VALUES 
 (1,66997921,5),(1,61090507,3),(1,65360359,6),(1,67471874,10),(1,63679194,1),

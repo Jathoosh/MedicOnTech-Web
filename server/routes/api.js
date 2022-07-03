@@ -1,12 +1,15 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-const data_db = require('./.data_db')
-const configRoutes = require('./configRoutes')
+const data_db = require('./.data_db');
+const configRoutes = require('./configRoutes');
 
-const {Sequelize} = require('sequelize');
-const { status } = require('express/lib/response');
+const { Sequelize } = require("sequelize");
+const { status } = require("express/lib/response");
 
+const crypto = require("crypto");
+const { URLSearchParams } = require("url");
+const config = require("../../config");
 const bcrypt = require('bcrypt');
 
 var sdatas = {};
@@ -14,27 +17,27 @@ var sdatas_comp = [];
 var mdatas = [];
 
 //Attention au nom de la table
-const sequelize = new Sequelize("db_medicontech",data_db.Username,data_db.Password, //Veuillez mettre le mot de passe de la base de donnée
-{
-  dialect: "mysql",
-  host: "localhost",
-  port: data_db.Port // Changer le port si vous utilisez un autre port que 3306
-});
+const sequelize = new Sequelize(
+  "db_medicontech",
+  data_db.Username,
+  data_db.Password, //Veuillez mettre le mot de passe de la base de donnée
+  {
+    dialect: "mysql",
+    host: "localhost",
+    port: data_db.Port, // Changer le port si vous utilisez un autre port que 3306
+  }
+);
 
-try 
-{ 
+try {
   sequelize.authenticate();
-  console.log('Connected to MySql database!');
+  console.log("Connected to MySql database!");
+} catch (error) {
+  console.error("Unable to connect", error);
 }
-catch (error)
-{
-  console.error('Unable to connect', error);
-};
 
 router.use((req, res, next) => {
-
   next();
-})
+});
 
 router.post('/login-authorize', (req, res) => {
   const {given_name, family_name, birthdate} = req.body;
@@ -384,15 +387,17 @@ router.get("/motapp/historique/:id", (req, res) => {
     });
 });
 
-router.get("/motapp/doctor", (req, res) => {
+router.get("/motapp/doctor/:id", (req, res) => {
+  id = req.params.id;
   sequelize
     .query(
-      "SELECT Person.first_name, Person.last_name, Person.phone, Person.email_address, Person.Id_Person FROM `Doctor` JOIN `Person` ON Person.Id_Person = Doctor.Id_Person"
+      "SELECT Person.first_name, Person.last_name, Person.phone, Person.email_address, Person.Id_Person FROM `Doctor` JOIN `Person` ON Person.Id_Person = Doctor.Id_Person INNER JOIN `assigned_doctor` ON assigned_doctor.Id_Doctor = Doctor.Id_Doctor WHERE assigned_doctor.Id_Patient = " +id
     )
+    
     .then((result) => {
       console.log(result[0]);
       res.status(200).json({ result: result[0] });
     });
 });
 
-module.exports = router
+module.exports = router;
