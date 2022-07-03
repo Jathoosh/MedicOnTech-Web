@@ -17,8 +17,7 @@
         <img id="logo_reseaux_sociaux" src="ressources\MedicOnTech_reseaux.png" alt="logo_reseaux_sociaux">
         <p id="texte_reseaux"> 
           <strong> Via nos réseaux sociaux </strong>
-          <br>Linkedin, Instagram et Youtube  
-          <br><a href="https://linktr.ee/medicontech">Linktree</a>
+          <br><a href="https://linktr.ee/medicontech">Linkedin, Instagram et Youtube</a>
         </p> 
       </div>
       

@@ -11,6 +11,7 @@ const PatientInCharge = window.httpVueLoader('./components/PatientInCharge.vue')
 const Profil_PAC = window.httpVueLoader('./components/Profil_PAC.vue')
 const Contact = window.httpVueLoader('./components/Contact.vue')
 const A_propos = window.httpVueLoader('./components/A_propos.vue')
+const Faq = window.httpVueLoader('./components/Faq.vue')
 
 // Header and Footer
 const Head_comp = window.httpVueLoader('./includes/header.vue');
@@ -40,7 +41,9 @@ const routes = [
   { path: '/patientInCharge', name:'PatientInCharge', component: PatientInCharge }, //Verifier TODO  
   { path: '/Contact', name:'Contact', component: Contact }, //Verifier TODO  
   { path: '/A_propos', name:'A_propos', component: A_propos }, //Verifier TODO  
+  { path: '/Faq', name:'Faq', component: Faq },
   { path: '/login_retrieve', name:'login-retrieve', component: LoginRetrieve } //Verifier TODO
+
 ]
 
 const router = new VueRouter({

@@ -39,7 +39,7 @@
             <router-link to="/A_propos">A propos</router-link>
           </li>
           <li>
-            <router-link to="/annexe2">Mentions légales</router-link>
+            <router-link to="/Faq">FAQ</router-link>
           </li>
           <li>
             <router-link to="/Contact">Contact</router-link>
