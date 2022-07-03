@@ -84,7 +84,7 @@ var app = new Vue( {
       {
         this.sdatas = res.data.sdatas;
         this.reloadData();
-        this.$router.push('/'+this.sdatas.function_name+'_home');
+        this.$router.push('/'+this.sdatas.profession.name+'_home');
       }
       else
       {
@@ -97,7 +97,7 @@ var app = new Vue( {
     },
     async getSdatas_Comp()
     {
-      if (this.sdatas.function_name == "Patient")
+      if (this.sdatas.profession.name == "Patient")
       {
         const res = await axios.get('api/patient_comp_datas');
         return res.data.datas;
@@ -105,12 +105,12 @@ var app = new Vue( {
     },
     async getMdatas()
     {
-      if (this.sdatas.function_name == "Patient")
+      if (this.sdatas.profession.name == "Patient")
       {
         const res = await axios.get('api/patient_mdatas');
         return res.data.datas;
       }
-      else if (this.sdatas.function_name == "Doctor")
+      else if (this.sdatas.profession.name == "Doctor")
       {
         const res = await axios.get('api/doctor_mdatas');
         return res.data.datas;
@@ -130,7 +130,7 @@ var app = new Vue( {
       {
         this.sdatas = res.data.sdatas;
         this.reloadData();
-        this.$router.push('/'+this.sdatas.function_name+'_home');
+        this.$router.push('/'+this.sdatas.profession.name+'_home');
       }
       else
       {
