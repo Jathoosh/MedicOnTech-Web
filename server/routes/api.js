@@ -1,12 +1,15 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-const data_db = require('./.data_db')
-const configRoutes = require('./configRoutes')
+const data_db = require('./.data_db');
+const configRoutes = require('./configRoutes');
 
-const {Sequelize} = require('sequelize');
-const { status } = require('express/lib/response');
+const { Sequelize } = require("sequelize");
+const { status } = require("express/lib/response");
 
+const crypto = require("crypto");
+const { URLSearchParams } = require("url");
+const config = require("../../config");
 const bcrypt = require('bcrypt');
 
 var sdatas = {};
@@ -14,27 +17,27 @@ var sdatas_comp = [];
 var mdatas = [];
 
 //Attention au nom de la table
-const sequelize = new Sequelize("db_medicontech",data_db.Username,data_db.Password, //Veuillez mettre le mot de passe de la base de donnée
-{
-  dialect: "mysql",
-  host: "localhost",
-  port: data_db.Port // Changer le port si vous utilisez un autre port que 3306
-});
+const sequelize = new Sequelize(
+  "db_medicontech",
+  data_db.Username,
+  data_db.Password, //Veuillez mettre le mot de passe de la base de donnée
+  {
+    dialect: "mysql",
+    host: "localhost",
+    port: data_db.Port, // Changer le port si vous utilisez un autre port que 3306
+  }
+);
 
-try 
-{ 
+try {
   sequelize.authenticate();
-  console.log('Connected to MySql database!');
+  console.log("Connected to MySql database!");
+} catch (error) {
+  console.error("Unable to connect", error);
 }
-catch (error)
-{
-  console.error('Unable to connect', error);
-};
 
 router.use((req, res, next) => {
-
   next();
-})
+});
 
 router.post('/login-authorize', (req, res) => {
   const {given_name, family_name, birthdate} = req.body;
@@ -71,7 +74,45 @@ router.post('/login', (req, res) => {
   sequelize.query(`SELECT professional.Id_Person FROM professional JOIN Person ON Person.Id_Person = professional.Id_Person WHERE email_address = '${mail}'`).then(result => {
     if (result[0].length == 0)
     {
-      res.status(200).json({message:'Professionel inconnu', connected:false});
+      sequelize.query(`SELECT patient.Id_Person FROM patient JOIN Person ON Person.Id_Person = patient.Id_Person WHERE email_address = '${mail}'`).then(result2 => {
+        if (result2[0].length == 0){
+          res.status(200).json({
+            message: "Utilisateur non trouvé",
+            connected : false
+          });
+        }
+        else{
+          const Id_Person = result2[0][0].Id_Person;
+          sequelize.query(`SELECT first_name, last_name, password, birth_date, email_address, Id_Patient, postal_address.* FROM patient JOIN Person USING(Id_Person) JOIN postal_address USING (Id_Postal_address) WHERE Id_Person = '${Id_Person}'`).then(result3 => {
+            if (bcrypt.compareSync(password, result3[0][0].password || "Blank"))
+            {
+              req.session.Id_Person = Id_Person;
+              req.session.function = "Patient";
+              req.session.function_id = result3[0][0].Id_Patient;
+              sdatas = {
+                Id_Person: Id_Person,
+                first_name: result3[0][0].first_name,
+                last_name: result3[0][0].last_name,
+                profession : {name: "Patient", id: result3[0][0].Id_Patient},
+                birth_date : result3[0][0].birth_date,
+                mail : result3[0][0].email_address,
+                workplace_name : {door_number:result3[0][0].door_number, road_number:result3[0][0].number, road_name:result3[0][0].road, zip_code:result3[0][0].zip_code, town:result3[0][0].town, country:result3[0][0].country},
+              }
+              res.status(200).json({
+                message: "Connexion réussie",
+                connected : true,
+                sdatas: sdatas
+              });
+            }
+            else{
+              res.status(200).json({
+                message: "Mot de passe incorrect",
+                connected : false
+              });
+            }
+          });
+        }
+      })
     }
     else
     {
@@ -208,8 +249,6 @@ router.get('/patient_mdatas', (req,res) => {
         });
       }
     })
-    console.log(mdatas);
-    console.log(Id_Pac);
     //Obtain unique Prescription according to Id_Patient
     let Id_Prescriptions_pac = [];
     Id_Pac.forEach((Id_Patient_pac,index) => {
@@ -384,15 +423,17 @@ router.get("/motapp/historique/:id", (req, res) => {
     });
 });
 
-router.get("/motapp/doctor", (req, res) => {
+router.get("/motapp/doctor/:id", (req, res) => {
+  id = req.params.id;
   sequelize
     .query(
-      "SELECT Person.first_name, Person.last_name, Person.phone, Person.email_address, Person.Id_Person FROM `Doctor` JOIN `Person` ON Person.Id_Person = Doctor.Id_Person"
+      "SELECT Person.first_name, Person.last_name, Person.phone, Person.email_address, Person.Id_Person FROM `Doctor` JOIN `Person` ON Person.Id_Person = Doctor.Id_Person INNER JOIN `assigned_doctor` ON assigned_doctor.Id_Doctor = Doctor.Id_Doctor WHERE assigned_doctor.Id_Patient = " +id
     )
+    
     .then((result) => {
       console.log(result[0]);
       res.status(200).json({ result: result[0] });
     });
 });
 
-module.exports = router
+module.exports = router;

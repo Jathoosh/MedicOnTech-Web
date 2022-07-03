@@ -1,12 +1,12 @@
 /*FAITES ATTENTIONS A BIEN RECOMMENTER CE CODE. IL SERT POUR L'INITIALISATION UNIQUEMENT*/
 
-/*drop database if exists db_medicontech;
+drop database if exists db_medicontech;
 CREATE DATABASE db_medicontech;
-USE db_medicontech;*/
+USE db_medicontech;
 
 -- Create Tables
 
-/*CREATE TABLE Postal_address(
+CREATE TABLE Postal_address(
    Id_Postal_address INT NOT NULL AUTO_INCREMENT,
    door_number VARCHAR(50),
    number VARCHAR(50),
@@ -86,6 +86,7 @@ CREATE TABLE Doctor(
 
 CREATE TABLE Patient(
    Id_Patient INT NOT NULL AUTO_INCREMENT,
+   password VARCHAR(100),
    Id_tutor INT,
    social_security_number VARCHAR(50),
    Id_Mutual_insurance INT,
@@ -108,6 +109,7 @@ CREATE TABLE Prescription(
    note TEXT,
    reported BOOLEAN,
    report_note TEXT,
+   barcode_svg TEXT,
    Id_Doctor INT NOT NULL,
    Id_Patient INT NOT NULL,
    PRIMARY KEY(Id_Prescription),
@@ -415,29 +417,29 @@ INSERT INTO Mutual_insurance(mutual_name) VALUES
 ("Mutuelle Générale des Cheminots (MGC)"),
 ("uMEn");
 
-INSERT INTO Patient(social_security_number,Id_Mutual_insurance,Id_Person) VALUES
-("1 87 03 65 101 161 22",51,1),
-("1 94 08 17 455 328 79",16,2),
-("1 77 03 78 517 172 55",51,5),
-("2 82 11 90 385 744 65",43,6),
-("1 68 09 40 705 468 94",13,7),
-("1 01 05 75 434 321 25",13,8),
-("1 79 07 12 654 247 27",32,10),
-("1 62 08 52 207 850 23",51,11),
-("1 85 02 31 339 211 30",13,12),
-("1 69 09 54 257 237 90",32,13),
-("2 02 02 49 846 738 57",43,14),
-("2 91 12 43 502 990 47",16,15),
-("1 67 05 89 973 354 23",32,16),
-("2 78 11 19 881 169 80",51,17),
-("1 62 10 62 967 860 51",16,18),
-("1 83 12 14 358 899 35",43,19),
-("1 90 06 23 542 630 41",16,22),
-("2 04 08 69 975 601 51",51,23),
-("2 61 12 13 879 173 42",43,24),
-("2 98 02 94 421 442 23",16,26),
-("2 63 01 53 372 682 64",27,27),
-("1 96 10 43 211 297 82",16,29);
+INSERT INTO Patient(social_security_number,Id_Mutual_insurance,Id_Person,password) VALUES
+("1 87 03 65 101 161 22",51,1,"$2b$10$i/dVRyx3B5TNNAIf8F.y3O3CL385j1TicSRFzJ/LOSselD4NDAhXi"),
+("1 94 08 17 455 328 79",16,2,"$2b$10$i/dVRyx3B5TNNAIf8F.y3O3CL385j1TicSRFzJ/LOSselD4NDAhXi"),
+("1 77 03 78 517 172 55",51,5,"$2b$10$gy5BLWPTkid.uYkOvAYORewex2luO0TMvh1N2HaTtHKN0xNdsfLMi"),
+("2 82 11 90 385 744 65",43,6,"$2b$10$dTlDwe9E55YUMKXNp5wwp.QfLRrlKuqMUa7N1AZ9ApfAqDQO1GCuK"),
+("1 68 09 40 705 468 94",13,7,"$2b$10$tTnpiAMJmf2OTBo/XmAdOOec2pqEUKqM5cqJslFdj.HbwXzDYqMCO"),
+("1 01 05 75 434 321 25",13,8,"$2b$10$Kk1bWihF0XtZxiqp9DxYAOH1xAms6q6w1CD032Rhb7XN5QCNrXJ6G"),
+("1 79 07 12 654 247 27",32,10,"$2b$10$Ua6y0dUffPA92cGQBIEyHe8f1/sNxCIKz16TmwfFEfKzy4Laywf9C"),
+("1 62 08 52 207 850 23",51,11,"$2b$10$fmHie3zScXU4pZ448JakOOw1US2yU0XxOXgYXRFT7.3MIw2UEUlT."),
+("1 85 02 31 339 211 30",13,12,"$2b$10$oKU8B/PSqUx60gdFVJOgleIJOPNDeNS0AnTk0G3kAmZyRexH//o06"),
+("1 69 09 54 257 237 90",32,13,"$2b$10$n.ru0ydXCY1SvlWTUGEGXOIrXnGPws5Gq4mmOMVmQ1ayjwIaWC0Hu"),
+("2 02 02 49 846 738 57",43,14,"$2b$10$Qd/bbL1jxr3jZjsPfrHpIOs7GQrLpqj/Rf0gkoZMW5ugw292j.Dpq"),
+("2 91 12 43 502 990 47",16,15,"$2b$10$hjJmazI.Y/2yc7eXnAgQduLP0yL7BtIA4pTt/fxxQqsKoCoZTO/fG"),
+("1 67 05 89 973 354 23",32,16,"$2b$10$a8IT2BVVmPj9HsCXyYrrQOMwh0mGdLW9qtMbNPBodI9X/aICLa.OW"),
+("2 78 11 19 881 169 80",51,17,"$2b$10$htsc3/qLnBIRxwMCiUWaTOYQivZo9MsrLqkEsW0iTKiQoZV9UobBa"),
+("1 62 10 62 967 860 51",16,18,"$2b$10$gs6sOn51Sux9xullyZr/ZONH9KySWXPd/leEuOekjbJytC1Dr.y4S"),
+("1 83 12 14 358 899 35",43,19,"$2b$10$EiIOGQtYOhgbB9oL1XnFKepDjsBcYKSaPZf1yt.2HfblKICge.DbO"),
+("1 90 06 23 542 630 41",16,22,"$2b$10$Mx9xQ1uLpN1kV5kFIzMzsOVwnc1sjiBlk63HBCB6a8xu.izjYdSEe"),
+("2 04 08 69 975 601 51",51,23,"$2b$10$.3zOA1R3zih21YYX7vQ0u.gwKuy6/E8iv/K6WSJXuhkOhmfstAmJe"),
+("2 61 12 13 879 173 42",43,24,"$2b$10$u05CZon.nOQxtpxWRtFFDOnN5uOQaZA9sEhUmo2rRHgKYZs3P6H8W"),
+("2 98 02 94 421 442 23",16,26,"$2b$10$bMVBXy1ZUWaoUl4f6S1GvuJ6hCxVfoeGAIsXpC4AZyrDGrA16yNnW"),
+("2 63 01 53 372 682 64",27,27,"$2b$10$Uw47ItIt8RXOSz8dG54oTOG780lHtj1TjAZgZ7Lh/Wj0.g38FZpda"),
+("1 96 10 43 211 297 82",16,29,"$2b$10$y1OQfawHLP8104zYlcXxVuZDNeMebqc.Xq8Bp.YJV7/eESuTwCsfu");
 
 INSERT INTO Patient(Id_tutor,social_security_number,Id_Mutual_insurance,Id_Person) VALUES
 (6,"2 10 12 63 645 283 63",43,3),
@@ -16348,6 +16350,7 @@ INSERT INTO prescription(creation_date,expiration_date,frequency_of_reuse,number
 ("1993-01-28","1994-03-16",103,4,false,false,"TODOTEXTE",false,"REPORTTODO",8,30),
 ("2006-05-16","2009-01-04",241,4,false,false,"TODOTEXTE",false,"REPORTTODO",8,30);
 
+
 INSERT INTO prescription_drug VALUES 
 (1,66997921,5),(1,61090507,3),(1,65360359,6),(1,67471874,10),(1,63679194,1),
 (2,63661520,5),(2,65603398,4),(2,61324091,2),(2,66060546,9),(2,64061763,7),
@@ -16590,4 +16593,4 @@ INSERT INTO prescription_service VALUES
 (117,13,2),(117,3,1),
 (118,25,2),(118,19,1),
 (119,1,2),(119,16,1),
-(120,16,1),(120,5,1);*/
+(120,16,1),(120,5,1);
