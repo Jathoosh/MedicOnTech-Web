@@ -12,17 +12,17 @@
 
       <div class="nav-block">
          <nav>
-            <router-link to="/login" v-if="sdatas.function_name===''">Connexion</router-link>
-            <router-link to="/pharmacist_home" v-if="sdatas.function_name===''">Page Pharmacien</router-link>
-            <router-link to="/doctor_home" v-if="sdatas.function_name===''">Page Médecin</router-link>
-            <router-link to="/patient_home" v-if="sdatas.function_name===''">Page Patient</router-link>
-            <router-link to="/doctor_home" v-if="sdatas.function_name==='Doctor'">Mes patients</router-link>
-            <router-link to="/edit_prescription" v-if="sdatas.function_name==='Doctor'">Rédiger Ordonnance</router-link>
-            <router-link to="/" v-if="sdatas.function_name==='Patient'">Mes Ordonnances</router-link>
-            <router-link to="/" v-if="sdatas.function_name==='Patient'">Personnes à charges</router-link>
-            <router-link to="/" v-if="sdatas.function_name==='Patient'">Autre ?????</router-link>
-            <router-link to="/" v-if="sdatas.function_name==='Pharmacist'">Scanner Ordonnance</router-link>
-            <router-link to="/" v-if="sdatas.function_name==='Pharmacist'">Autre ?????</router-link>
+            <router-link to="/login" v-if="sdatas.profession.name===''">Connexion</router-link>
+            <router-link to="/pharmacist_home" v-if="sdatas.profession.name===''">Page Pharmacien</router-link>
+            <router-link to="/doctor_home" v-if="sdatas.profession.name===''">Page Médecin</router-link>
+            <router-link to="/patient_home" v-if="sdatas.profession.name===''">Page Patient</router-link>
+            <router-link to="/doctor_home" v-if="sdatas.profession.name==='Doctor'">Mes patients</router-link>
+            <router-link to="/edit_prescription" v-if="sdatas.profession.name==='Doctor'">Rédiger Ordonnance</router-link>
+            <router-link to="/" v-if="sdatas.profession.name==='Patient'">Mes Ordonnances</router-link>
+            <router-link to="/" v-if="sdatas.profession.name==='Patient'">Personnes à charges</router-link>
+            <router-link to="/" v-if="sdatas.profession.name==='Patient'">Autre ?????</router-link>
+            <router-link to="/" v-if="sdatas.profession.name==='Pharmacist'">Scanner Ordonnance</router-link>
+            <router-link to="/" v-if="sdatas.profession.name==='Pharmacist'">Autre ?????</router-link>
           </nav>
 
             <p class="image_profil text-center" 
