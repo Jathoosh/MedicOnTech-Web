@@ -41,7 +41,7 @@
                 <div class="prescriptionCard">
                     <div>
                         <h2>
-                            Dr. {{ ligne.infos_prescription.doctor_first_name }} {{ ligne.infos_prescription.doctor_last_name }}, fait le
+                            Dr. {{ ligne.infos_prescription.doctor_infos.first_name }} {{ ligne.infos_prescription.doctor_infos.last_name }}, fait le
                             {{ ligne.infos_prescription.creation_date }}
                         </h2>
                         <div class="statePrescription">
@@ -62,7 +62,7 @@
                 <div class="prescriptionCard">
                     <div>
                         <h2>
-                            Dr. {{ ligne.infos_prescription.doctor_first_name }} {{ ligne.infos_prescription.doctor_last_name }}, fait le
+                            Dr. {{ ligne.infos_prescription.doctor_infos.first_name }} {{ ligne.infos_prescription.doctor_infos.last_name }}, fait le
                             {{ ligne.infos_prescription.creation_date }}
                         </h2>
                         <div class="statePrescription">
