@@ -55,9 +55,19 @@ var app = new Vue( {
   el: '#app',
   data: 
   {
-    sdatas: {id:0, firstname:'', lastname:'', profession:{id:0,name:""}, function_id:0, email_address:'', work_home:''},
-    sdatas_comp: [], //???????????!!!!!!
+    sdatas: {
+      Id_Person:0, 
+      first_name:'', 
+      last_name:'', 
+      profession:{id:0,name:""}, 
+      mail:'', 
+      workplace_name:''
+    },
+    sdatas_comp: [], //Liste uniquement utilisé pour le patient (contient ces ordonnances)
     mdatas: [],
+    //==========================================================
+    //Séparation entre les données obtenues de la base de données et les données utilisées dans les différentes pages
+    //==========================================================
     index_history_patient: 0,
     index_pac: 0,
     tutor_bool: true,
@@ -71,20 +81,13 @@ var app = new Vue( {
   async mounted () 
   {
     this.reloadData();
-    // this.footerToBottom();
   },
   methods: 
   {
-    footertobottom(height)
-    {
-      var main = document.getElementById("main");
-      main.style.paddingBottom = height;
-    },
-    async reloadData()
-    {
-      this.sdatas_comp = await this.getSdatas_Comp();
-      this.mdatas = await this.getMdatas();
-    },
+    //==========================================================
+    //Méthode pour récupérer les données de la base de données
+    //==========================================================
+    
     async login(data)
     {
       var res = await axios.post('api/login', data);
@@ -92,7 +95,7 @@ var app = new Vue( {
       {
         this.sdatas = res.data.sdatas;
         this.reloadData();
-        this.$router.push('/'+this.sdatas.profession.name+'_home');
+        this.goToPage('/'+this.sdatas.profession.name+'_home');
       }
       else
       {
@@ -108,6 +111,10 @@ var app = new Vue( {
       if (this.sdatas.profession.name == "Patient")
       {
         const res = await axios.get('api/patient_comp_datas');
+        const res2 = await axios.get('api/patient_comp_datas_services');
+        res.data.datas.forEach(element => {
+          element.services = res2.data.datas.filter(service => service.Id_Prescription == element.infos_prescription.Id_Prescription);
+        });
         return res.data.datas;
       }
     },
@@ -116,20 +123,25 @@ var app = new Vue( {
       if (this.sdatas.profession.name == "Patient")
       {
         const res = await axios.get('api/patient_mdatas');
+        const res2 = await axios.get('api/patient_mdatas_services');
+        res.data.datas.forEach(element => {
+          element.prescriptions_pac.forEach(prescription => {
+            prescription.services = res2.data.datas.filter(service => service.Id_Prescription == prescription.infos_prescription.Id_Prescription);
+          });
+        });
         return res.data.datas;
       }
       else if (this.sdatas.profession.name == "Doctor")
       {
         const res = await axios.get('api/doctor_mdatas');
+        const res2 = await axios.get('api/doctor_mdatas_services');
+        res.data.datas.forEach(element => {
+          element.prescriptions.forEach(prescription => {
+            prescription.services = res2.data.datas.filter(service => service.Id_Prescription == prescription.infos_prescription.Id_Prescription)[0].services;
+          });
+        });
         return res.data.datas;
       }
-    },
-    getPrescriptions(data)
-    {
-      this.patientID = data;
-    },
-    sendPrescription(data){
-      
     },
     async loadDataFcCallback(data)
     {
@@ -138,7 +150,7 @@ var app = new Vue( {
       {
         this.sdatas = res.data.sdatas;
         this.reloadData();
-        this.$router.push('/'+this.sdatas.profession.name+'_home');
+        this.goToPage('/'+this.sdatas.profession.name+'_home');
       }
       else
       {
@@ -146,6 +158,38 @@ var app = new Vue( {
         //redirect to login
         this.$router.push('/login');
       }
+    },
+
+    //==========================================================
+    //Fonctions pour le bon fonctionnement des pages
+    //==========================================================
+    async reloadData()
+    {
+      this.sdatas_comp = await this.getSdatas_Comp();
+      this.mdatas = await this.getMdatas();
+    },
+    footertobottom(height)
+    {
+      var main = document.getElementById("main");
+      main.style.paddingBottom = height;
+    },
+    goToPage(page){
+      var current_url = window.location.href;
+      current_url = current_url.substring(current_url.lastIndexOf('/'), current_url.length);
+      if(page != current_url){
+        this.$router.push(page);
+      }
+    },
+
+    //==========================================================
+    //Fonctions concernant les Emits
+    //==========================================================
+    getPrescriptions(data)
+    {
+      this.patientID = data;
+    },
+    sendPrescription(data){
+      
     },
     infos_patient(data)
     {
