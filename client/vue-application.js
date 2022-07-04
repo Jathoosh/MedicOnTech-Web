@@ -80,7 +80,7 @@ var app = new Vue( {
   },
   async mounted () 
   {
-    this.reloadData();
+    this.notConnected();
   },
   methods: 
   {
@@ -95,7 +95,6 @@ var app = new Vue( {
       {
         this.sdatas = res.data.sdatas;
         this.reloadData();
-        this.goToPage('/'+this.sdatas.profession.name+'_home');
       }
       else
       {
@@ -150,7 +149,6 @@ var app = new Vue( {
       {
         this.sdatas = res.data.sdatas;
         this.reloadData();
-        this.goToPage('/'+this.sdatas.profession.name+'_home');
       }
       else
       {
@@ -167,6 +165,7 @@ var app = new Vue( {
     {
       this.sdatas_comp = await this.getSdatas_Comp();
       this.mdatas = await this.getMdatas();
+      this.goToPage('/'+this.sdatas.profession.name+'_home');
     },
     footertobottom(height)
     {
@@ -178,6 +177,19 @@ var app = new Vue( {
       current_url = current_url.substring(current_url.lastIndexOf('/'), current_url.length);
       if(page != current_url){
         this.$router.push(page);
+      }
+    },
+    async notConnected()
+    {
+      const res = await axios.get('api/connected');
+      if(res.data.connected)
+      {
+        this.sdatas = res.data.sdatas;
+        this.reloadData();
+      }
+      else
+      {
+        this.goToPage('/login');
       }
     },
 

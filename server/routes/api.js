@@ -148,6 +148,23 @@ router.post('/login', (req, res) => {
   });
 })
 
+router.get('/connected', (req, res) => { //TODO : Cookie
+  if (req.session.Id_Person != null)
+  {
+    console.log(sdatas);
+    res.status(200).json({
+      connected : true,
+      sdatas : sdatas
+    });
+  }
+  else
+  {
+    res.status(200).json({
+      connected : false
+    });
+  }
+})
+
 //PARTIE OBTENTIONS INFOS PERSONNES
 
 router.get('/retrieve_person', (req, res) => {
@@ -179,7 +196,7 @@ router.get('/retrieve_person', (req, res) => {
 router.get('/patient_comp_datas', (req,res) => {
   const Id_Patient = req.session.function_id || req.body.Id_Patient;
   sdatas_comp = [];
-  sequelize.query(`SELECT prescription.*, drug.*, professional.workplace_name, person.* from prescription right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) join doctor using (Id_Doctor) join professional using (Id_Person) join person Using (Id_Person) WHERE Id_Patient = '${Id_Patient}'`).then(result => {
+  sequelize.query(`SELECT prescription.*, drug.*, professional.workplace_name, person.*, speciality.speciality_name, postal_address.* from prescription right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) join doctor using (Id_Doctor) join doctor_speciality using(Id_Doctor) join speciality using (Id_Speciality) join professional using (Id_Person) join person Using (Id_Person) join postal_address using(Id_Postal_address) WHERE Id_Patient = '${Id_Patient}'`).then(result => {
     
     let Id_Prescriptions = [];
     result[0].forEach((row,n) => {
@@ -199,11 +216,15 @@ router.get('/patient_comp_datas', (req,res) => {
             note : row.note,
             reported : row.reported,
             report_note : row.report_note,
-            doctor_workplace_name : row.workplace_name,
-            doctor_first_name : row.first_name,
-            doctor_last_name : row.last_name,
-            doctor_mail : row.email_address,
-            doctor_phone_number : row.phone,
+            doctor_infos : {
+              workplace_name : row.workplace_name,
+              first_name : row.first_name,
+              last_name : row.last_name,
+              speciality : row.speciality_name,
+              mail : row.email_address,
+              phone : row.phone,
+              address : {door_number:row.door_number, road_number:row.number, road_name:row.road, zip_code:row.zip_code, town:row.town, country:row.country},
+            }
           },
           drugs : [],
           services : []
@@ -262,7 +283,7 @@ router.get('/patient_mdatas', (req,res) => {
   const Id_Patient = req.session.function_id || req.body.Id_Patient;
   mdatas = [];
 
-  sequelize.query(`SELECT person.*, patient.Id_Patient, prescription.*, drug.*, doctor_infos.email_address doctor_mail, doctor_infos.first_name doctor_first, doctor_infos.last_name doctor_last, doctor_infos.phone doctor_phone, professional.workplace_name from prescription JOIN patient USING (Id_Patient) JOIN person USING (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) join doctor Using (Id_Doctor) Join professional on doctor.Id_Person = professional.Id_Person Join person as doctor_infos On professional.Id_Person = doctor_infos.Id_Person WHERE Id_Patient IN (SELECT Id_Patient from Patient WHERE Id_Tutor = '${Id_Patient}')`).then(result => {
+  sequelize.query(`SELECT person.*, patient.Id_Patient, prescription.*, drug.*, doctor_infos.email_address doctor_mail, doctor_infos.first_name doctor_first, doctor_infos.last_name doctor_last, doctor_infos.phone doctor_phone, professional.workplace_name, speciality.speciality_name, postal_address.* from prescription JOIN patient USING (Id_Patient) JOIN person USING (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) join doctor Using (Id_Doctor) Join professional on doctor.Id_Person = professional.Id_Person Join person as doctor_infos On professional.Id_Person = doctor_infos.Id_Person Join postal_address on doctor_infos.Id_Postal_address = postal_address.Id_Postal_address join doctor_speciality using(Id_Doctor) join speciality using(Id_Speciality) WHERE Id_Patient IN (SELECT Id_Patient from Patient WHERE Id_Tutor = '${Id_Patient}')`).then(result => {
     let Id_Pac = [];
     result[0].forEach(row => {
       if (!Id_Pac.includes(row.Id_Patient))
@@ -303,11 +324,15 @@ router.get('/patient_mdatas', (req,res) => {
               note : row.note,
               reported : row.reported,
               report_note : row.report_note,
-              doctor_workplace_name : row.workplace_name,
-              doctor_first_name : row.doctor_first,
-              doctor_last_name : row.doctor_last,
-              doctor_mail : row.doctor_mail,
-              doctor_phone_number : row.doctor_phone,
+              doctor_infos : {
+                workplace_name : row.workplace_name,
+                first_name : row.doctor_first,
+                last_name : row.doctor_last,
+                speciality : row.speciality_name,
+                mail : row.doctor_mail,
+                phone : row.doctor_phone,
+                address : {door_number:row.door_number, road_number:row.number, road_name:row.road, zip_code:row.zip_code, town:row.town, country:row.country},
+              }
             },
             drugs : [],
             services : []
