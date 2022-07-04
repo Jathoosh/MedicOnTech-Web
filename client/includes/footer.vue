@@ -57,6 +57,17 @@
 <script>
 module.exports = {
   name: "foot-component",
+  methods: {
+    footerToBottom(){
+      let footer = document.getElementById("footer");
+      let height = footer.offsetHeight + "px";
+      footer.style.height = height;
+      this.$emit("footertobottom", height);
+    },
+  },
+  mounted() {
+    this.footerToBottom();
+  },
 };
 </script>
 
@@ -102,8 +113,6 @@ li > a.router-link-exact-active.router-link-active:hover {
   background-color: #D6D6D6;
   padding-top: 20px;
   padding-bottom: 20px;
-
-
 }
 
 .contPri {

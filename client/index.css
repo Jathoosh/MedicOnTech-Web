@@ -5,6 +5,8 @@ html {
 
 body {
     margin:0px;
+    min-height: 100vh;
+    position: relative;
 }
 
 .font-cera{
@@ -22,6 +24,12 @@ header {
 #main {
     width:90%;
     margin: 0 auto;
+}
+
+#footer {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
 }
 
 .band {
