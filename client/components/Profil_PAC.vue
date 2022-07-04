@@ -93,7 +93,6 @@ module.exports = {
       sendPac(){ // envoi les données du patient à charge à la base de données
         this.$emit('addPac', this.patient);
         this.message = "Ajouté";
-        // attendre 5 secondes avant de remettre le message à "Pas encore ajouté"
         setTimeout(() => {
           this.message = "Pas encore ajouté";
         }, 2000);
