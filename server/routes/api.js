@@ -130,7 +130,8 @@ router.post('/login', (req, res) => {
             workplace_name : result2[0][0].workplace_name, 
             profession : result2[0][0].Id_Doctor==null?
               {name:"Pharmacist",id:result2[0][0].Id_Pharmacist}:
-              {name:"Doctor",id:result2[0][0].Id_Doctor}
+              {name:"Doctor",id:result2[0][0].Id_Doctor},
+            mail : mail
           }
           res.status(200).json({
             message : 'Connexion réussie',
@@ -178,7 +179,7 @@ router.get('/retrieve_person', (req, res) => {
 router.get('/patient_comp_datas', (req,res) => {
   const Id_Patient = req.session.function_id || req.body.Id_Patient;
   sdatas_comp = [];
-  sequelize.query(`SELECT prescription.*, drug.* from prescription right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) WHERE Id_Patient = '${Id_Patient}'`).then(result => {
+  sequelize.query(`SELECT prescription.*, drug.*, professional.workplace_name, person.* from prescription right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) join doctor using (Id_Doctor) join professional using (Id_Person) join person Using (Id_Person) WHERE Id_Patient = '${Id_Patient}'`).then(result => {
     
     let Id_Prescriptions = [];
     result[0].forEach((row,n) => {
@@ -198,6 +199,11 @@ router.get('/patient_comp_datas', (req,res) => {
             note : row.note,
             reported : row.reported,
             report_note : row.report_note,
+            doctor_workplace_name : row.workplace_name,
+            doctor_first_name : row.first_name,
+            doctor_last_name : row.last_name,
+            doctor_mail : row.email_address,
+            doctor_phone_number : row.phone,
           },
           drugs : [],
           services : []
@@ -225,11 +231,38 @@ router.get('/patient_comp_datas', (req,res) => {
   })
 })
 
+router.get('/patient_comp_datas_services', (req,res) => {
+  const Id_Patient = req.session.function_id || req.body.Id_Patient;
+  let toReturn = [];
+  sequelize.query(`SELECT prescription.Id_Prescription, service.* from prescription right join prescription_service Using (Id_Prescription) join service using (Id_Service) WHERE Id_Patient = '${Id_Patient}'`).then(result => {
+    //Separate each service by Id_Prescription
+    let Id_Prescriptions = [];
+    result[0].forEach((row,n) => {
+      if (!Id_Prescriptions.includes(row.Id_Prescription))
+      {
+        Id_Prescriptions.push(row.Id_Prescription);
+        toReturn.push({
+          Id_Prescription : row.Id_Prescription,
+          services : []
+        });
+      }
+      toReturn[Id_Prescriptions.length-1].services.push({
+        Id_Service : row.Id_Service,
+        service_name : row.service_name,
+      });
+    })
+    res.status(200).json({
+      message : 'Données services patients récupérées',
+      datas : toReturn
+    });
+  })
+})
+
 router.get('/patient_mdatas', (req,res) => {
   const Id_Patient = req.session.function_id || req.body.Id_Patient;
   mdatas = [];
 
-  sequelize.query(`SELECT person.*, patient.Id_Patient, prescription.*, drug.* from prescription JOIN patient USING (Id_Patient) JOIN person	USING (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) WHERE Id_Patient IN (SELECT Id_Patient from Patient WHERE Id_Tutor = '${Id_Patient}')`).then(result => {
+  sequelize.query(`SELECT person.*, patient.Id_Patient, prescription.*, drug.*, doctor_infos.email_address doctor_mail, doctor_infos.first_name doctor_first, doctor_infos.last_name doctor_last, doctor_infos.phone doctor_phone, professional.workplace_name from prescription JOIN patient USING (Id_Patient) JOIN person USING (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) join doctor Using (Id_Doctor) Join professional on doctor.Id_Person = professional.Id_Person Join person as doctor_infos On professional.Id_Person = doctor_infos.Id_Person WHERE Id_Patient IN (SELECT Id_Patient from Patient WHERE Id_Tutor = '${Id_Patient}')`).then(result => {
     let Id_Pac = [];
     result[0].forEach(row => {
       if (!Id_Pac.includes(row.Id_Patient))
@@ -243,7 +276,7 @@ router.get('/patient_mdatas', (req,res) => {
             birth_date : row.birth_date,
             email_address : row.email_address,
             phone : row.phone,
-            Id_Postal_address : row.Id_Postal_address
+            Id_Postal_address : row.Id_Postal_address,
           },
           prescriptions_pac : []
         });
@@ -270,6 +303,11 @@ router.get('/patient_mdatas', (req,res) => {
               note : row.note,
               reported : row.reported,
               report_note : row.report_note,
+              doctor_workplace_name : row.workplace_name,
+              doctor_first_name : row.doctor_first,
+              doctor_last_name : row.doctor_last,
+              doctor_mail : row.doctor_mail,
+              doctor_phone_number : row.doctor_phone,
             },
             drugs : [],
             services : []
@@ -297,9 +335,35 @@ router.get('/patient_mdatas', (req,res) => {
   })
 })
 
+router.get('/patient_mdatas_services', (req,res) => {
+  const Id_Patient = req.session.function_id || req.body.Id_Patient;
+  let toReturn = [];
+  sequelize.query(`SELECT prescription.Id_Prescription, service.* from prescription right join prescription_service Using (Id_Prescription) join service using (Id_Service) WHERE Id_Patient IN (SELECT Id_Patient from Patient WHERE Id_Tutor = '${Id_Patient}')`).then(result => {
+    //Separate each service by Id_Prescription
+    let Id_Prescriptions = [];
+    result[0].forEach((row,n) => {
+      if (!Id_Prescriptions.includes(row.Id_Prescription))
+      {
+        Id_Prescriptions.push(row.Id_Prescription);
+        toReturn.push({
+          Id_Prescription : row.Id_Prescription,
+          services : []
+        });
+      }
+      toReturn[Id_Prescriptions.length-1].services.push({
+        Id_Service : row.Id_Service,
+        service_name : row.service_name,
+      });
+    })
+    res.status(200).json({
+      message : 'Données services patients à charges récupérées',
+      datas : toReturn
+    });
+  })
+})
+
 router.get('/doctor_mdatas', (req,res) => {
   const Id_Doctor = req.session.function_id;
-  console.log(Id_Doctor);
   mdatas = [];
   sequelize.query(`SELECT person.*, patient.Id_Patient, prescription.*, drug.* from prescription join patient using (Id_Patient) join person using (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) where Id_Patient IN (SELECT Id_Patient from assigned_doctor where Id_Doctor = '${Id_Doctor}');`).then(result => {
     //Obtain unique Patient
@@ -366,6 +430,34 @@ router.get('/doctor_mdatas', (req,res) => {
     res.status(200).json({
       message : 'Données récupérées',
       datas : mdatas
+    });
+  })
+})
+
+router.get('/doctor_mdatas_services', (req,res) => {
+  const Id_Doctor = req.session.function_id;
+  let toReturn = [];
+  sequelize.query(`SELECT prescription.Id_Prescription, service.*, prescription_service.quantity from prescription right join prescription_service Using (Id_Prescription) join service using (Id_Service) WHERE Id_Patient IN (SELECT Id_Patient from assigned_doctor where Id_Doctor = '${Id_Doctor}')`).then(result => {
+    //Separate each service by Id_Prescription
+    let Id_Prescriptions = [];
+    result[0].forEach((row,n) => {
+      if (!Id_Prescriptions.includes(row.Id_Prescription))
+      {
+        Id_Prescriptions.push(row.Id_Prescription);
+        toReturn.push({
+          Id_Prescription : row.Id_Prescription,
+          services : []
+        });
+      }
+      toReturn[Id_Prescriptions.length-1].services.push({
+        Id_Service : row.Id_Service,
+        service_name : row.service_name,
+        quantity : row.quantity
+      });
+    })
+    res.status(200).json({
+      message : 'Données services patients à charges récupérées',
+      datas : toReturn
     });
   })
 })
