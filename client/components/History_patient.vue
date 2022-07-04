@@ -9,35 +9,39 @@
       <div class="buttonback">
         <button @click="redirectToPac()" id="button">Ajouter une personne à charge</button>
         <button @click="back()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Retour</button>
-
       </div>
-
-
     </div>
+      
       <p id="search_adv">Recherche avancée</p>
       <div class="container">
-        <input placeholder="Select date" type="date" class="form-control">
+
+          <p style="max-height:5px; align-self :center;">A partir du : </p>
+
+
+
+          <input placeholder="Select date" v-model="input_date" type="date" class="form-control" style="max-width:12%; margin-left:5px;">
+
       </div>
 
   <br>
   <br>
   <br>
 
-    <div class="prescription_info" v-for="(d, index_history_patient) in mdatas[index_history_patient].prescriptions" :key="index_history_patient">
-      <div class="detail" >
-        <h2>Fait le {{changeDate(d.infos_prescription.creation_date)}} - expire le {{changeDate(d.infos_prescription.expiration_date)}}</h2>
-        <p><strong>Etat ordonnance : {{statePres(d.infos_prescription.validity)}}</strong></p>
-        <p>Nombre de réutilisations : {{d.infos_prescription.frequency_of_reuse}}</p>
-        <p>Ordonnance signalée : {{reportedPres(d.infos_prescription.reported)}}</p>
-        <p  v-if="d.infos_prescription.reported == true">  Raisons du signalement : {{d.infos_prescription.report_note}}</p>
-        <p style="color:grey;">ID : {{generateBarCodeNumber(d.infos_prescription.Id_Prescription)}}</p>
-      </div>
-
-      <div class="buttonRedirect">
-          <button @click="redirectionToOrdonnance()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Voir le détail</button> 
-      </div>
+  <div class="prescription_info" v-for="(d, index) in filteredData" :key="index"> 
+    <div class="detail">
+      <h2>Fait le {{changeDate(d.infos_prescription.creation_date)}} - expire le {{changeDate(d.infos_prescription.expiration_date)}}</h2>
+      <p><strong>Etat ordonnance : {{statePres(d.infos_prescription.validity)}}</strong></p>
+      <p>Nombre de réutilisations : {{d.infos_prescription.frequency_of_reuse}}</p>
+      <p>Ordonnance signalée : {{reportedPres(d.infos_prescription.reported)}}</p>
+      <p  v-if="d.infos_prescription.reported == true">  Raisons du signalement : {{d.infos_prescription.report_note}}</p>
+      <p style="color:grey;">ID : {{generateBarCodeNumber(d.infos_prescription.Id_Prescription)}}</p>
     </div>
-    <br>
+
+    <div class="buttonRedirect">
+        <button @click="redirectionToOrdonnance()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Voir le détail</button> 
+    </div>
+  </div>
+  <br>
   </div>
 </template>
 
@@ -64,6 +68,7 @@ module.exports = {
   
   data() {
     return {
+      input_date: "",
     };
   },
   methods: {
@@ -107,8 +112,23 @@ module.exports = {
       }
     }
   },
-  computed: {},
-};
+  computed: {
+    filteredData() {
+      var select_date = this.input_date;
+      var date = new Date(select_date).getTime();
+
+      if(select_date == ""){
+        return this.mdatas[this.index_history_patient].prescriptions;
+      }
+      else{
+        return this.mdatas[this.index_history_patient].prescriptions.filter(function (d) {
+          return new Date(d.infos_prescription.creation_date).getTime() >= date;
+        });
+      }
+      
+    }
+  }
+}
 </script>
 
 <style>
@@ -116,6 +136,7 @@ module.exports = {
 #search_adv {
   border-bottom: 5px solid #01AA88;
   max-width: 10%;
+  inline-size: fit-content;
 }
 
 /*bloc minimisé ordonnance*/
@@ -158,8 +179,10 @@ button:hover {
 
 /*Recherche avancée */
 .container {
-  max-width: 12%;
+  max-width: 100%;
   float: left;
+  display: flex;
+  flex-direction: row;
 }
 
 input[type=text] {
