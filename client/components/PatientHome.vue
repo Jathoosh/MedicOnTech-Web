@@ -40,10 +40,10 @@
             <div id="global" v-for="(ligne, index) in sdatas_comp" :key="index">
                 <div class="prescriptionCard">
                     <div>
-                        <!-- <h2>
-                            Dr {{ doctor.first_name }} {{ doctor.last_name }}, fait le
-                            {{ ligne.creation_date }}
-                        </h2> -->
+                        <h2>
+                            Dr. {{ ligne.infos_prescription.doctor_first_name }} {{ ligne.infos_prescription.doctor_last_name }}, fait le
+                            {{ ligne.infos_prescription.creation_date }}
+                        </h2>
                         <div class="statePrescription">
                             <p v-if="ligne.infos_prescription.used==true">Utilisée le {{ ligne.infos_prescription.date_of_use }}.</p>
                             <p v-if="ligne.infos_prescription.validity==true">Oronnance valide.</p>
@@ -52,7 +52,7 @@
 
                         <p id="ID"> ID : {{ ligne.infos_prescription.Id_Prescription }}</p>
                     </div> 
-                    <button id="detail" @click="toOrdonnance"><strong>Voir le détail</strong></button>
+                    <button id="detail" @click="toOrdonnance(index)"><strong>Voir le détail</strong></button>
                 </div>
             </div>
         </div>
@@ -61,10 +61,10 @@
             <div id="global" v-for="(ligne, index) in mdatas[index_pac].prescriptions_pac" :key="index">
                 <div class="prescriptionCard">
                     <div>
-                            <!-- <h2>
-                            Dr {{ doctor.first_name }} {{ doctor.last_name }}, fait le
-                            {{ ligne.creation_date }}
-                        </h2> -->
+                        <h2>
+                            Dr. {{ ligne.infos_prescription.doctor_first_name }} {{ ligne.infos_prescription.doctor_last_name }}, fait le
+                            {{ ligne.infos_prescription.creation_date }}
+                        </h2>
                         <div class="statePrescription">
                             <p v-if="ligne.infos_prescription.used==true">Utilisée le {{ ligne.infos_prescription.date_of_use }}.</p>
                             <p v-if="ligne.infos_prescription.validity==true">Oronnance valide.</p>
@@ -74,7 +74,7 @@
                         <p id="ID"> ID : {{ ligne.infos_prescription.Id_Prescription }}</p>
                     </div> 
 
-                    <button id="detail" @click="toOrdonnance"><strong>Voir le détail</strong></button>
+                    <button id="detail" @click="toOrdonnance(index)"><strong>Voir le détail</strong></button>
                 </div>
             </div>
 
@@ -93,8 +93,9 @@ module.exports = {
         }
     },
     methods: {
-        toOrdonnance: function () {
-        this.$router.push("/Ordonnance");
+        toOrdonnance: function (index) {
+        this.$router.push("/Ordonnance");          
+        this.$emit('save_index_ordonnance', {index:index});
         },
         goToPatientInCharge: function () {
         this.$router.push("/PatientInCharge");
