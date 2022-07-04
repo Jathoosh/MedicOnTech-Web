@@ -49,7 +49,10 @@
                         <div>
                             <p v-if="ligne.used=='true'">Utilisée le {{ ligne.date_of_use }}.</p>
                             <p v-if="ligne.validity=='true'">Oronnance valide.</p>
-                            <p v-if="ligne.reported=='true'">Ordonnance signalée.</p><br> 
+                            <p v-if="ligne.reported=='true'">
+                                Ordonnance signalée.<br>
+                                {{ligne.report_note}}
+                            </p> 
                         </div>
                         <div class="barCode">
 
