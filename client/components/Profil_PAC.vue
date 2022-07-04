@@ -2,9 +2,6 @@
   <div>
     <p>NRTIAEZHGIOEZH</p>
   <div class="main_container">
-    <div class = "test"> <!-- TTTTTEEEEESSSSTTTT -->
-      <p class="title_profil">Profil de {{patient.first_name}} {{patient.last_name}}</p>
-
       <div >
         <button @click="redirectToHistoryPatient()" class="btn btn-outline-dark ml-2" type="submit">Retour</button>
       </div>
@@ -29,21 +26,21 @@
           <tbody>
               <tr>
                 <th scope="row">Nom de famille</th>
-                <td><input v-model="patient.last_name"></td>
+                <td><input type="text" v-model="patient.last_name"></td>
               </tr>
 
             <tr>
               <th scope="row">Prénom</th>
-              <td><input v-model="patient.first_name"></td>
+              <td><input type="text" v-model="patient.first_name"></td>
             </tr>
             <tr>
               <th scope="row">Date de naissance</th>
-              <td><input v-model="patient.birth_date" type="date"></td>
+              <td><input type="date" v-model="patient.birth_date"></td>
             </tr>
             
             <tr>
               <th scope="row">Mutuelle</th>
-              <td><input v-model="patient.mutuelle"></td>
+              <td><input type="text" v-model="patient.mutuelle"></td>
             </tr>
           </tbody>
         </table> 
@@ -54,14 +51,15 @@
 
       </div>
       <div class="buttonModify">
-        <button @click="sendPac" class="btn btn-outline-dark ml-2" type="submit">Ajouter patient</button>
+        <button @click="sendPac()" class="btn btn-outline-dark ml-2" type="submit">Ajouter patient</button>
+        <br>
+        <p>{{message}}</p>
       </div>
+      <br>
     </div> 
     
   </div>
   </div>
-  <br>
-</div>
 </template>
 
 <script>
@@ -70,36 +68,40 @@ module.exports = {
     data(){
         return{
           patient:
-            {
-              last_name: 'Last name',
-              first_name: 'First name',
-              birth_date: 'Date de naissance',
-              email_adress: 'Adresse Mail',
-              mutuelle: 0,
-            }
+              {
+                last_name: "",
+                first_name: "",
+                birth_date: "",
+                mutuelle: "",
+              },
+            newLast_name: "",
+            newFirst_name: "",
+            newBirth_date: "",
+            newEmail_adress: "",
+            newMutuelle: "",
+            message: "Pas encore ajouté"
         }
     },
     methods:{
-      modifyInformationsProfil: function(){
-        this.$emit("modify", this.patient);
-        console.log(this.patient); //renvoie nouvelles informations Patient
-      },
-      retourPagePrincipale: function(){
-        this.$emit("retour page principale");
-        this.$router.push("/PatientHome");
-      }, 
-      redirectToHistoryPatient: function(){
-        this.$emit("redirect to history patient");
+      redirectToHistoryPatient(){
         this.$router.push("/History_patient");
      },
       initialesPatient: function(){
         var String = this.patient.last_name[0] + this.patient.first_name[0];
         return String;
       },
-        sendPac: function(){
-            this.$emit("sendpac", this.patient);
-            this.$router.push("/History_patient");
-        }
+      sendPac(){ // envoi les données du patient à charge à la base de données
+        this.$emit('addPac', this.patient);
+        this.message = "Ajouté";
+        // attendre 5 secondes avant de remettre le message à "Pas encore ajouté"
+        setTimeout(() => {
+          this.message = "Pas encore ajouté";
+        }, 2000);
+        this.patient.last_name = "";
+        this.patient.first_name = "";
+        this.patient.birth_date = "";
+        this.patient.mutuelle = "";
+      }
     }
    
 }
