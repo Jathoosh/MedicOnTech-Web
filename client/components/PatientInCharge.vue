@@ -68,10 +68,10 @@ module.exports = {
     },
      methods: {
         backHome: function () {
-        this.$router.push("/PatientHome");
+        this.$router.push("/Patient_home");
         },
         goToHomePatientInCHarge: function (index) {
-            this.$router.push("/PatientHome");            
+            this.$router.push("/Patient_home");            
             this.$emit('save_index_pac', {index:index});
             this.$emit('tutor_false');
 

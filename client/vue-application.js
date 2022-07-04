@@ -71,6 +71,7 @@ var app = new Vue( {
     index_history_patient: 0,
     index_pac: 0,
     tutor_bool: true,
+    index_ordonnance: 0,
   },
   components: 
   {
@@ -200,6 +201,9 @@ var app = new Vue( {
     },
     tutor_false(){
       this.tutor_bool = false;
+    },
+    save_index_ordonnance(data){
+      this.index_ordonnance = data.index;
     }
   }
 })
