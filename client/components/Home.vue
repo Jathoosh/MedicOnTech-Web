@@ -14,9 +14,6 @@
 <script>
 module.exports = {
     name: 'Home',
-    mounted() {
-      document.getElementById("main").style.width = "100%";
-    },
     
     components: {
       loginpar : LoginPar,

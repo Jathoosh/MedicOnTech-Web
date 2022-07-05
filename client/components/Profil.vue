@@ -99,7 +99,7 @@ module.exports = {
 }
 </script>
 
-<style>
+<style scoped>
   .test {
     display: flex;
     justify-content: space-between ;

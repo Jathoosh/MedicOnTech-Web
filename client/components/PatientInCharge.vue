@@ -118,7 +118,7 @@ module.exports = {
 }
 </script>
 
-<style>
+<style scoped>
     .topContainer {
         display: flex;
         justify-content: space-between;

@@ -7,27 +7,27 @@
         </div>
 
         <div class="ordonnance" id="ordonnanceForPrint">
-            <div v-if="tutor_bool==true">
+            <div>
 
                     <div class="headerOrdonnance">
                         <!-- Information du Docteur - Table Id_Doctor & Person-->
                         <p id="doctorContainer">
-                            Dr. {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.first_name }} {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.last_name }}<br>
-                            Medecin {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.speciality }}<br>
-                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.phone }}<br>
-                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.mail }}<br>
+                            Dr. {{ prescription_for_display.infos_prescription.doctor_infos.first_name }} {{ prescription_for_display.infos_prescription.doctor_infos.last_name }}<br>
+                            Medecin {{ prescription_for_display.infos_prescription.doctor_infos.speciality }}<br>
+                            {{ prescription_for_display.infos_prescription.doctor_infos.phone }}<br>
+                            {{ prescription_for_display.infos_prescription.doctor_infos.mail }}<br>
                         </p>
 
                         <img id="logo_MedicOnTech" src="ressources\MedicOnTech - Logo.png" alt="logo_MedicOnTech">
 
                         <!-- Information du lieu de travail_docteur - Table Id_Doctor & Person-->
                         <p id="workContainer">
-                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.workplace_name }}<br>
-                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.address.road_number }} 
-                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.address.road_name }}<br>
-                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.address.town }}
-                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.address.zip_code }},
-                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.address.country }}<br>
+                            {{ prescription_for_display.infos_prescription.doctor_infos.workplace_name }}<br>
+                            {{ prescription_for_display.infos_prescription.doctor_infos.address.road_number }} 
+                            {{ prescription_for_display.infos_prescription.doctor_infos.address.road_name }}<br>
+                            {{ prescription_for_display.infos_prescription.doctor_infos.address.town }}
+                            {{ prescription_for_display.infos_prescription.doctor_infos.address.zip_code }},
+                            {{ prescription_for_display.infos_prescription.doctor_infos.address.country }}<br>
 
                             <!-- {{ ligne.infos_prescription.doctor_workplace_mail }}<br> -->
                         </p>
@@ -35,35 +35,35 @@
 
                     <div class="bodyOrdonnance">
 
-                        <p id="ID">ID : {{ sdatas_comp[index_ordonnance].infos_prescription.Id_Prescription }}</p>
-                        <p>Fait le {{ sdatas_comp[index_ordonnance].infos_prescription.creation_date }}.</p><br>
+                        <p id="ID">ID : {{ prescription_for_display.infos_prescription.Id_Prescription }}</p>
+                        <p>Fait le {{ prescription_for_display.infos_prescription.creation_date }}.</p><br>
 
                         <!-- Information du Patient - Table Id_Patient & Person-->
                         <p>M. {{sdatas.first_name}} {{sdatas.last_name}}</p><br>
                     
                         <!-- Information Liste de médicaments - Table Id_Prescription & Drug-->
-                        <p v-for="(ligne,index_drug) in sdatas_comp[index_ordonnance].drugs" :key="index_drug">
+                        <p v-for="(ligne,index_drug) in prescription_for_display.drugs" :key="index_drug">
                             {{ ligne.drug_name }}
                         </p><br>
                         <!-- - {{ ligne.drug_quantity }} ???-->
                         
                         <!-- Information Liste de services - Table Id_Prescription & Service-->
-                        <p v-for="(ligne,index_service) in sdatas_comp[index_ordonnance].services" :key="index_service">
+                        <p v-for="(ligne,index_service) in prescription_for_display.services" :key="index_service">
                             {{ ligne.service_name }}
                         </p><br>
 
                         <!-- Informtion Ordonnance Note & Renouvelabilité -->
-                        <p>Notes : {{ sdatas_comp[index_ordonnance].infos_prescription.note }}</p><br>            
-                        <p>Ordonnance renouvelable {{ sdatas_comp[index_ordonnance].infos_prescription.number_of_reuses }} 
-                            fois tous les {{ sdatas_comp[index_ordonnance].infos_prescription.frequency_of_reuse }} jours.</p><br><br>
+                        <p>Notes : {{ prescription_for_display.infos_prescription.note }}</p><br>            
+                        <p>Ordonnance renouvelable {{ prescription_for_display.infos_prescription.number_of_reuses }} 
+                            fois tous les {{ prescription_for_display.infos_prescription.frequency_of_reuse }} jours.</p><br><br>
 
                         <div class="statutContainer">
                             <div>
-                                <p v-if="sdatas_comp[index_ordonnance].infos_prescription.used==true">Utilisée le {{ sdatas_comp[index_ordonnance].infos_prescription.date_of_use }}.</p>
-                                <p v-if="sdatas_comp[index_ordonnance].infos_prescription.validity==true">Oronnance valide.</p>
-                                <p v-if="sdatas_comp[index_ordonnance].infos_prescription.reported==true">
+                                <p v-if="prescription_for_display.infos_prescription.used==true">Utilisée le {{ prescription_for_display.infos_prescription.date_of_use }}.</p>
+                                <p v-if="prescription_for_display.infos_prescription.validity==true">Oronnance valide.</p>
+                                <p v-if="prescription_for_display.infos_prescription.reported==true">
                                     Ordonnance signalée.<br>
-                                    {{sdatas_comp[index_ordonnance].infos_prescription.report_note}}
+                                    {{prescription_for_display.infos_prescription.report_note}}
                                 </p> 
                             </div>
                             <div class="barCode">
@@ -103,36 +103,43 @@ module.exports = {
         }
     },
     props:{
-        mdatas: {
-            type: Array,
-            required: true,
-            default: function () {
-                return [];
-            }
-        },
-        sdatas: {
+        // mdatas: {
+        //     type: Array,
+        //     required: true,
+        //     default: function () {
+        //         return [];
+        //     }
+        // },
+        // sdatas: {
+        //     type: Object,
+        //     required: true,
+        //     default: function () {
+        //         return [];
+        //     }
+        // },
+        // sdatas_comp: {
+        //     type: Array,
+        //     required: true,
+        //     default: function () {
+        //         return [];
+        //     }
+        // },
+        // index_pac: {
+        //     type: Number,
+        //     required: true,
+        //     default: function () {
+        //         return 0;
+        //     }
+        // },
+        // tutor_bool: Boolean,
+        // index_ordonnance: Number,
+        prescription_for_display: {
             type: Object,
             required: true,
             default: function () {
-                return [];
+                return {};
             }
-        },
-        sdatas_comp: {
-            type: Array,
-            required: true,
-            default: function () {
-                return [];
-            }
-        },
-        index_pac: {
-            type: Number,
-            required: true,
-            default: function () {
-                return 0;
-            }
-        },
-        tutor_bool: Boolean,
-        index_ordonnance: Number,
+        }
     },
     mounted() {
         //Parcourir la liste des Prescription d'un Patient et récupérer les données de la Presciption
@@ -179,7 +186,7 @@ module.exports = {
 </script>
 
 
-<style>
+<style scoped>
     .ordonnanceContainer {
         display: flex;
         flex-direction: column;

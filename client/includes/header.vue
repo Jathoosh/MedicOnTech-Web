@@ -16,6 +16,7 @@
             <router-link to="/pharmacist_home" v-if="sdatas.profession.name===''">Page Pharmacien</router-link>
             <router-link to="/doctor_home" v-if="sdatas.profession.name===''">Page Médecin</router-link>
             <router-link to="/patient_home" v-if="sdatas.profession.name===''">Page Patient</router-link>
+            <button v-if="sdatas.profession.name!==''" @click="logout">Deconnexion</button>
             <router-link to="/doctor_home" v-if="sdatas.profession.name==='Doctor'">Mes patients</router-link>
             <router-link to="/edit_prescription" v-if="sdatas.profession.name==='Doctor'">Rédiger Ordonnance</router-link>
             <router-link to="/" v-if="sdatas.profession.name==='Patient'">Mes Ordonnances</router-link>
@@ -90,6 +91,9 @@ module.exports = {
       },
     login: function(data){
       this.$emit('login', data);
+    },
+    logout: function(){
+      this.$emit('logout');
     }
 
   },
@@ -201,7 +205,11 @@ nav > a.router-link-exact-active.router-link-active:hover {
   margin-right: 25px;
 }
 
-nav > a {
+button{
+  border: none;
+}
+
+nav > a, button {
   background-color: rgb(236, 235, 235);
   color: rgb(49, 49, 49);
   margin: 5px;
@@ -209,7 +217,7 @@ nav > a {
   text-decoration: none;
   border-radius: 7px;
 }
-nav > a:hover {
+nav > a:hover, button:hover {
   background-color: #b9b9b9;
 }
 nav > a.router-link-exact-active.router-link-active

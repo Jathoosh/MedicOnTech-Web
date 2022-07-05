@@ -94,8 +94,12 @@ module.exports = {
     },
     methods: {
         toOrdonnance: function (index) {
-        this.$router.push("/Ordonnance");          
-        this.$emit('save_index_ordonnance', {index:index});
+            if (this.tutor_bool==true) {
+                this.$emit('save_ordonnance', this.sdatas_comp[index]);
+            }
+            else {
+                this.$emit('save_ordonnance', this.mdatas[this.index_pac].prescriptions_pac[index]);
+            }
         },
         goToPatientInCharge: function () {
         this.$router.push("/PatientInCharge");

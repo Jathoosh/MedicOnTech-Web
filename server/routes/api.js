@@ -165,6 +165,13 @@ router.get('/connected', (req, res) => { //TODO : Cookie
   }
 })
 
+router.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.status(200).json({
+    connected : false
+  });
+})
+
 //PARTIE OBTENTIONS INFOS PERSONNES
 
 router.get('/retrieve_person', (req, res) => {
@@ -280,10 +287,10 @@ router.get('/patient_comp_datas_services', (req,res) => {
 })
 
 router.get('/patient_mdatas', (req,res) => {
-  const Id_Patient = req.session.function_id || req.body.Id_Patient;
+  const Id_Person = req.session.Id_Person;
   mdatas = [];
 
-  sequelize.query(`SELECT person.*, patient.Id_Patient, prescription.*, drug.*, doctor_infos.email_address doctor_mail, doctor_infos.first_name doctor_first, doctor_infos.last_name doctor_last, doctor_infos.phone doctor_phone, professional.workplace_name, speciality.speciality_name, postal_address.* from prescription JOIN patient USING (Id_Patient) JOIN person USING (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) join doctor Using (Id_Doctor) Join professional on doctor.Id_Person = professional.Id_Person Join person as doctor_infos On professional.Id_Person = doctor_infos.Id_Person Join postal_address on doctor_infos.Id_Postal_address = postal_address.Id_Postal_address join doctor_speciality using(Id_Doctor) join speciality using(Id_Speciality) WHERE Id_Patient IN (SELECT Id_Patient from Patient WHERE Id_Tutor = '${Id_Patient}')`).then(result => {
+  sequelize.query(`SELECT person.*, patient.Id_Patient, prescription.*, drug.*, doctor_infos.email_address doctor_mail, doctor_infos.first_name doctor_first, doctor_infos.last_name doctor_last, doctor_infos.phone doctor_phone, professional.workplace_name, speciality.speciality_name, postal_address.* from prescription JOIN patient USING (Id_Patient) JOIN person USING (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) join doctor Using (Id_Doctor) Join professional on doctor.Id_Person = professional.Id_Person Join person as doctor_infos On professional.Id_Person = doctor_infos.Id_Person Join postal_address on doctor_infos.Id_Postal_address = postal_address.Id_Postal_address join doctor_speciality using(Id_Doctor) join speciality using(Id_Speciality) WHERE Id_Patient IN (SELECT Id_Patient from Patient WHERE Id_Tutor = '${Id_Person}')`).then(result => {
     let Id_Pac = [];
     result[0].forEach(row => {
       if (!Id_Pac.includes(row.Id_Patient))
@@ -361,9 +368,9 @@ router.get('/patient_mdatas', (req,res) => {
 })
 
 router.get('/patient_mdatas_services', (req,res) => {
-  const Id_Patient = req.session.function_id || req.body.Id_Patient;
+  const Id_Person = req.session.Id_Person;
   let toReturn = [];
-  sequelize.query(`SELECT prescription.Id_Prescription, service.* from prescription right join prescription_service Using (Id_Prescription) join service using (Id_Service) WHERE Id_Patient IN (SELECT Id_Patient from Patient WHERE Id_Tutor = '${Id_Patient}')`).then(result => {
+  sequelize.query(`SELECT prescription.Id_Prescription, service.* from prescription right join prescription_service Using (Id_Prescription) join service using (Id_Service) WHERE Id_Patient IN (SELECT Id_Patient from Patient WHERE Id_Tutor = '${Id_Person}')`).then(result => {
     //Separate each service by Id_Prescription
     let Id_Prescriptions = [];
     result[0].forEach((row,n) => {
