@@ -30,17 +30,27 @@
             </div>
             <br>
             <div class="input_medicament_info">
-                <label style="font-size:30px; margin-bottom:5px"><strong>Ajouter un médicament</strong></label>
-                <!--input pour ajouter le médicament-->
-                <form v-on:submit.prevent="addDrug">
-                    <input type="text" v-model="newDrug_name" placeholder="Nom du médicament"/>
-                    <input type="number" v-model="newDrug_quantity" placeholder="Quantité" required />
-                    <br>
-                    <br>
-                    <input id="notes_input" type="text" v-model="newDrug_notes" placeholder="Notes"/>
-                    <br>
-                    <button>Ajouter</button>
-                </form>
+                <div id="container_drug">
+                    <!--input pour ajouter le médicament-->
+                    <form id="form_add" v-on:submit.prevent="addDrug">
+                        <label style="font-size:30px; margin-bottom:5px"><strong>Ajouter un médicament</strong></label>
+                        <br>
+                        <input type="text" v-model="newDrug_name" placeholder="Nom du médicament"/>
+                        <button @click="searchdrug()">Rechercher un médicament</button>
+                        
+                        <br>
+                        <br>
+                        <div>
+                            <input type="number" min="1" v-model="newDrug_quantity" placeholder="Quantité" required />
+                            <input id="notes_input" type="text" v-model="newDrug_notes" placeholder="Notes"/>
+                        </div>
+                        <br>
+                        
+                        <button>Ajouter</button>
+                    </form>
+                
+                    <listdrug id="drug_table" @fillinputdrug = "fillinputdrug" v-if="print_list_drug == true"></listdrug>
+                </div>
                 <br>
                 <!--Affichage de la liste de médicaments ajoutée-->
                 <table class="table table-striped table-bordered">
@@ -92,7 +102,8 @@
 module.exports = {
     name: 'Edit_prescription',
     components: {
-        listpatient:listpatient
+        listpatient:listpatient,
+        listdrug: listdrug,
     },
     data() { 
         return {
@@ -127,6 +138,7 @@ module.exports = {
             },
             sendMessage: false, // message de confirmation d'envoi de l'ordonnance
             print_list_patient: false, // affichage de la liste des patients
+            print_list_drug: false, // affichage de la liste des médicaments
         }
     },
     methods: {
@@ -181,11 +193,27 @@ module.exports = {
                 alert("Veuillez remplir les champs nom et prénom");
             }
         },
+        searchdrug(){
+            if(this.newDrug_name != ""){
+                console.log("med :  " + this.newDrug_name);
+                this.$emit('sendToBackDrug', this.newDrug_name);
+                this.print_list_drug = true;
+            }
+            else{
+                alert("Veuillez remplir le champ nom du médicament");
+            }
+        },
+
         fillinput(patient){ // remplir les champs de saisie avec les données du patient sélectionné
             this.newPatient_lastname = patient[0].last_name;
             this.newPatient_firstname = patient[0].first_name;
             this.print_list_patient = false;
         },
+        fillinputdrug(drug){ // remplir les champs de saisie avec les données du médicament sélectionné
+            console.log("la drogue c'est mal" + drug[0].drug_name);
+            this.newDrug_name = drug[0].name;
+            this.print_list_drug = false;
+        }
 
     }, 
     created: function(){
@@ -302,8 +330,21 @@ width: 20%;
 }
 
 #notes_input {
-    width:29%;
-    height:60px;
+    width:300px;
+
     margin-bottom:20px;
+}
+#container_drug {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+
+}
+#form_add {
+    width: 100%;
+}
+#drug_table {
+    width: 100%;
 }
 </style>
