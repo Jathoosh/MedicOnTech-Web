@@ -8,39 +8,42 @@
 
         <div class="ordonnance" id="ordonnanceForPrint">
             <div v-if="tutor_bool==true">
-                <div v-for="(ligne, index) in sdatas_comp" :key="index">
 
                     <div class="headerOrdonnance">
                         <!-- Information du Docteur - Table Id_Doctor & Person-->
                         <p id="doctorContainer">
-                            Dr. {{ ligne.infos_prescription.doctor_first_name }} {{ ligne.infos_prescription.doctor_last_name }}<br>
-                            <!-- Medecin {{ ligne.infos_prescription.doctor_speciality_name }}<br> -->
-                            <!-- {{ ligne.infos_prescription.doctor_personal_phone_number }}<br> -->
-                            {{ ligne.infos_prescription.doctor_mail }}<br>
+                            Dr. {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.first_name }} {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.last_name }}<br>
+                            Medecin {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.speciality }}<br>
+                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.phone }}<br>
+                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.mail }}<br>
                         </p>
 
                         <img id="logo_MedicOnTech" src="ressources\MedicOnTech - Logo.png" alt="logo_MedicOnTech">
 
                         <!-- Information du lieu de travail_docteur - Table Id_Doctor & Person-->
                         <p id="workContainer">
-                            {{ ligne.infos_prescription.doctor_workplace_name }}<br>
-                            <!-- Adresse : {{ doctor.work_name }}<br> -->
-                            {{ ligne.infos_prescription.doctor_phone_number }}<br>
+                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.workplace_name }}<br>
+                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.address.road_number }} 
+                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.address.road_name }}<br>
+                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.address.town }}
+                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.address.zip_code }},
+                            {{ sdatas_comp[index_ordonnance].infos_prescription.doctor_infos.address.country }}<br>
+
                             <!-- {{ ligne.infos_prescription.doctor_workplace_mail }}<br> -->
                         </p>
                     </div>
 
                     <div class="bodyOrdonnance">
 
-                        <p>Fait le {{ sdatas_comp[index_ordonnance].infos_prescription.creation_date }}.</p>
-                        <p>{{ sdatas_comp[index_ordonnance].infos_prescription.Id_Prescription }}</p><br>
+                        <p id="ID">ID : {{ sdatas_comp[index_ordonnance].infos_prescription.Id_Prescription }}</p>
+                        <p>Fait le {{ sdatas_comp[index_ordonnance].infos_prescription.creation_date }}.</p><br>
 
                         <!-- Information du Patient - Table Id_Patient & Person-->
                         <p>M. {{sdatas.first_name}} {{sdatas.last_name}}</p><br>
                     
                         <!-- Information Liste de médicaments - Table Id_Prescription & Drug-->
                         <p v-for="(ligne,index_drug) in sdatas_comp[index_ordonnance].drugs" :key="index_drug">
-                            {{ ligne.drug_name }}, {{ ligne.drug_format }} 
+                            {{ ligne.drug_name }}
                         </p><br>
                         <!-- - {{ ligne.drug_quantity }} ???-->
                         
@@ -69,10 +72,9 @@
                         </div>  
                     </div> 
 
-                </div>
             </div>
 
-
+            <!-- Ajouter le cas d'un patient à charge ! -->
 
         </div>
 
@@ -255,5 +257,9 @@ module.exports = {
         background-color: #b1b1b1;
         transition: background-color 0.5s;
 
+    }
+
+    #ID{
+        color:grey;
     }
 </style>
