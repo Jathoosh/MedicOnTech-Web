@@ -14,7 +14,7 @@
                     </h5>
                     <div class="card-text">
                         Dernière ordonnance : {{ displayLastPrescriptionDateOf(index) }}<br>
-                        Expire le : {{ changeDate(ligne.prescriptions_pac[index].infos_prescription.expiration_date) }}
+                        Expire le : {{ displayLastPrescriptionExpirationDateOf(index) }}
                     </div>
                     <!-- <div class="card-text">
                         <p id="ID">Tuteur_ID : {{ generateBarCodeNumber(sdatas.Id_Person) }}</p>
@@ -67,13 +67,32 @@ module.exports = {
             }
             return barcode; 
         },
-        displayLastPrescriptionDateOf(index)
+        displayLastPrescriptionDateOf(index_last)
         {
             let Dates = [];
             //find latest date of Dates array
-            for(let i = 0; i < this.mdatas[index].prescriptions_pac.length; i++)
+            for(let i = 0; i < this.mdatas[index_last].prescriptions_pac.length; i++)
             {
-                Dates.push(this.mdatas[index].prescriptions_pac[i].infos_prescription.creation_date);
+                Dates.push(this.mdatas[index_last].prescriptions_pac[i].infos_prescription.creation_date);
+            }
+            //convert date string to date object
+            for(let i = 0; i < Dates.length; i++)
+            {
+                Dates[i] = new Date(Dates[i]);
+            }
+            //sort dates array
+            Dates.sort(function(a, b){return b-a});
+            //return first date among dates
+            // display Dates info
+            return Dates[0].getDate() + "/" + (Dates[0].getMonth()+1) + "/" + Dates[0].getFullYear();
+        },
+        displayLastPrescriptionExpirationDateOf(index_last)
+        {
+            let Dates = [];
+            //find latest date of Dates array
+            for(let i = 0; i < this.mdatas[index_last].prescriptions_pac.length; i++)
+            {
+                Dates.push(this.mdatas[index_last].prescriptions_pac[i].infos_prescription.expiration_date);
             }
             //convert date string to date object
             for(let i = 0; i < Dates.length; i++)

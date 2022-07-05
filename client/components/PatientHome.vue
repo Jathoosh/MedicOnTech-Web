@@ -5,40 +5,38 @@
             <button @click="goToPatientInCharge" id="buttons">Personnes à charge</button>
         </div>
 
-        <div id="container">
-        <input
-            class="SearchBar"
-            type="search"
-            v-model="search"
-            placeholder="Rechercher une ordonnance"
-            size="28"
-        />
-        </div>
-
         <h3>Filtres</h3>
         <hr/>
         <div class="filtre">
         
             <h4>Date</h4>
-            <input class="filter_date" type="date" placeholder="Date" size="28" />
+            <input class="filter_date" type="date" v-model="input_date" placeholder="Date" size="28" />
 
         </div>
 
         <div v-if="tutor_bool==true">
-            <div id="global" v-for="(ligne, index) in sdatas_comp" :key="index">
+            <div id="global" v-for="(ligne, index) in filteredDataTutor" :key="index">
                 <div class="prescriptionCard">
                     <div>
                         <h2>
-                            Dr. {{ ligne.infos_prescription.doctor_infos.first_name }} {{ ligne.infos_prescription.doctor_infos.last_name }}, fait le
-                            {{ changeDate(ligne.infos_prescription.creation_date) }}
-                        </h2>
+                            Par Dr. {{ ligne.infos_prescription.doctor_infos.first_name }} {{ ligne.infos_prescription.doctor_infos.last_name }}
+                            - Pour {{ sdatas.first_name }} {{ sdatas.last_name }}
+                        </h2>                       
+                        <h4> 
+                            Fait le {{ changeDate(ligne.infos_prescription.creation_date) }}
+                            - Expire le {{ changeDate(ligne.infos_prescription.expiration_date) }} <br>
+                        </h4>
+
                         <div class="statePrescription">
-                            <p v-if="ligne.infos_prescription.used==true">Utilisée le {{ changeDate(ligne.infos_prescription.date_of_use) }}.</p>
-                            <p v-if="ligne.infos_prescription.validity==true">Oronnance valide.</p>
-                            <p v-if="ligne.infos_prescription.reported==true">Ordonnance signalée.</p> 
+                            <p v-if="ligne.infos_prescription.used==true">Ordonnance utilisée le {{ changeDate(ligne.infos_prescription.date_of_use) }}.</p>
+                            <p v-if="ligne.infos_prescription.validity==false">Oronnance invalide.</p>
+                            <p v-if="ligne.infos_prescription.reported==true">
+                                Ordonnance signalée :<br>
+                                {{ligne.infos_prescription.report_note}}
+                            </p>  
                         </div>
 
-                        <p id="ID"> ID : {{ generateBarCodeNumber(ligne.infos_prescription.Id_Prescription) }}</p>
+                        <!-- <p id="ID"> ID : {{ generateBarCodeNumber(ligne.infos_prescription.Id_Prescription) }}</p> -->
                     </div> 
                     <button id="detail" @click="toOrdonnance(index)"><strong>Voir le détail</strong></button>
                 </div>
@@ -46,20 +44,27 @@
         </div>
 
         <div v-else>
-            <div id="global" v-for="(ligne, index) in mdatas[index_pac].prescriptions_pac" :key="index">
+            <div id="global" v-for="(ligne, index) in filteredData" :key="index">
                 <div class="prescriptionCard">
                     <div>
                         <h2>
-                            Dr. {{ ligne.infos_prescription.doctor_infos.first_name }} {{ ligne.infos_prescription.doctor_infos.last_name }}, fait le
-                            {{ ligne.infos_prescription.creation_date }}
+                            Par Dr. {{ ligne.infos_prescription.doctor_infos.first_name }} {{ ligne.infos_prescription.doctor_infos.last_name }}
+                            - Pour <!-- {{ mdatas[this.index_pac].infos_pac.first_name }} {{ mdatas[this.index_pac].infos_pac.last_name }} -->
                         </h2>
+                        <h4>
+                            Fait le {{ changeDate(ligne.infos_prescription.creation_date) }}
+                            - Expire le {{ changeDate(ligne.infos_prescription.expiration_date) }}
+                        </h4>
                         <div class="statePrescription">
-                            <p v-if="ligne.infos_prescription.used==true">Utilisée le {{ ligne.infos_prescription.date_of_use }}.</p>
-                            <p v-if="ligne.infos_prescription.validity==true">Oronnance valide.</p>
-                            <p v-if="ligne.infos_prescription.reported==true">Ordonnance signalée.</p> 
+                            <p v-if="ligne.infos_prescription.used==true">Ordonnance utilisée le {{ changeDate(ligne.infos_prescription.date_of_use) }}.</p>
+                            <p v-if="ligne.infos_prescription.validity==false">Oronnance invalide.</p>
+                            <p v-if="ligne.infos_prescription.reported==true">
+                                Ordonnance signalée.<br>
+                                {{ligne.infos_prescription.report_note}}
+                            </p>  
                         </div>
 
-                        <p id="ID"> ID : {{ ligne.infos_prescription.Id_Prescription }}</p>
+                        <!-- <p id="ID"> ID : {{ ligne.infos_prescription.Id_Prescription }}</p> -->
                     </div> 
 
                     <button id="detail" @click="toOrdonnance(index)"><strong>Voir le détail</strong></button>
@@ -76,7 +81,7 @@ module.exports = {
     data() {
         return {
             
-            search: "",
+            input_date: "",
             
         }
     },
@@ -105,14 +110,35 @@ module.exports = {
         }
     },
     computed: {
-        filteredPatients() {
-        return this.patient.filter((patient) => {
-            return (
-            patient.last_name.toLowerCase().indexOf(this.search.toLowerCase()) >
-            -1
-            );
-        });
-        },
+    filteredDataTutor() {
+        var select_date = this.input_date;
+        var date = new Date(select_date).getTime();
+
+        if(select_date == ""){
+            return this.sdatas_comp;
+        }
+        else{
+            return this.sdatas_comp.filter(function (ligne) {
+            return new Date(ligne.infos_prescription.creation_date).getTime() >= date;
+            });
+        }
+      
+    },
+    filteredData() {
+        var select_date = this.input_date;
+        var date = new Date(select_date).getTime();
+
+        if(select_date == ""){
+            return this.mdatas[this.index_pac].prescriptions_pac;
+        }
+        else{
+            return this.mdatas[this.index_pac].prescriptions_pac.filter(function (ligne) {
+            return new Date(ligne.infos_prescription.creation_date).getTime() >= date;
+            });
+        }
+      
+    }
+
     },
     props:{
         mdatas: {
@@ -170,7 +196,6 @@ module.exports = {
         margin-left: auto;
         margin-right: auto;
         padding: 20px;
-        padding-bottom: 40px;
         margin-top: 7vh;
         margin-bottom: 25px;
     }
@@ -241,9 +266,8 @@ module.exports = {
     }
 
     .statePrescription {
-        margin: 10px;
+        margin-top: 20px;
         margin-left: 35px;
-
     }
 
     #ID{
