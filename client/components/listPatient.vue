@@ -54,6 +54,6 @@ module.exports = {
 } 
 </script>
 
-<style>
+<style scoped>
 
 </style>
