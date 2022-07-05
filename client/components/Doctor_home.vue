@@ -113,7 +113,7 @@ module.exports = {
 };
 </script>
 
-<style>
+<style scoped>
 h4 {
   padding-top: 15px;
 }

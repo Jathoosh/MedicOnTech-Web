@@ -15,8 +15,10 @@
                     <br>
                     <input class="inputName" v-model="newPatient_lastname" type="text" placeholder="Nom" required/>
                     <input class="inputName" v-model="newPatient_firstname" type="text" placeholder="Prénom" required/>
+                    <button @click="searchpatient()">Rechercher</button>
+                    <listpatient @fillinput = "fillinput" v-if="print_list_patient == true"> </listpatient>
                 </div>
-            
+
                 <div class="date_container">
                     <div style="margin-right:5px">
                         <p>Le </p>
@@ -86,8 +88,12 @@
 </template>
 
 <script>
+
 module.exports = {
     name: 'Edit_prescription',
+    components: {
+        listpatient:listpatient
+    },
     data() { 
         return {
             reusable : false,
@@ -120,7 +126,7 @@ module.exports = {
                 reuse: "",
             },
             sendMessage: false, // message de confirmation d'envoi de l'ordonnance
-
+            print_list_patient: false, // affichage de la liste des patients
         }
     },
     methods: {
@@ -164,19 +170,36 @@ module.exports = {
             
             console.log("VOILA CE QUE TU RECOIS : ",this.newPrescription);
         },
+        searchpatient(){
+           
+            if(this.newPatient_lastname != "" && this.newPatient_firstname != ""){
+                console.log("oye " + this.newPatient_lastname + this.newPatient_firstname);
+                this.$emit('sendToBackName', this.newPatient_lastname, this.newPatient_firstname);
+                this.print_list_patient = true;
+            }
+            else{
+                alert("Veuillez remplir les champs nom et prénom");
+            }
+        },
+        fillinput(patient){ // remplir les champs de saisie avec les données du patient sélectionné
+            this.newPatient_lastname = patient[0].last_name;
+            this.newPatient_firstname = patient[0].first_name;
+            this.print_list_patient = false;
+        },
+
     }, 
     created: function(){
                 this.drugs = [];
                 this.newDrug_name = "";
                 this.newDrug_quantity = "";
                 this.newDrug_notes = "";
-                }
+                },
     
 
 }
 </script>
 
-<style>
+<style scoped>
 .head {
     display: flex;
     justify-content: space-between;
