@@ -77,7 +77,15 @@ var app = new Vue( {
         first_name: '',
         last_name: '',
       },
-      infos_prescription: {},
+      infos_prescription: {
+        doctor_info: {
+          first_name: '',
+          last_name: '',
+          specialty: '',
+          phone: '',
+          mail: '',
+        }
+      },
       drugs: [],
       services: [],
     },

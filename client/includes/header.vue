@@ -36,7 +36,7 @@
 
     <button @click="login({mail:'moreau.camille@medecin.fr',password:'123'})" >connexion docteur (1) Camille Moreau</button>
     <button @click="login({mail:'laurent.sara@pharmacien.fr',password:'123'})" >connexion pharmacien (7) Sara Laurent</button>
-    <button @click="login({mail:'rhoncus@google.edu',password:'123'})" >connexion patient (7) Keaton Smith</button>
+    <button @click="login({mail:'sapien.cursus@protonmail.couk',password:'123'})" >connexion patient (5) Ross O'brien</button>
 
     <!-- TODO à rajuster pour que la card soit juste en dessous du profil --> 
     <div id="carteSuperposee" class="cardPosition">

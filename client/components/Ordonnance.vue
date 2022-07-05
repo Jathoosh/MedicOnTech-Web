@@ -35,8 +35,8 @@
 
                     <div class="bodyOrdonnance">
 
-                        <p id="ID">ID : {{ generateBarCodeNumber(sdatas_comp[index_ordonnance].infos_prescription.Id_Prescription) }}</p>
-                        <p>Fait le {{ sdatas_comp[index_ordonnance].infos_prescription.creation_date }}.</p><br>
+                        <p id="ID">ID : {{ generateBarCodeNumber(prescription_for_display.infos_prescription.Id_Prescription) }}</p>
+                        <p>Fait le {{ prescription_for_display.infos_prescription.creation_date }}.</p><br>
 
                         <!-- Information du Patient - Table Id_Patient & Person-->
                         <p>M. {{prescription_for_display.infos_patient.first_name}} {{prescription_for_display.infos_patient.last_name}}</p><br>
@@ -48,9 +48,9 @@
                         <!-- - {{ ligne.drug_quantity }} ???-->
                         
                         <!-- Information Liste de services - Table Id_Prescription & Service-->
-                        <p v-for="(ligne,index_service) in prescription_for_display.services" :key="index_service">
+                        <!-- <p v-for="(ligne,index_service) in prescription_for_display.services" :key="index_service">
                             {{ ligne.service_name }}
-                        </p><br>
+                        </p><br> -->
 
                         <!-- Informtion Ordonnance Note & Renouvelabilité -->
                         <p>Notes : {{ prescription_for_display.infos_prescription.note }}</p><br>            
@@ -143,6 +143,7 @@ module.exports = {
         }
     },
     mounted() {
+        console.log(this.prescription_for_display);
         //Parcourir la liste des Prescription d'un Patient et récupérer les données de la Presciption
         //Afficher les données de la Prescription (tables Prescription, Drug et Service) dans la vue 
         //Afficher les données du Docteur (table Person et Speciality) dans la vue en haut à gauche de l'ordonnance
