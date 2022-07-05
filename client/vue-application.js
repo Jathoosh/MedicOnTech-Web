@@ -22,7 +22,7 @@ const InfoCard = window.httpVueLoader('./components/InfoCard.vue');
 const Profil = window.httpVueLoader('./components/Profil.vue');
 const LoginPar = window.httpVueLoader('./components/LoginPar.vue');
 const LoginPro = window.httpVueLoader('./components/LoginPro.vue');
-
+const listpatient = window.httpVueLoader('./components/listPatient.vue');
 // Page de fonctionnalités
 const LoginRetrieve = window.httpVueLoader('./pages/LoginRetrieve.vue');
 

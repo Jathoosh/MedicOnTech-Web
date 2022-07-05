@@ -16,9 +16,6 @@
       <div class="container">
 
           <p style="max-height:5px; align-self :center;">A partir du : </p>
-
-
-
           <input placeholder="Select date" v-model="input_date" type="date" class="form-control" style="max-width:12%; margin-left:5px;">
 
       </div>
