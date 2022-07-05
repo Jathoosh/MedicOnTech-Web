@@ -214,6 +214,9 @@ var app = new Vue( {
     tutor_false(){
       this.tutor_bool = false;
     },
+    tutor_true(){
+      this.tutor_bool = true;
+    },
     save_index_ordonnance(data){
       this.index_ordonnance = data.index;
     }

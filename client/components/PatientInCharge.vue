@@ -8,11 +8,18 @@
         <div class="container">
             <div class="card" style="width: 18rem;" v-for="(ligne, index) in mdatas" :key="index">
                 <div class="card-body" >
-                <h5 class="card-title">{{ligne.infos_pac.first_name}} {{ligne.infos_pac.last_name}} - {{ligne.infos_pac.birth_date}}</h5>
+                    <h5 class="card-title">
+                        {{ligne.infos_pac.first_name}} {{ligne.infos_pac.last_name}} - 
+                        {{ currentAge(new Date(ligne.infos_pac.birth_date)) }} ans
+                    </h5>
                     <div class="card-text">
-                        <p id="ID">Tuteur_ID : {{ sdatas.Id_Person }}</p>
-                        <p id="ID">Patient_ID : {{ ligne.infos_pac.Id_Person }}</p>
+                        Dernière ordonnance : {{ displayLastPrescriptionDateOf(index) }}<br>
+                        Expire le : {{ changeDate(ligne.prescriptions_pac[index].infos_prescription.expiration_date) }}
                     </div>
+                    <!-- <div class="card-text">
+                        <p id="ID">Tuteur_ID : {{ generateBarCodeNumber(sdatas.Id_Person) }}</p>
+                        <p id="ID">Patient_ID : {{ generateBarCodeNumber(ligne.infos_pac.Id_Person) }}</p>
+                    </div> -->
                     <div class="button_container">
                         <button id="button" @click="goToHomePatientInCHarge(index)">Détails</button>
                     </div>
@@ -28,60 +35,62 @@ module.exports = {
     name: 'PatientInCharge',
     data() {
         return {
-            // tutor:
-            //     {
-            //         id_tutor: "4357265334",
-            //         first_name: "Alain",
-            //         last_name: "PIERRE"
-            //     }
-            // ,
-            // patients: [
-            //     {
-            //         first_name: "Jean",
-            //         last_name: "PIERRE",
-            //         id_patient: "123456789",
-            //         social_security_number: "987654321",
-            //     },
-            //     {
-            //         first_name: "Paul",
-            //         last_name: "PIERRE",
-            //         id_patient: "123456789",
-            //         social_security_number: "987654321",
-            //     },
-            //     {
-            //         first_name: "Jacques",
-            //         last_name: "PIERRE",
-            //         id_patient: "123456789",
-            //         social_security_number: "987654321",
-            //     },
-            //     {
-            //         first_name: "Jacques",
-            //         last_name: "PIERRE",
-            //         id_patient: "123456789",
-            //         social_security_number: "987654321",
-            //     },
-            //     {
-            //         first_name: "Jacques",
-            //         last_name: "PIERRE",
-            //         id_patient: "123456789",
-            //         social_security_number: "987654321",
-            //     },
-                
 
-            // ],
         }
     },
      methods: {
         backHome: function () {
         this.$router.push("/Patient_home");
         },
-        goToHomePatientInCHarge: function (index) {
-            this.$router.push("/Patient_home");            
+        goToHomePatientInCHarge: function (index) {          
             this.$emit('save_index_pac', {index:index});
             this.$emit('tutor_false');
-
-
+            this.$router.push("/Patient_home");  
+        },
+        currentAge(birthDate) {
+            var today = new Date();
+            var todayYear = today.getFullYear();
+            var todayMonth = today.getMonth();
+            var birthDateYear = birthDate.getFullYear();
+            var birthDateMonth = birthDate.getMonth();
+            var age = todayYear - birthDateYear;
+            var month = todayMonth - birthDateMonth;
+            if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        },
+        generateBarCodeNumber(Id_Prescription){
+            var barcode = Id_Prescription.toString();
+            while (barcode.length < 12) {
+                barcode = "0" + barcode;
+            }
+            return barcode; 
+        },
+        displayLastPrescriptionDateOf(index)
+        {
+            let Dates = [];
+            //find latest date of Dates array
+            for(let i = 0; i < this.mdatas[index].prescriptions_pac.length; i++)
+            {
+                Dates.push(this.mdatas[index].prescriptions_pac[i].infos_prescription.creation_date);
+            }
+            //convert date string to date object
+            for(let i = 0; i < Dates.length; i++)
+            {
+                Dates[i] = new Date(Dates[i]);
+            }
+            //sort dates array
+            Dates.sort(function(a, b){return b-a});
+            //return first date among dates
+            // display Dates info
+            return Dates[0].getDate() + "/" + (Dates[0].getMonth()+1) + "/" + Dates[0].getFullYear();
+        },
+        changeDate(date){
+        dateSplit = date.split('-');
+        return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
         }
+
     },
     props:{
         mdatas: {
@@ -118,7 +127,7 @@ module.exports = {
 }
 </script>
 
-<style>
+<style scoped>
     .topContainer {
         display: flex;
         justify-content: space-between;
@@ -136,7 +145,9 @@ module.exports = {
     button {
         color: rgb(49, 49, 49);
         text-decoration: none;
-        padding: 10px;
+        padding: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
         margin-left: 5px;
         margin-right: 5px;
         border-radius: 7px;
@@ -182,12 +193,12 @@ module.exports = {
     .card-text {
         font-size: 15px;
         margin-top: -4px;
-        margin-bottom: 0px;
+        margin-bottom: 5px;
     }
 
     #ID{
         color:grey;
-        font-size: 15px;
+        font-size: 12px;
         margin-top: -4px;
         margin-bottom: 1px;
     }

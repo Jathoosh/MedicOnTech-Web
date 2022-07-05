@@ -50,7 +50,7 @@
                             <p v-if="ligne.infos_prescription.reported==true">Ordonnance signalée.</p> 
                         </div>
 
-                        <p id="ID"> ID : {{ ligne.infos_prescription.Id_Prescription }}</p>
+                        <p id="ID"> ID : {{ generateBarCodeNumber(ligne.infos_prescription.Id_Prescription) }}</p>
                     </div> 
                     <button id="detail" @click="toOrdonnance(index)"><strong>Voir le détail</strong></button>
                 </div>
@@ -100,6 +100,13 @@ module.exports = {
         goToPatientInCharge: function () {
         this.$router.push("/PatientInCharge");
         },
+        generateBarCodeNumber(Id_Prescription){
+            var barcode = Id_Prescription.toString();
+            while (barcode.length < 12) {
+                barcode = "0" + barcode;
+            }
+            return barcode; 
+        }
     },
     computed: {
         filteredPatients() {
