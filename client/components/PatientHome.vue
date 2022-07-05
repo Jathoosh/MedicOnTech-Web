@@ -21,18 +21,6 @@
         
             <h4>Date</h4>
             <input class="filter_date" type="date" placeholder="Date" size="28" />
-            <h4>Médicaments</h4>
-            <input class="filter_drug" type="text" placeholder="Medicament" size="15" />
-
-            <h4>Quantité</h4>
-
-            <select class="filter_select">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            </select>
 
         </div>
 
@@ -42,10 +30,10 @@
                     <div>
                         <h2>
                             Dr. {{ ligne.infos_prescription.doctor_infos.first_name }} {{ ligne.infos_prescription.doctor_infos.last_name }}, fait le
-                            {{ ligne.infos_prescription.creation_date }}
+                            {{ changeDate(ligne.infos_prescription.creation_date) }}
                         </h2>
                         <div class="statePrescription">
-                            <p v-if="ligne.infos_prescription.used==true">Utilisée le {{ ligne.infos_prescription.date_of_use }}.</p>
+                            <p v-if="ligne.infos_prescription.used==true">Utilisée le {{ changeDate(ligne.infos_prescription.date_of_use) }}.</p>
                             <p v-if="ligne.infos_prescription.validity==true">Oronnance valide.</p>
                             <p v-if="ligne.infos_prescription.reported==true">Ordonnance signalée.</p> 
                         </div>
@@ -110,6 +98,10 @@ module.exports = {
                 barcode = "0" + barcode;
             }
             return barcode; 
+        },
+        changeDate(date){
+        dateSplit = date.split('-');
+        return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
         }
     },
     computed: {
