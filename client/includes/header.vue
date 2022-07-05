@@ -25,7 +25,7 @@
             <router-link to="/" v-if="sdatas.profession.name==='Pharmacist'">Autre ?????</router-link>
           </nav>
 
-            <p class="image_profil text-center" 
+          <p v-if="sdatas.Id_Person > 0" class="image_profil text-center" 
             id="nom_img_profil" 
             @click="activateCard()"> {{ initialesPatient() }} </p>
         </div>
@@ -39,7 +39,7 @@
 
     <!-- TODO à rajuster pour que la card soit juste en dessous du profil --> 
     <div id="carteSuperposee" class="cardPosition">
-      <infocard v-if="card == true" @disapear="disapear"/>
+      <infocard :sdatas = "sdatas" v-if="card == true" @disapear="disapear"/>
     </div>
     <!-- {{sdatas}} -->
   </div>
@@ -85,7 +85,7 @@ module.exports = {
       this.card = false;
     },
     initialesPatient: function(){
-        var String = this.last_name[0] + this.first_name[0];
+        var String = this.sdatas.first_name[0] + this.sdatas.last_name[0];
         return String;
       },
     login: function(data){
@@ -233,9 +233,7 @@ nav > a.router-link-exact-active.router-link-active
 }
 
 #nom_img_profil{
-  margin-bottom: 0px;
-  margin-top: 7px; 
-  margin-right: 19px; 
+  margin: auto;
   font-size: 1.5em;
   padding-top: 5px;
 }

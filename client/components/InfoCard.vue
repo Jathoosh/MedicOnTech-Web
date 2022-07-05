@@ -2,19 +2,19 @@
     <div class="card">
         <!-- affichage des données d'une personne -->
         <div class="card-image">
-          <div class="d-flex flex-row">
-            <div class="image_profil text-center">
-              <p id="nom_image_profil"> {{ initialesPatient() }} </p>
+          <div>
+            <div class="image_profil">
+              <p id="nom_img_profil"> {{ initialesPatient() }} </p>
             </div>
           </div>
         </div>
         
         <div class="card-body">
-            <p>{{ last_name }}</p>
-            <p>{{ first_name }}</p>
-            <p>{{ birth_date }}</p>
-            <p>{{ email_adress }}</p>
-            <button @click="modifyProfil"><strong>Modifier profil</strong></button>
+            <p>{{ sdatas.first_name }}</p>
+            <p>{{ sdatas.last_name }}</p>
+            <p v-if="sdatas.profession.name === 'Patient'">{{ sdatas.birth_date }}</p>
+            <p>{{ sdatas.mail }}</p>
+            <button @click="modifyProfil" v-if="sdatas.profession.name === 'Patient'"><strong>Modifier profil</strong></button>
         </div>
     </div>
 </template>
@@ -22,25 +22,22 @@
 <script>
 module.exports = {
     name: 'info-card',
-    data(){
-        return{
-            Id_Person: 1,  // on ne doit pas le voir sur la page
-            last_name: 'Nom de famille',
-            first_name: 'Prénom',
-            birth_date: 'Date de naissance',
-            email_adress: 'Adresse mail'
-        }
+    props: {
+      sdatas: {
+        type: Object,
+        required: false,
+        default: function () {
+          return {};
+        },
+      },
     },
-    mounted(){
-        // afficher caractéristiques de l'utilisateur de la table personne
-    }, 
     methods:{
       modifyProfil: function(){
         this.$emit("disapear");
         this.$router.push("/Profil");
       },
       initialesPatient: function(){
-        var String = this.last_name[0] + this.first_name[0];
+        var String = this.sdatas.first_name[0] + this.sdatas.last_name[0];
         return String;
       }
     }
@@ -50,20 +47,22 @@ module.exports = {
 
 <style scoped>
   .card {
-    width: 12%; 
+    width: 13%; 
     top: -48px;
     right: 21px;
     box-shadow: 0px 5px 20px rgb(81, 153, 220);
   }
   
   .card-image {
-    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-right: 19px;
   }
 
   .card-image img {
     width: 100%;
     height: 100%;
-    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -80,8 +79,6 @@ module.exports = {
   }
 
   button{
-    width: 138px;
-    height: 33px;
     border-radius: 60px / 40px;
   }
 
@@ -103,16 +100,19 @@ module.exports = {
   }
 
   .image_profil {
-    height: 66px;
-    width: 72px;
+    height:50px;
+    width: 50px;
     border-radius: 100%;
     border: 2px solid black;
-    margin-top: 20px;    
+    margin-top: 20px;
   }
 
-  #nom_image_profil{
-    margin-top: 20%;  
-    font-size: 1.5em;
+  #nom_img_profil{
+    display: flex;
+    flex-direction: row-reverse;
+    align-content: stretch;
+    justify-content: flex-end;
+    margin-left: 6px;
   }
 
 </style>
