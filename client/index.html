@@ -33,6 +33,7 @@
       :sdatas="sdatas"
       :mdatas="mdatas"
       @login = "login"
+      @logout = "logout"
       ></head_comp>
       <!-- FIN TODO -->
       <!-- <Head_comp></Head_comp> -->
@@ -52,8 +53,9 @@
       @tutor_false = "tutor_false"
       @tutor_true = "tutor_true"
       :tutor_bool = "tutor_bool"
-      @save_index_ordonnance = "save_index_ordonnance"
+      @save_ordonnance = "save_ordonnance"
       :index_ordonnance = "index_ordonnance"
+      :prescription_for_display = "prescription_for_display"
       ></router-view>
       <!-- @getPrescriptions = "getPrescriptions"
       :index_patient = "index_patient"

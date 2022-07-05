@@ -39,7 +39,7 @@ module.exports = {
 }
 </script>
 
-<style>
+<style scoped>
   
   #container{
     display: flex;

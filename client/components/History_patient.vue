@@ -131,7 +131,7 @@ module.exports = {
 }
 </script>
 
-<style>
+<style scoped>
 /*recherche avancéd */
 #search_adv {
   border-bottom: 5px solid #01AA88;

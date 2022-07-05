@@ -94,8 +94,12 @@ module.exports = {
     },
     methods: {
         toOrdonnance: function (index) {
-        this.$router.push("/Ordonnance");          
-        this.$emit('save_index_ordonnance', {index:index});
+            if (this.tutor_bool==true) {
+                this.$emit('save_ordonnance', {prescription : this.sdatas_comp[index], infos_patient : {first_name : this.sdatas.first_name, last_name : this.sdatas.last_name}});
+            }
+            else {
+                this.$emit('save_ordonnance', {prescription : this.mdatas[this.index_pac].prescriptions_pac[index], infos_patient : {first_name : this.sdatas.first_name, last_name : this.sdatas.last_name}});
+            }
         },
         goToPatientInCharge: function () {
         this.$router.push("/PatientInCharge");
@@ -130,7 +134,7 @@ module.exports = {
             type: Object,
             required: true,
             default: function () {
-                return [];
+                return {};
             }
         },
         sdatas_comp: {

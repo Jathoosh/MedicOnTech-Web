@@ -78,7 +78,7 @@ module.exports = {
 }
 </script>
 
-<style>
+<style scoped>
 
     .buttonDeconnexion{
         position: absolute;

@@ -176,7 +176,7 @@ module.exports = {
 }
 </script>
 
-<style>
+<style scoped>
 .head {
     display: flex;
     justify-content: space-between;

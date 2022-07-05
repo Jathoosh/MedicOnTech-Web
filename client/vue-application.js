@@ -71,7 +71,16 @@ var app = new Vue( {
     index_history_patient: 0,
     index_pac: 0,
     tutor_bool: true,
-    index_ordonnance: 0,
+    index_ordonnance: 0, // voir si nécessaire
+    prescription_for_display: {
+      infos_patient: {
+        first_name: '',
+        last_name: '',
+      },
+      infos_prescription: {},
+      drugs: [],
+      services: [],
+    },
   },
   components: 
   {
@@ -81,12 +90,12 @@ var app = new Vue( {
   },
   async mounted () 
   {
-    this.notConnected();
+    this.checkConnexion();
   },
   methods: 
   {
     //==========================================================
-    //Méthode pour récupérer les données de la base de données
+    //Méthode pour connexion
     //==========================================================
     
     async login(data)
@@ -106,6 +115,38 @@ var app = new Vue( {
     {
       window.location.href = "http://localhost:3000/login";
     },
+    async loadDataFcCallback(data)
+    {
+      const res = await axios.get('api/retrieve_person');
+      if (res.data.connected)
+      {
+        this.sdatas = res.data.sdatas;
+        this.reloadData();
+      }
+      else
+      {
+        alert("Veuillez réessayer la connexion");
+        //redirect to login
+        this.$router.push('/login');
+      }
+    },
+    async logout(){
+      await axios.get('api/logout');
+      this.sdatas = {
+        Id_Person:0, 
+        first_name:'', 
+        last_name:'', 
+        profession:{id:0,name:""}, 
+        mail:'', 
+        workplace_name:''
+      };
+      this.reloadData();
+    },
+
+    //==========================================================
+    //Méthode pour récupérer les données de la base de données
+    //==========================================================
+
     async getSdatas_Comp()
     {
       if (this.sdatas.profession.name == "Patient")
@@ -143,30 +184,25 @@ var app = new Vue( {
         return res.data.datas;
       }
     },
-    async loadDataFcCallback(data)
-    {
-      const res = await axios.get('api/retrieve_person');
-      if (res.data.connected)
-      {
-        this.sdatas = res.data.sdatas;
-        this.reloadData();
-      }
-      else
-      {
-        alert("Veuillez réessayer la connexion");
-        //redirect to login
-        this.$router.push('/login');
-      }
-    },
+    
 
     //==========================================================
     //Fonctions pour le bon fonctionnement des pages
     //==========================================================
     async reloadData()
     {
-      this.sdatas_comp = await this.getSdatas_Comp();
-      this.mdatas = await this.getMdatas();
-      this.goToPage('/'+this.sdatas.profession.name+'_home');
+      if (this.sdatas.Id_Person != 0)
+      {
+        this.sdatas_comp = await this.getSdatas_Comp();
+        this.mdatas = await this.getMdatas();
+        this.goToPage('/'+this.sdatas.profession.name+'_home');
+      }
+      else
+      {
+        this.sdatas_comp = [];
+        this.mdatas = [];
+        this.goToPage('/login');
+      }
     },
     footertobottom(height)
     {
@@ -177,10 +213,35 @@ var app = new Vue( {
       var current_url = window.location.href;
       current_url = current_url.substring(current_url.lastIndexOf('/'), current_url.length);
       if(page != current_url){
+        if(page == '/login'){
+          document.getElementById("main").style.width = "100%";
+        }
+        else{
+          document.getElementById("main").style.width = "90%";
+        }
         this.$router.push(page);
       }
+      else
+      {
+        this.resetNonDBData();
+      }
     },
-    async notConnected()
+    resetNonDBData(){
+      this.index_history_patient = 0;
+      this.index_pac = 0;
+      this.tutor_bool = true;
+      this.index_ordonnance = 0;
+      this.prescription_for_display = {
+        infos_prescription: {},
+        drugs: [],
+        services: [],
+        infos_patient : {
+          first_name: '',
+          last_name: '',
+        },
+      };
+    },
+    async checkConnexion()
     {
       const res = await axios.get('api/connected');
       if(res.data.connected)
@@ -219,6 +280,11 @@ var app = new Vue( {
     },
     save_index_ordonnance(data){
       this.index_ordonnance = data.index;
+    },
+    save_ordonnance(data){
+      this.prescription_for_display = data.prescription;
+      this.prescription_for_display.infos_patient = data.infos_patient;
+      this.$router.push("/Ordonnance");
     }
   }
 })
