@@ -436,4 +436,16 @@ router.get("/motapp/doctor/:id", (req, res) => {
     });
 });
 
+router.get("/motapp/charge/:id", (req, res) => {
+  id = req.params.id;
+  sequelize
+    .query(
+      "SELECT * from Patient Join person Using (Id_Person) where Id_Tutor = " +id
+    )
+    .then((result) => {
+      console.log(result[0]);
+      res.status(200).json({ result: result[0] });
+    });
+});
+
 module.exports = router;
