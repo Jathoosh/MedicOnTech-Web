@@ -440,7 +440,7 @@ router.get("/motapp/charge/:id", (req, res) => {
   id = req.params.id;
   sequelize
     .query(
-      "SELECT * from Patient Join person Using (Id_Person) where Id_Tutor = " +id
+      `SELECT * from Patient Join person Using (Id_Person) where Id_Tutor = (Select Id_Person from patient where Id_Patient = ${id})`
     )
     .then((result) => {
       console.log(result[0]);
