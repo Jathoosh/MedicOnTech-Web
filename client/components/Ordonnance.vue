@@ -34,13 +34,19 @@
                     </div>
 
                     <div class="bodyOrdonnance">
+                        <div class="bodyHeadearContainer">
+                            <div class="bodyHeader">
+                                <p id="ID">ID : {{ generateBarCodeNumber(prescription_for_display.infos_prescription.Id_Prescription) }}</p>
+                                <p>Fait le {{ changeDate(prescription_for_display.infos_prescription.creation_date) }}.</p><br>
 
-                        <p id="ID">ID : {{ generateBarCodeNumber(prescription_for_display.infos_prescription.Id_Prescription) }}</p>
-                        <p>Fait le {{ prescription_for_display.infos_prescription.creation_date }}.</p><br>
+                                <!-- Information du Patient - Table Id_Patient & Person-->
+                                <p>M. {{prescription_for_display.infos_patient.first_name}} {{prescription_for_display.infos_patient.last_name}}</p><br>
+                            </div>
 
-                        <!-- Information du Patient - Table Id_Patient & Person-->
-                        <p>M. {{prescription_for_display.infos_patient.first_name}} {{prescription_for_display.infos_patient.last_name}}</p><br>
-                    
+                            <img id="code_barres" :src="generateBarCode(prescription_for_display.infos_prescription.Id_Prescription )" alt="code_barres">
+
+                        </div>
+
                         <!-- Information Liste de médicaments - Table Id_Prescription & Drug-->
                         <p v-for="(ligne,index_drug) in prescription_for_display.drugs" :key="index_drug">
                             {{ ligne.drug_name }}
@@ -59,7 +65,7 @@
 
                         <div class="statutContainer">
                             <div>
-                                <p v-if="prescription_for_display.infos_prescription.used==true">Utilisée le {{ prescription_for_display.infos_prescription.date_of_use }}.</p>
+                                <p v-if="prescription_for_display.infos_prescription.used==true">Utilisée le {{ changeDate(prescription_for_display.infos_prescription.date_of_use) }}.</p>
                                 <p v-if="prescription_for_display.infos_prescription.validity==true">Oronnance valide.</p>
                                 <p v-if="prescription_for_display.infos_prescription.reported==true">
                                     Ordonnance signalée.<br>
@@ -90,7 +96,7 @@ module.exports = {
     name: 'Ordonnance',
     methods: {
         backHome: function () {
-        this.$router.push("/PatientHome");
+        this.$router.push("/Patient_home");
         },
         print: function () {
             window.print();
@@ -101,6 +107,19 @@ module.exports = {
                 barcode = "0" + barcode;
             }
             return barcode; 
+        },
+        changeDate(date){
+            dateSplit = date.split('-');
+            return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
+        },
+        generateBarCode(ID){
+            var prescription_ID = ID;
+            var barcode = prescription_ID.toString();
+            while (barcode.length < 12) {
+                barcode = "0" + barcode;
+            }
+            console.log(barcode);
+            return "http://bwipjs-api.metafloor.com/?bcid=ean13&text=" + barcode;
         }
     },
     props:{
@@ -183,6 +202,7 @@ module.exports = {
             console.log('failToPrint');
         });
     },
+
 }
 
 </script>
@@ -218,6 +238,7 @@ module.exports = {
         align-items: center;
         margin-left: 5px;
         margin-right: 5px;
+        margin-top: 10px;
     }
 
     #doctorContainer{
@@ -232,7 +253,7 @@ module.exports = {
     }
 
     #logo_MedicOnTech{
-        width: 30%;
+        width: 20%;
         height: auto;
     }
 
@@ -240,6 +261,14 @@ module.exports = {
         font-size: 0.9em;
         font-weight: bold;
         margin-left: 100px;
+        margin-top: 50px;
+    }
+
+    .bodyHeaderOrdonnance{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: nowrap;
     }
 
     #imprimer{
