@@ -12,7 +12,7 @@
               
               <tr v-for="(d, index) in table_patient" :key="index">
                 <td>{{ d.last_name}} {{d.first_name}}</td>
-                <td>NUM SECU</td>
+                <td>{{ d.social_security_number }}</td>
                 <td><button class="btn btn-outline-secondary" style="float:right;" @click="sendName(index)">Selectionner</button></td>
               </tr>
               
@@ -26,37 +26,31 @@ module.exports = {
     name:"listPatient",
     
    props: {
-    // Kdo pour jathoosh
-      //  infos_patients: {
-      //   type: Array,
-      //   required: true,
-      //   default: function () {
-      //     return [];
-      //   }
-      // },
-   },
-    data() {
-      return {
-        table_patient: [
-          {
-            last_name: "Dupont",
-            first_name: "Jean",
-          },
-          {
-            last_name: "Dupont",
-            first_name: "aze",
-          }
-      
-        ],
-      };
+    liste_patient_search: {
+      type: Array,
+      required: true,
+      default: function () {
+        return [];
+      },
     },
-    methods: {
-      sendName(index) {
-        console.log("wesh");
-        this.$emit('fillinput', [this.table_patient[index]]);
-
-      }
+   },
+   watch: {
+    liste_patient_search: function (newValue) {
+      this.table_patient = newValue;
+      console.log(this.table_patient);
     }
+   },
+  data() {
+    return {
+      table_patient: [],
+    };
+  },
+  methods: {
+    sendName(index) {
+      this.$emit('fillinput', [this.table_patient[index]]);
+
+    }
+  }
 } 
 </script>
 

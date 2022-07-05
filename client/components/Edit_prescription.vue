@@ -16,7 +16,7 @@
                     <input class="inputName" v-model="newPatient_lastname" type="text" placeholder="Nom" required/>
                     <input class="inputName" v-model="newPatient_firstname" type="text" placeholder="Prénom" required/>
                     <button @click="searchpatient()">Rechercher</button>
-                    <listpatient @fillinput = "fillinput" v-if="print_list_patient == true"> </listpatient>
+                    <listpatient @fillinput = "fillinput" :liste_patient_search = "liste_patient_search" v-if="print_list_patient == true"> </listpatient>
                 </div>
 
                 <div class="date_container">
@@ -93,6 +93,13 @@ module.exports = {
     name: 'Edit_prescription',
     components: {
         listpatient:listpatient
+    },
+    props: {
+        liste_patient_search: {
+            type: Array,
+            required: true,
+            default: []
+        }
     },
     data() { 
         return {
@@ -172,13 +179,12 @@ module.exports = {
         },
         searchpatient(){
            
-            if(this.newPatient_lastname != "" && this.newPatient_firstname != ""){
-                console.log("oye " + this.newPatient_lastname + this.newPatient_firstname);
-                this.$emit('sendToBackName', this.newPatient_lastname, this.newPatient_firstname);
+            if(this.newPatient_lastname != "" || this.newPatient_firstname != ""){
+                this.$emit('search_patient', {last_name:(this.newPatient_lastname == "" ? "=" : this.newPatient_lastname), first_name:(this.newPatient_firstname  == "" ? "=" : this.newPatient_firstname)});
                 this.print_list_patient = true;
             }
             else{
-                alert("Veuillez remplir les champs nom et prénom");
+                alert("Veuillez remplir les champs nom et/ou prénom");
             }
         },
         fillinput(patient){ // remplir les champs de saisie avec les données du patient sélectionné

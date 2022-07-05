@@ -55,14 +55,7 @@ var app = new Vue( {
   el: '#app',
   data: 
   {
-    sdatas: {
-      Id_Person:0, 
-      first_name:'', 
-      last_name:'', 
-      profession:{id:0,name:""}, 
-      mail:'', 
-      workplace_name:''
-    },
+    sdatas: {Id_Person:0, first_name:'', last_name:'', profession:{id:0,name:""}, mail:'', workplace_name:''},
     sdatas_comp: [], //Liste uniquement utilisé pour le patient (contient ces ordonnances)
     mdatas: [],
     //==========================================================
@@ -73,22 +66,14 @@ var app = new Vue( {
     tutor_bool: true,
     index_ordonnance: 0, // voir si nécessaire
     prescription_for_display: {
-      infos_patient: {
-        first_name: '',
-        last_name: '',
-      },
+      infos_patient: {first_name: '',last_name: ''},
       infos_prescription: {
-        doctor_info: {
-          first_name: '',
-          last_name: '',
-          specialty: '',
-          phone: '',
-          mail: '',
-        }
+        doctor_info: {first_name: '',last_name: '',specialty: '',phone: '',mail: ''}
       },
       drugs: [],
       services: [],
     },
+    liste_patient_search: [],
   },
   components: 
   {
@@ -99,6 +84,7 @@ var app = new Vue( {
   async mounted () 
   {
     this.checkConnexion();
+    this.changePageWidth('');
   },
   methods: 
   {
@@ -152,7 +138,7 @@ var app = new Vue( {
     },
 
     //==========================================================
-    //Méthode pour récupérer les données de la base de données
+    //Méthode pour récupérer les données de la base de données au chargement de la page
     //==========================================================
 
     async getSdatas_Comp()
@@ -192,7 +178,6 @@ var app = new Vue( {
         return res.data.datas;
       }
     },
-    
 
     //==========================================================
     //Fonctions pour le bon fonctionnement des pages
@@ -221,17 +206,22 @@ var app = new Vue( {
       var current_url = window.location.href;
       current_url = current_url.substring(current_url.lastIndexOf('/'), current_url.length);
       if(page != current_url){
-        if(page == '/login'){
-          document.getElementById("main").style.width = "100%";
-        }
-        else{
-          document.getElementById("main").style.width = "90%";
-        }
+        this.changePageWidth(page);
         this.$router.push(page);
       }
       else
       {
         this.resetNonDBData();
+      }
+    },
+    changePageWidth(page){
+      var current_url = window.location.href;
+      current_url = current_url.substring(current_url.lastIndexOf('/'), current_url.length);
+      if(page == '/login' || (current_url == '/login' && page == '')){
+        document.getElementById("main").style.width = "100%";
+      }
+      else{
+        document.getElementById("main").style.width = "90%";
       }
     },
     resetNonDBData(){
@@ -264,7 +254,17 @@ var app = new Vue( {
     },
 
     //==========================================================
-    //Fonctions concernant les Emits
+    //Méthode pour récupérer les données de la base de données durant le fonctionnement
+    //==========================================================
+
+    async recherchePatient(data)
+    {
+      const res = await axios.get('api/recherchePatient/'+data.first_name+'/'+data.last_name);
+      this.liste_patient_search = res.data.datas;
+    },
+
+    //==========================================================
+    //Fonctions concernant les Emits et le reste
     //==========================================================
     getPrescriptions(data)
     {

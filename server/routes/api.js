@@ -494,6 +494,19 @@ router.get('/doctor_mdatas_services', (req,res) => {
   })
 })
 
+// PARTIE FONCTIONNELLE DU SITE
+
+router.get('/recherchePatient/:first_name/:last_name', (req,res) => {
+  const first_name = req.params.first_name == "=" ? "" : req.params.first_name;
+  const last_name = req.params.last_name == "=" ? "" : req.params.last_name;
+  sequelize.query(`select first_name, last_name, social_security_number, birth_date from Person join patient using (Id_Person) where first_name like "${first_name+"%"}" and last_name like "${last_name+"%"}"`).then(result => {
+    res.status(200).json({
+      message : 'Données patients récupérées',
+      datas : result[0]
+    });
+  })
+})
+
 // PARTIE APPLICATION
 
 router.get("/motapp", (req, res) => {
