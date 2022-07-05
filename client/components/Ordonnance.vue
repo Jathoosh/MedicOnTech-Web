@@ -35,8 +35,8 @@
 
                     <div class="bodyOrdonnance">
 
-                        <p id="ID">ID : {{ prescription_for_display.infos_prescription.Id_Prescription }}</p>
-                        <p>Fait le {{ prescription_for_display.infos_prescription.creation_date }}.</p><br>
+                        <p id="ID">ID : {{ generateBarCodeNumber(sdatas_comp[index_ordonnance].infos_prescription.Id_Prescription) }}</p>
+                        <p>Fait le {{ sdatas_comp[index_ordonnance].infos_prescription.creation_date }}.</p><br>
 
                         <!-- Information du Patient - Table Id_Patient & Person-->
                         <p>M. {{prescription_for_display.infos_patient.first_name}} {{prescription_for_display.infos_patient.last_name}}</p><br>
@@ -94,6 +94,13 @@ module.exports = {
         },
         print: function () {
             window.print();
+        },
+        generateBarCodeNumber(Id_Prescription){
+            var barcode = Id_Prescription.toString();
+            while (barcode.length < 12) {
+                barcode = "0" + barcode;
+            }
+            return barcode; 
         }
     },
     props:{
