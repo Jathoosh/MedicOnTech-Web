@@ -73,6 +73,10 @@ var app = new Vue( {
     tutor_bool: true,
     index_ordonnance: 0, // voir si nécessaire
     prescription_for_display: {
+      infos_patient: {
+        first_name: '',
+        last_name: '',
+      },
       infos_prescription: {},
       drugs: [],
       services: [],
@@ -217,6 +221,25 @@ var app = new Vue( {
         }
         this.$router.push(page);
       }
+      else
+      {
+        this.resetNonDBData();
+      }
+    },
+    resetNonDBData(){
+      this.index_history_patient = 0;
+      this.index_pac = 0;
+      this.tutor_bool = true;
+      this.index_ordonnance = 0;
+      this.prescription_for_display = {
+        infos_prescription: {},
+        drugs: [],
+        services: [],
+        infos_patient : {
+          first_name: '',
+          last_name: '',
+        },
+      };
     },
     async checkConnexion()
     {
@@ -256,6 +279,7 @@ var app = new Vue( {
       //this.index_ordonnance = data.index;
       console.log(data);
       this.prescription_for_display = data.prescription;
+      this.prescription_for_display.infos_patient = data.infos_patient;
       this.$router.push("/Ordonnance");
     }
   }

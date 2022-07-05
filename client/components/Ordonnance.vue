@@ -39,7 +39,7 @@
                         <p>Fait le {{ prescription_for_display.infos_prescription.creation_date }}.</p><br>
 
                         <!-- Information du Patient - Table Id_Patient & Person-->
-                        <p>M. {{sdatas.first_name}} {{sdatas.last_name}}</p><br>
+                        <p>M. {{prescription_for_display.infos_patient.first_name}} {{prescription_for_display.infos_patient.last_name}}</p><br>
                     
                         <!-- Information Liste de médicaments - Table Id_Prescription & Drug-->
                         <p v-for="(ligne,index_drug) in prescription_for_display.drugs" :key="index_drug">
@@ -88,12 +88,6 @@
 <script>
 module.exports = {
     name: 'Ordonnance',
-    data() {
-        return {
-
-            
-        }
-    },
     methods: {
         backHome: function () {
         this.$router.push("/PatientHome");
