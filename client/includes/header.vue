@@ -16,7 +16,7 @@
             <router-link to="/pharmacist_home" v-if="sdatas.profession.name===''">Page Pharmacien</router-link>
             <router-link to="/doctor_home" v-if="sdatas.profession.name===''">Page Médecin</router-link>
             <router-link to="/patient_home" v-if="sdatas.profession.name===''">Page Patient</router-link>
-            <button v-if="sdatas.profession.name!==''" @click="logout">Deconnexion</button>
+            <a v-if="sdatas.profession.name!==''" @click="logout">Deconnexion</a>
             <router-link to="/doctor_home" v-if="sdatas.profession.name==='Doctor'">Mes patients</router-link>
             <router-link to="/edit_prescription" v-if="sdatas.profession.name==='Doctor'">Rédiger Ordonnance</router-link>
             <router-link to="/Patient_home" v-if="sdatas.profession.name==='Patient'  && tutor_bool === true">Mes Ordonnances</router-link>
