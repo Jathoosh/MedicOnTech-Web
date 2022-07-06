@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p>NRTIAEZHGIOEZH</p>
   <div class="main_container">
       <div >
         <button @click="redirectToHistoryPatient()" class="btn btn-outline-dark ml-2" type="submit">Retour</button>
@@ -12,9 +11,7 @@
   <div class="container">
     <div class = "card_patient">
       <p id = "informations" class="rectangle">Ajout d'une personne à charge</p>
-      <div class="content_container">
-        <!-- importer logo de la personne connectée -->
-        
+      <div class="content_container">      
         
         <div class="d-flex flex-row">
           <p class="image_profil text-center" id="nom_profil"> New </p>

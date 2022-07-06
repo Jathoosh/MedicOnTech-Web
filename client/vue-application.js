@@ -294,6 +294,11 @@ var app = new Vue( {
       this.prescription_for_display = data.prescription;
       this.prescription_for_display.infos_patient = data.infos_patient;
       this.$router.push("/Ordonnance");
+    },
+    OrdonnanceTutor()
+    {
+      this.tutor_true();
+      this.goToPage('/Patient_home');
     }
   }
 })

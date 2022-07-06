@@ -13,8 +13,8 @@
                         {{ currentAge(new Date(ligne.infos_pac.birth_date)) }} ans
                     </h5>
                     <div class="card-text">
-                        Dernière ordonnance : {{ displayLastPrescriptionDateOf(index) }}<br>
-                        Expire le : {{ displayLastPrescriptionExpirationDateOf(index) }}
+                        Dernière ordonnance : {{ changeDate(displayLastPrescriptionDateOf(index)) }}<br>
+                        Expire le : {{ changeDate(displayLastPrescriptionExpirationDateOf(index)) }}
                     </div>
                     <!-- <div class="card-text">
                         <p id="ID">Tuteur_ID : {{ generateBarCodeNumber(sdatas.Id_Person) }}</p>
@@ -84,7 +84,7 @@ module.exports = {
             Dates.sort(function(a, b){return b-a});
             //return first date among dates
             // display Dates info
-            return Dates[0].getDate() + "/" + (Dates[0].getMonth()+1) + "/" + Dates[0].getFullYear();
+            return  Dates[0].getFullYear() + "-" + (Dates[0].getMonth()+1<10? "0"+(Dates[0].getMonth()+1) : Dates[0].getMonth()+1) + "-" + (Dates[0].getDate()+1<10? "0"+(Dates[0].getDate()+1) : Dates[0].getDate()+1);
         },
         displayLastPrescriptionExpirationDateOf(index_last)
         {
@@ -103,11 +103,11 @@ module.exports = {
             Dates.sort(function(a, b){return b-a});
             //return first date among dates
             // display Dates info
-            return Dates[0].getDate() + "/" + (Dates[0].getMonth()+1) + "/" + Dates[0].getFullYear();
+            return  Dates[0].getFullYear()+ "-" + (Dates[0].getMonth()+1<10? "0"+(Dates[0].getMonth()+1) : Dates[0].getMonth()+1) + "-" + (Dates[0].getDate()+1<10? "0"+(Dates[0].getDate()+1) : Dates[0].getDate()+1);
         },
         changeDate(date){
-        dateSplit = date.split('-');
-        return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
+            dateSplit = date.split('-');
+            return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
         }
 
     },
@@ -170,7 +170,7 @@ module.exports = {
         margin-left: 5px;
         margin-right: 5px;
         border-radius: 7px;
-        border: 0.4px solid rgb(49, 49, 49);
+        border: none;
     }
 
     button:hover {
@@ -187,11 +187,16 @@ module.exports = {
         flex-direction: row;
     }
 
-    /*Bootstrap */
-    .btn-primary {
-        color: #fff;
-        background-color: #007bff;
-        border-color: #007bff;
+    button {
+        color: rgb(49, 49, 49);
+        text-decoration: none;
+        padding: 10px;
+        border-radius: 7px;
+    }
+
+    button:hover {
+        background-color: #b1b1b1;
+        transition: background-color 0.5s;
     }
     .container
     {

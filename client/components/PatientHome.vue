@@ -2,16 +2,13 @@
     <div>
         <div class="topContainer">
             <h3>Bonjour {{sdatas.first_name}} {{sdatas.last_name}} !</h3>
-            <button @click="goToPatientInCharge" id="buttons">Personnes à charge</button>
         </div>
 
-        <h3>Filtres</h3>
-        <hr/>
+        <h4>Filtres</h4>
+        <hr>
         <div class="filtre">
-        
             <h4>Date</h4>
             <input class="filter_date" type="date" v-model="input_date" placeholder="Date" size="28" />
-
         </div>
 
         <div v-if="tutor_bool==true">
@@ -38,7 +35,7 @@
 
                         <!-- <p id="ID"> ID : {{ generateBarCodeNumber(ligne.infos_prescription.Id_Prescription) }}</p> -->
                     </div> 
-                    <button id="detail" @click="toOrdonnance(index)"><strong>Voir le détail</strong></button>
+                    <button id="detail" @click="toOrdonnance(index)">Voir le détail</button>
                 </div>
             </div>
         </div>
@@ -49,7 +46,7 @@
                     <div>
                         <h2>
                             Par Dr. {{ ligne.infos_prescription.doctor_infos.first_name }} {{ ligne.infos_prescription.doctor_infos.last_name }}
-                            - Pour <!-- {{ mdatas[this.index_pac].infos_pac.first_name }} {{ mdatas[this.index_pac].infos_pac.last_name }} -->
+                            - Pour {{ mdatas[index_pac].infos_pac.first_name }} {{ mdatas[index_pac].infos_pac.last_name }}
                         </h2>
                         <h4>
                             Fait le {{ changeDate(ligne.infos_prescription.creation_date) }}
@@ -67,7 +64,7 @@
                         <!-- <p id="ID"> ID : {{ ligne.infos_prescription.Id_Prescription }}</p> -->
                     </div> 
 
-                    <button id="detail" @click="toOrdonnance(index)"><strong>Voir le détail</strong></button>
+                    <button id="detail" @click="toOrdonnance(index)">Voir le détail</button>
                 </div>
             </div>
 
@@ -91,11 +88,8 @@ module.exports = {
                 this.$emit('save_ordonnance', {prescription : this.sdatas_comp[index], infos_patient : {first_name : this.sdatas.first_name, last_name : this.sdatas.last_name}});
             }
             else {
-                this.$emit('save_ordonnance', {prescription : this.mdatas[this.index_pac].prescriptions_pac[index], infos_patient : {first_name : this.sdatas.first_name, last_name : this.sdatas.last_name}});
+                this.$emit('save_ordonnance', {prescription : this.mdatas[this.index_pac].prescriptions_pac[index], infos_patient : {first_name : this.mdatas[this.index_pac].infos_pac.first_name, last_name : this.mdatas[this.index_pac].infos_pac.last_name}});
             }
-        },
-        goToPatientInCharge: function () {
-        this.$router.push("/PatientInCharge");
         },
         generateBarCodeNumber(Id_Prescription){
             var barcode = Id_Prescription.toString();
@@ -105,8 +99,8 @@ module.exports = {
             return barcode; 
         },
         changeDate(date){
-        dateSplit = date.split('-');
-        return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
+            dateSplit = date.split('-');
+            return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
         }
     },
     computed: {
@@ -206,9 +200,8 @@ module.exports = {
     }
     .filter_date {
         max-height: 20px;
-        margin-top:15px;
         margin-left: 15px;
-        margin-right: 15px;
+        align-self: center;
     }
 
     .filter_drug {
@@ -244,7 +237,7 @@ module.exports = {
         margin-left: 5px;
         margin-right: 5px;
         border-radius: 7px;
-        border: 0.4px solid rgb(49, 49, 49);
+        border: none;
     }
 
     button:hover {
