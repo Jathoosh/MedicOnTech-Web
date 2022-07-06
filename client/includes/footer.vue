@@ -31,7 +31,7 @@
       </div>
       <div class="contPri center">
         <h1>MedicOnTech</h1>
-        <p>jathooshthvrs@gmail.com</p>
+        <p>Solution Factory 2022</p>
       </div>
       <div class="contSec center">
         <ul class="simple-list">
