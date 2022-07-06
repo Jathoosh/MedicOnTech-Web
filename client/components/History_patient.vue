@@ -73,7 +73,7 @@ module.exports = {
       this.$router.push("/Doctor_home");
     },
     redirectionToOrdonnance: function (index) {
-      this.$emit('save_ordonnance', {prescription : this.mdatas[this.index_history_patient].prescriptions[index], infos_patient : {first_name : this.mdatas[this.index_history_patient].infos_patient[index].first_name, last_name : this.mdatas[this.index_history_patient].infos_patient[index].last_name}});
+      this.$emit('save_ordonnance_doctor', {prescription : this.mdatas[this.index_history_patient].prescriptions[index], infos_patient : {first_name : this.mdatas[this.index_history_patient].infos_patient.first_name, last_name : this.mdatas[this.index_history_patient].infos_patient.last_name}, doctor_infos : this.sdatas});
     },
     redirectionToPatientInCharge: function () {
       this.$router.push("/PatientInCharge");
