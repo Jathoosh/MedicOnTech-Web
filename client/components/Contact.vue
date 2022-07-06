@@ -8,7 +8,7 @@
     <div>
       <p id="texte_medicOnTech"> 
         Nous sommes disponibles tous les jours de la semaine
-        de 9h à 18h pour quelconque renseignements. 
+        de 9h à 18h pour tout renseignement complémentaire. 
       </p>
     </div>
 
