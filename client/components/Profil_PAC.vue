@@ -1,6 +1,5 @@
 <template>
   <div>
-
   <div class="main_container">
       <div id="retour_container">
         <button id="button" @click="redirectToHistoryPatient()" type="submit">Retour</button>
@@ -14,7 +13,6 @@
       <p id = "informations" class="rectangle">Ajout d'une personne à charge pour {{mdatas[index_history_patient].infos_patient.last_name}} {{mdatas[index_history_patient].infos_patient.first_name}}</p>
       <div class="content_container">
         <!-- importer logo de la personne connectée -->
-        
         
         <div class="d-flex flex-row">
           <p class="image_profil text-center" id="nom_profil">{{initialesPatient()}} </p>

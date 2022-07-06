@@ -10,11 +10,11 @@
         </div>
         
         <div class="card-body">
-            <p>{{ sdatas.first_name }}</p>
-            <p>{{ sdatas.last_name }}</p>
-            <p v-if="sdatas.profession.name === 'Patient'">{{ sdatas.birth_date }}</p>
+            <p>{{ sdatas.first_name }} {{ sdatas.last_name }}</p>
+            <p v-if="sdatas.profession.name === 'Patient'">Né le {{ changeDate(sdatas.birth_date) }}</p>
             <p>{{ sdatas.mail }}</p>
-            <button @click="modifyProfil" v-if="sdatas.profession.name === 'Patient'"><strong>Modifier profil</strong></button>
+            <p v-if="sdatas.mutuelle!=null">Mutuelle : {{ sdatas.mutuelle }}</p>
+            <button @click="modifyProfil" v-if="sdatas.profession.name === 'Patient'">Modifier profil</button>
         </div>
     </div>
 </template>
@@ -39,6 +39,10 @@ module.exports = {
       initialesPatient: function(){
         var String = this.sdatas.first_name[0] + this.sdatas.last_name[0];
         return String;
+      },
+      changeDate(date){
+        dateSplit = date.split('-');
+        return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
       }
     }
    
@@ -47,10 +51,11 @@ module.exports = {
 
 <style scoped>
   .card {
-    width: 13%; 
-    top: -48px;
-    right: 21px;
-    box-shadow: 0px 5px 20px rgb(81, 153, 220);
+    display: flex;
+    top: -120px;
+    right: 15px;
+    box-shadow: 1px 5px 5px rgb(85, 129, 170);
+    z-index: 1;
   }
   
   .card-image {
@@ -78,8 +83,16 @@ module.exports = {
     box-sizing: border-box;
   }
 
-  button{
-    border-radius: 60px / 40px;
+  button {
+    color: rgb(49, 49, 49);
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 7px;
+  }
+
+  button:hover {
+    background-color: #b1b1b1;
+    transition: background-color 0.5s;
   }
 
   .image_formulaire{

@@ -19,9 +19,9 @@
             <button v-if="sdatas.profession.name!==''" @click="logout">Deconnexion</button>
             <router-link to="/doctor_home" v-if="sdatas.profession.name==='Doctor'">Mes patients</router-link>
             <router-link to="/edit_prescription" v-if="sdatas.profession.name==='Doctor'">Rédiger Ordonnance</router-link>
-            <router-link to="/Patient_home" v-if="sdatas.profession.name==='Patient'" @click="goToHome">Mes Ordonnances</router-link>
+            <router-link to="/Patient_home" v-if="sdatas.profession.name==='Patient'  && tutor_bool === true">Mes Ordonnances</router-link>
+            <button v-if="sdatas.profession.name==='Patient' && tutor_bool === false" @click="OrdonnanceTutor">Mes Ordonnances</button>
             <router-link to="/PatientInCharge" v-if="sdatas.profession.name==='Patient'">Personnes à charges</router-link>
-            <router-link to="/" v-if="sdatas.profession.name==='Patient'">Autre ?????</router-link>
             <router-link to="/" v-if="sdatas.profession.name==='Pharmacist'">Scanner Ordonnance</router-link>
             <router-link to="/" v-if="sdatas.profession.name==='Pharmacist'">Autre ?????</router-link>
           </nav>
@@ -93,9 +93,7 @@ module.exports = {
     login: function(data){
       this.$emit('login', data);
     },
-    //Bouton pour passer à la page d'accueil
-    goToHome: function () {    
-      console.log("Oui");      
+    OrdonnanceTutor: function () {   
       this.$emit('tutor_true');
     },
     logout: function(){
