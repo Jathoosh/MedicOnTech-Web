@@ -7,8 +7,8 @@
       </div>
       <br>
       <div class="buttonback">
-        <button @click="redirectToPac()" id="button">Ajouter une personne à charge</button>
-        <button @click="back()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Retour</button>
+        <button @click="redirectToPac()" >Ajouter une personne à charge</button>
+        <button @click="back()"  >Retour</button>
       </div>
     </div>
       
@@ -21,8 +21,6 @@
       </div>
 
   <br>
-  <br>
-  <br>
 
   <div class="prescription_info" v-for="(d, index) in filteredData" :key="index"> 
     <div class="detail">
@@ -31,11 +29,10 @@
       <p>Nombre de réutilisations : {{d.infos_prescription.frequency_of_reuse}}</p>
       <p>Ordonnance signalée : {{reportedPres(d.infos_prescription.reported)}}</p>
       <p  v-if="d.infos_prescription.reported == true">  Raisons du signalement : {{d.infos_prescription.report_note}}</p>
-      <p style="color:grey;">ID : {{generateBarCodeNumber(d.infos_prescription.Id_Prescription)}}</p>
     </div>
 
     <div class="buttonRedirect">
-        <button @click="redirectionToOrdonnance()" class="btn btn-outline-secondary" data-mdb-ripple-color="dark">Voir le détail</button> 
+        <button @click="redirectionToOrdonnance()">Voir le détail</button> 
     </div>
   </div>
   <br>
@@ -182,7 +179,7 @@ button {
   margin-left: 5px;
   margin-right: 5px;
   border-radius: 7px;
-  border: 0.4px solid rgb(49, 49, 49);
+  border: none;
 }
 
 button:hover {
