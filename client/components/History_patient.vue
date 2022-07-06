@@ -3,7 +3,7 @@
     <br>
     <div class="head">
       <div class="info">
-        <h3>Historique des ordonnances de {{mdatas[index_history_patient].infos_patient.last_name}} {{mdatas[index_history_patient].infos_patient.first_name}} </h3>
+        <h3>Historique des ordonnances de {{mdatas[index_history_patient].infos_patient.last_name}} {{mdatas[index_history_patient].infos_patient.first_name}} - {{currentAge(mdatas[index_history_patient].infos_patient.birth_date)}} ans</h3>
       </div>
       <br>
       <div class="buttonback">
@@ -107,7 +107,24 @@ module.exports = {
       else{
         return "Invalide";
       }
-    }
+    },
+    currentAge(birthDate) {
+      var today = new Date();
+      var birth = new Date(birthDate);
+      
+      var age = today.getFullYear() - birth.getFullYear();
+      var month = today.getMonth() - birth.getMonth();
+      if (month < 0 || (month === 0 && today.getDay() < birth.getDay())) {
+        age--;
+      }
+      return age;
+      
+      
+    },
+
+    testTypeofBirthDate(birthDate){
+      console.log(typeof birthDate);
+    },
   },
   computed: {
     filteredData() {
