@@ -40,7 +40,7 @@
 
     <!-- TODO à rajuster pour que la card soit juste en dessous du profil --> 
     <div id="carteSuperposee" class="cardPosition">
-      <infocard :sdatas = "sdatas" v-if="card == true" @disapear="disapear"/>
+      <infocard :sdatas = "sdatas" v-if="card == true" @disapear="disapear" :button_actionne = "button_actionne"/>
     </div>
     <!-- {{sdatas}} -->
   </div>
@@ -57,6 +57,7 @@ module.exports = {
       default: {},
     },
     tutor_bool: Boolean,
+    button_actionne: Boolean
   },
   data(){
     return{
@@ -85,6 +86,7 @@ module.exports = {
     }, 
     disapear(){
       this.card = false;
+      this.$emit('gotoprofil')
     },
     initialesPatient: function(){
         var String = this.sdatas.first_name[0] + this.sdatas.last_name[0];

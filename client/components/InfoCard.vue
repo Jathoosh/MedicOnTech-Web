@@ -14,7 +14,8 @@
             <p>{{ sdatas.last_name }}</p>
             <p v-if="sdatas.profession.name === 'Patient'">{{ sdatas.birth_date }}</p>
             <p>{{ sdatas.mail }}</p>
-            <button @click="modifyProfil" v-if="sdatas.profession.name === 'Patient'"><strong>Modifier profil</strong></button>
+
+            <button @click="modifyProfil" v-if="sdatas.profession.name === 'Patient' && button_actionne == false"><strong>Modifier profil</strong></button>
         </div>
     </div>
 </template>
@@ -30,6 +31,7 @@ module.exports = {
           return {};
         },
       },
+      button_actionne: Boolean
     },
     methods:{
       modifyProfil: function(){

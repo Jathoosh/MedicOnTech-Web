@@ -75,6 +75,7 @@ var app = new Vue( {
       services: [],
     },
     liste_patient_search: [],
+    button_actionne: false
   },
   components: 
   {
@@ -294,6 +295,10 @@ var app = new Vue( {
       this.prescription_for_display = data.prescription;
       this.prescription_for_display.infos_patient = data.infos_patient;
       this.$router.push("/Ordonnance");
+    },
+
+    gotoprofil(){
+      this.button_actionne = true;
     }
   }
 })
