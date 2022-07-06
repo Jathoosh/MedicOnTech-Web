@@ -32,7 +32,7 @@
     </div>
 
     <div class="buttonRedirect">
-        <button @click="redirectionToOrdonnance()">Voir le détail</button> 
+        <button @click="redirectionToOrdonnance(index)">Voir le détail</button> 
     </div>
   </div>
   <br>
@@ -42,7 +42,10 @@
 <script>
 module.exports = {
   name: "History_patient",
- props: {
+  components: {
+    Ordonnance,
+  },
+  props: {
     sdatas: Object,
     mdatas: {
       type: Array,
@@ -69,8 +72,8 @@ module.exports = {
     back: function () {
       this.$router.push("/Doctor_home");
     },
-    redirectionToOrdonnance: function () {
-      this.$router.push("/Ordonnance");
+    redirectionToOrdonnance: function (index) {
+      this.$emit('save_ordonnance_doctor', {prescription : this.mdatas[this.index_history_patient].prescriptions[index], infos_patient : {first_name : this.mdatas[this.index_history_patient].infos_patient.first_name, last_name : this.mdatas[this.index_history_patient].infos_patient.last_name}, doctor_infos : this.sdatas});
     },
     redirectionToPatientInCharge: function () {
       this.$router.push("/PatientInCharge");
