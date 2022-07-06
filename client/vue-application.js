@@ -65,6 +65,7 @@ var app = new Vue( {
     index_history_patient: 0,
     index_pac: 0,
     tutor_bool: true,
+    status: 0,
     index_ordonnance: 0, // voir si nécessaire
     prescription_for_display: {
       infos_patient: {first_name: '',last_name: ''},
@@ -286,6 +287,15 @@ var app = new Vue( {
     },
     tutor_true(){
       this.tutor_bool = true;
+    },
+    status_patient(){
+      this.status = 0;
+    },
+    status_doctor(){
+      this.status = 1;
+    },
+    status_pharmacist(){
+      this.status = 2;
     },
     save_index_ordonnance(data){
       this.index_ordonnance = data.index;
