@@ -26,6 +26,7 @@ const listpatient = window.httpVueLoader('./components/listPatient.vue');
 const listdrug = window.httpVueLoader('./components/listDrug.vue');
 // Page de fonctionnalités
 const LoginRetrieve = window.httpVueLoader('./pages/LoginRetrieve.vue');
+const mobileLogin = window.httpVueLoader('./pages/mobilelogin.vue');
 
 const routes = [
   { path: '/login', component: Home },
@@ -43,7 +44,8 @@ const routes = [
   { path: '/Contact', name:'Contact', component: Contact }, //Verifier TODO  
   { path: '/A_propos', name:'A_propos', component: A_propos }, //Verifier TODO  
   { path: '/Faq', name:'Faq', component: Faq },
-  { path: '/login_retrieve', name:'login-retrieve', component: LoginRetrieve } //Verifier TODO
+  { path: '/login_retrieve', name:'login-retrieve', component: LoginRetrieve }, //Verifier TODO
+  { path: '/mobile_login', name:'mobile-login', component: mobileLogin }, //Verifier TODO
 
 ]
 
@@ -75,7 +77,8 @@ var app = new Vue( {
       services: [],
     },
     liste_patient_search: [],
-    button_actionne: false
+    button_actionne: false, 
+    check_connexion_mobile: false,
   },
   components: 
   {
@@ -137,6 +140,10 @@ var app = new Vue( {
         workplace_name:''
       };
       this.reloadData();
+    },
+    async checkconnexionmobile(){
+      const res = await axios.get('/api/motapp/setconnexion');
+      this.check_connexion_mobile = res.status === 200? true : false;
     },
 
     //==========================================================
@@ -251,7 +258,12 @@ var app = new Vue( {
       }
       else
       {
-        this.goToPage('/login');
+        var current_url = window.location.href;
+        current_url = current_url.substring(current_url.lastIndexOf('/'), current_url.length);
+        if(current_url != '/mobile_login'){
+          this.goToPage('/login');
+        }
+        
       }
     },
 
@@ -299,7 +311,7 @@ var app = new Vue( {
 
     gotoprofil(){
       this.button_actionne = true;
-    }
+    },
     OrdonnanceTutor()
     {
       this.tutor_true();

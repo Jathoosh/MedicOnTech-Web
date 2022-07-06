@@ -44,6 +44,8 @@
     </header>
     <main id="main">
       <router-view
+      @checkconnexionmobile = "checkconnexionmobile"
+      :check_connexion_mobile="check_connexion_mobile"
       @fc-method = "FCMethod"
       @login = "login"
       :mdatas = "mdatas"
