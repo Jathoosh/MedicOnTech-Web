@@ -13,8 +13,8 @@
                         <!-- Information du Docteur - Table Id_Doctor & Person-->
                         <p id="doctorContainer">
                             Dr. {{ prescription_for_display.infos_prescription.doctor_infos.first_name }} {{ prescription_for_display.infos_prescription.doctor_infos.last_name }}<br>
-                            Medecin {{ prescription_for_display.infos_prescription.doctor_infos.speciality }}<br>
-                            {{ prescription_for_display.infos_prescription.doctor_infos.phone }}<br>
+                            <!-- Medecin {{ prescription_for_display.infos_prescription.doctor_infos.speciality }}<br> -->
+                            <!-- {{ prescription_for_display.infos_prescription.doctor_infos.phone }}<br> -->
                             {{ prescription_for_display.infos_prescription.doctor_infos.mail }}<br>
                         </p>
 
@@ -23,11 +23,11 @@
                         <!-- Information du lieu de travail_docteur - Table Id_Doctor & Person-->
                         <p id="workContainer">
                             {{ prescription_for_display.infos_prescription.doctor_infos.workplace_name }}<br>
-                            {{ prescription_for_display.infos_prescription.doctor_infos.address.road_number }} 
-                            {{ prescription_for_display.infos_prescription.doctor_infos.address.road_name }}<br>
-                            {{ prescription_for_display.infos_prescription.doctor_infos.address.town }}
-                            {{ prescription_for_display.infos_prescription.doctor_infos.address.zip_code }},
-                            {{ prescription_for_display.infos_prescription.doctor_infos.address.country }}<br>
+                            <!-- {{ prescription_for_display.infos_prescription.doctor_infos.address.road_number }}  -->
+                            <!-- {{ prescription_for_display.infos_prescription.doctor_infos.address.road_name }}<br> -->
+                            <!-- {{ prescription_for_display.infos_prescription.doctor_infos.address.town }} -->
+                            <!-- {{ prescription_for_display.infos_prescription.doctor_infos.address.zip_code }}, -->
+                            <!-- {{ prescription_for_display.infos_prescription.doctor_infos.address.country }}<br> -->
 
                             <!-- {{ ligne.infos_prescription.doctor_workplace_mail }}<br> -->
                         </p>
@@ -124,36 +124,6 @@ module.exports = {
         }
     },
     props:{
-        // mdatas: {
-        //     type: Array,
-        //     required: true,
-        //     default: function () {
-        //         return [];
-        //     }
-        // },
-        // sdatas: {
-        //     type: Object,
-        //     required: true,
-        //     default: function () {
-        //         return [];
-        //     }
-        // },
-        // sdatas_comp: {
-        //     type: Array,
-        //     required: true,
-        //     default: function () {
-        //         return [];
-        //     }
-        // },
-        // index_pac: {
-        //     type: Number,
-        //     required: true,
-        //     default: function () {
-        //         return 0;
-        //     }
-        // },
-        // tutor_bool: Boolean,
-        // index_ordonnance: Number,
         prescription_for_display: {
             type: Object,
             required: true,

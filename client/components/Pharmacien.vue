@@ -1,65 +1,87 @@
 <template>
-    <div>
-        <p> Bonjour {{ infosPharmacist() }} </p>
-        
-        <div class="buttonDeconnexion">
-            <button @click="retourPagePrincipale" class="buttonTextSize btn text-center" type="submit">Deconnexion</button>
-        </div>
+    <div class="mainContainer">
+        <h3> Bonjour {{ infosPharmacist() }} </h3>
         
         <div class="rectangle"> <p id="title_profil"> Recherche avancée </p> </div>    
         
-        <div id="container"> 
-            <div>
-                <input class="buttonTextSize SearchBar" type="search" id="search" placeholder="ID ordonnance" size="28"/>
-                <button @click="rechercherID()" id="buttonRechercher" class="buttonTextSize btn text-center">Rechercher</button>              
+        <div id="searchContainer"> 
+            <input class="searchBar" type="search" id="search" placeholder="ID ordonnance" size="28"/>
+            <input class="searchBar" type="search" id="search" placeholder="N° sécurité sociale" size="28"/>
+            <button @click="rechercherID()" id="buttonRechercher">Rechercher</button>              
+        </div>
+
+        <!-- Affichage de l'ordonnance seulement si la fonction scanPrescription renvoit true -->
+        <!-- <div v-if="scanPrescription == true"> -->
+
+            <ordonnance></ordonnance>
+
+            <div class="buttonValider">
+                <button @click="validerOrdonnance" type="submit">Valider ordonnance</button>
             </div>
-        </div>
 
-        <!-- affichage de l'ordonnance seulement si la fonction scanPrescription renvoit true -->
-        <!-- <p v-if="scanPrescription == true"> Affichage de l'ordonnance </p> -->
+            <!-- Signalement ordonnance -->
+            <h4> Signalement </h4> 
 
-        <div class="buttonValiderOrdonnance">
-            <button @click="validerOrdonnance" class="buttonTextSize btn text-center" type="submit">Valider ordonnance</button>
-        </div>
+            <form> 
+                <textarea class="form-control" placeholder="Cause du signalement, ... ">  </textarea> 
+            </form>
 
-               
-        <div id="containerInput"> 
-            <p class="signalement"> Signalement </p> 
-            <div id="SignalContainer">
-                <form> <textarea class= "buttonTextSize" placeholder="Cause du signalement, ... ">  </textarea> </form>
-                <div class="buttonSignaler"> 
-                    <button @click="signalerOrdonnance" class="buttonTextSize btn text-center" type="submit">Signaler</button> 
-                </div>
-            </div>    
-        </div>
+            <div class="buttonSignaler"> 
+                <button @click="signalerOrdonnance" type="submit">Signaler</button> 
+            </div> 
+        <!-- </div> -->
+
     </div>
 </template>
 
 <script>
 module.exports = {
     name: 'Pharmacien',
+    components: {
+        Ordonnance,
+    },
+    props:{
+        mdatas: {
+            type: Array,
+            required: true,
+            default: function () {
+                return [];
+            }
+        },
+        sdatas: {
+            type: Object,
+            required: true,
+            default: function () {
+                return {};
+            }
+        },
+        prescription_for_display: {
+            type: Object,
+            required: true,
+            default: function () {
+                return {};
+            }
+        }
+    },
     data(){
         return{
-            pharmacist: {
-                id_pharmacist: 1, 
-                last_name: 'Last Name',
-                first_name: 'First Name '            
-            }
+            // pharmacist: {
+            //     id_pharmacist: 1, 
+            //     last_name: 'Last Name',
+            //     first_name: 'First Name '            
+            // }
         }
     },
     methods: {
         infosPharmacist: function(){
-            var String = this.pharmacist.first_name + this.pharmacist.last_name;
+            var String = this.sdatas.first_name + " " + this.sdatas.last_name;
             return String;
-        },
-        retourPagePrincipale: function(){
-            this.$emit("retour page principale");
-            this.$router.push("/login");
         },
         rechercherID: function(){
             var idOrdonnance = document.getElementById("search").value;
             //sera à modifier pour qu'on puisse récupérer l'id de l'ordonnance => backend
             alert(idOrdonnance);
+            this.checkEAN13Digits(idOrdonnance);
         },
         validerOrdonnance: function(){
             //this.$emit("ordonannce validée", this.id_prescription);
@@ -69,7 +91,20 @@ module.exports = {
             var idOrdonnanceSignalee = document.getElementById("signaler").value;
             //sera à modifier pour qu'on puisse récupérer l'id de l'ordonnance => backend
             alert(idOrdonnanceSignalee);
-        }       
+        },
+        checkEAN13Digits(str){ //Le str est le code barre en nombre, faites attention à ce qu'il n'y ait que des nombres
+            let sum1 = 0;
+            let sum2 = 0;
+            for (let i = 0; i<str.length()-1;i++){
+                if (i%2 == 0){
+                    sum1 = sum1 + sum1
+                }
+                else{
+                    sum2 = sum2 + sum2
+                }
+            }
+            return str[str.length()-1] == ((sum1*3 + sum2)%10 == 0)? 0 : (10 - (sum1*3 + sum2)%10)
+        } 
     },
     mounted(){
         // afficher l'ordonnance du patient en fonction de son id
@@ -79,110 +114,70 @@ module.exports = {
 </script>
 
 <style scoped>
-
-    .buttonDeconnexion{
-        position: absolute;
-        left: 1509px;
-        top: 167px;
-        background: #D9D9D9;
-        border-radius: 20px;
+    .mainContainer{
+        width: 100%;
     }
 
    .rectangle{
         width: fit-content;
         border-bottom: 4px solid green;
-        margin-top: 20px;
+        margin-top: 2%;
     }
      
    #title_profil{
-        margin-top: 12px;
+        margin-top: 2%;
         font-size: 24px;
         margin-left: -2px;
         margin-bottom: 0px;
     }
-     
-    #container{        
+    
+    #searchContainer{
         display: flex;
         flex-direction: row;
-        justify-content: center;   
-        margin-right: -10px;
+        justify-content: space-between;
+        align-items: center;
+        width: 60%;
+        margin-top: 2%;
+        margin-bottom: 3%;
     }
 
-    #containerInput{
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        align-content: space-around;    
-        align-items: stretch;
-    }
-    
-    #container .SearchBar{
+    .searchBar{
         border-top: none;
         border-left: none;
         border-right: none;
-        margin-bottom: 15px;
-        margin-top: 15px;
-        width: 70%;
+        padding: 5px;
+        margin-right: 5px;
     }
 
-    .buttonTextSize{
-        font-size: 17px;
-    }
-
-    
-    #buttonRechercher{
-        width: fit-content;
-        background: #D9D9D9;
-        border-radius: 20px; 
-        margin-right: -162px;
-        margin-top: -69px;
-        margin-left: 790px;
-    }
-
-    .buttonValiderOrdonnance{
-        width: fit-content;
-        margin-left: 790px;
-        background: #D9D9D9;
-        border-radius: 20px;  
-    }
-
-    .signalement{
-        width: fit-content;
-        height: 50px;
-        font-weight: 800;
-        font-size: 25px;
-    }
-
-    #containerInput .Signaler{
-        width: 1019px;
-        height: 368px;
-        background: rgba(216, 216, 216, 0.5);
-        border-radius: 20px;
-        margin-bottom: 30px;  
-        position: static;   
-    }
-
-    #SignalContainer{
-        align-self: center;
+    .buttonValider{
         display: flex;
-        flex-direction: column;
-        justify-content: end;        
-    }
-
-    textarea {
-        width: 1022px;
-        height: 368px;
-        background: rgba(216, 216, 216, 0.5);
-        border-radius: 20px;
-        margin-top: 15px;  
-        margin-bottom: 30px;  
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 3%;
+        margin-bottom: 3%;
     }
 
     .buttonSignaler{
-        background: #D9D9D9;
-        border-radius: 20px;
-        max-width: 100px;
-        align-self: flex-end;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        margin-top: 2%;
+        margin-bottom: 3%;
+    }
+
+    button {
+    color: rgb(49, 49, 49);
+    text-decoration: none;
+    padding: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 7px;
+    border: none;
+    }
+
+    button:hover {
+        background-color: #b1b1b1;
+        transition: background-color 0.5s;
     }
 
 </style>
