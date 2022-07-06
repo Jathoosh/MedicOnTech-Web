@@ -510,30 +510,40 @@ router.get('/recherchePatient/:first_name/:last_name', (req,res) => {
 // Modif mutuelle quand on fait modifier profil
 
 router.put('/modifMutuelle', (req,res) => {
-  const Id_Patient = req.session.Id_Patient || req.body.Id_Patient;
+  const Id_Patient = req.session.function_id;
   const mutuelle = req.body.mutuelle;
   sequelize.query(`SELECT Id_Mutual_insurance, mutual_name FROM Mutual_insurance WHERE mutual_name like '%${mutuelle}%' LIMIT 1`).then(result => {
-    sequelize.query(`update patient set Id_Mutual_insurance = ${result[0][0].Id_Mutual_insurance} where Id_Patient = '${Id_Patient}'`).then(result2 => {
-      if (result2[0].affectedRows == 1)
-      {
-        res.status(200).json({
-          message : 'Mutuelle modifiée',
-          mutual_name : result[0][0].mutual_name,
-          changed : true
-        });
-      }
-      else
-      {
-        res.status(200).json({
-          message : 'Mutuelle non modifiée',
+    if (result[0].length == 0)
+    {
+      res.status(200).json({
+        message : 'Mutuelle inconnue',
+        changed : false
+      });
+    }
+    else{
+      sequelize.query(`update patient set Id_Mutual_insurance = ${result[0][0].Id_Mutual_insurance} where Id_Patient = '${Id_Patient}'`).then(result2 => {
+        if (result2[0].affectedRows == 1)
+        {
+          res.status(200).json({
+            message : 'Mutuelle modifiée',
+            mutual_name : result[0][0].mutual_name,
+            changed : true
+          });
+        }
+        else
+        {
+          res.status(200).json({
+            message : 'Mutuelle non modifiée',
+            changed : false
+          });
+        }
+      }).catch(err => {
+        res.status(500).json({
+          message : 'Erreur lors de la modification de la mutuelle',
           changed : false
         });
-      }
-    }).catch(err => {
-      res.status(500).json({
-        message : 'Erreur lors de la modification de la mutuelle'
-      });
-    })
+      })
+    }
   });
 })
 

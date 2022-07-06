@@ -79,6 +79,7 @@ var app = new Vue( {
     liste_patient_search: [],
     button_actionne: false, 
     check_connexion_mobile: false,
+    mutual_change_state: "false",
   },
   components: 
   {
@@ -268,7 +269,7 @@ var app = new Vue( {
     },
 
     //==========================================================
-    //Méthode pour récupérer les données de la base de données durant le fonctionnement
+    //Méthode pour intéragir avec la base de données durant le fonctionnement
     //==========================================================
 
     async recherchePatient(data)
@@ -277,15 +278,22 @@ var app = new Vue( {
       this.liste_patient_search = res.data.datas;
     },
 
-    //==========================================================
-    //Fonctions concernant les Emits et le reste
-    //==========================================================
-    modify_profil(data)
+    async modify_profil(data)
     {
-      //const res = await axios.update('api/update_person', data);
-      //TODO Temp
-      this.sdatas.mutuelle = data.mutuelle;
+      const res = await axios.put('api/modifMutuelle', data);
+      if(res.data.changed == true){
+        this.sdatas.mutual_name = res.mutual_name;
+        this.mutual_change_state = "changed";
+      }
+      else{
+        this.mutual_change_state = "true";
+      }
     },
+
+    //==========================================================
+    //Fonctions concernant les Emits, actions en local et le reste
+    //==========================================================
+    
     getPrescriptions(data)
     {
       this.patientID = data;

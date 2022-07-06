@@ -52,7 +52,7 @@
       </div>
       <div class="buttonModify">
         <p class="p" id="add_message">{{message}}</p>
-        <p v-if="hide_lenght == true" id="lenght_message">Le numéro de mutuelle doit contenir au moins 8 caractères</p>
+        <p v-if='hide_length == "true"' id="lenght_message">Le nom de la mutuelle est incorrect</p>
         <button @click="modifyInformationsProfil()" class="btn btn-outline-dark ml-2">Ajouter une mutuelle</button>
       </div>
     </div> 
@@ -74,35 +74,38 @@ module.exports = {
           return {};
         },
       },
+      hide_length: {
+        type: String,
+        default: "false",
+        validator(value) {
+          return ["true", "false", "changed"].includes(value)
+        },
+      },
+
     },
     data() {
       return {
         mutuelle: "",
-        hide_lenght: false,
         message: "",
       };
     },
     mounted() {
-      this.mutuelle = this.sdatas.mutuelle;
-    },
-    methods:{
-      modifyInformationsProfil(){
-        if(this.mutuelle != null && this.mutuelle.length < 8){
-          this.hide_lenght = true;
-        }
-        else if (this.mutuelle == "" || this.mutuelle == null){
-          this.hide_lenght = true;
-        }
-        else {
-          this.hide_lenght = false;
+      this.mutuelle = this.sdatas.mutual_name;
+      //watch hide_length
+      this.$watch('hide_length', (value) => {
+        if (value == "changed") {
           setTimeout(() => {
-            this.message = "✔";
+          this.message = "✔";
           }, 0001);
           setTimeout(() => {
             this.message = "";
           }, 4000);
-          this.$emit("modify_profil", {mutuelle:this.mutuelle});
         }
+      });
+    },
+    methods:{
+      modifyInformationsProfil(){
+        this.$emit("modify_profil", {mutuelle:this.mutuelle});
       },
       retourPagePrincipale: function(){
         this.$emit("retour page principale");
