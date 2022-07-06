@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p>Je ne suis pas ton père.</p>
     <table class="table">
       <thead>
               <tr>

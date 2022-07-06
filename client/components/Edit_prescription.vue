@@ -89,10 +89,12 @@
             <br>
             <br>
             <div class="send" style="text-align:center; ">
-             <button type="button" style="width:40%;" @click="sendPrescription()">Envoyer</button>
-             <p v-if="sendMessage === true">Ordonannance envoyée</p>
+                <button type="button" style="width:40%;" @click="sendPrescription()">Envoyer</button>
+                <p id="message" v-if="sendMessage === true">Ordonnance envoyée. Redirection dans 2s.</p>
+                <p id="message_error" v-if="boolerror == true">{{message_error}}</p>
             </div>
             </form>
+           
         </div>
     </div>
 </template>
@@ -146,6 +148,8 @@ module.exports = {
             sendMessage: false, // message de confirmation d'envoi de l'ordonnance
             print_list_patient: false, // affichage de la liste des patients
             print_list_drug: false, // affichage de la liste des médicaments
+            message_error : "",
+            boolerror : false, 
         }
     },
     methods: {
@@ -166,15 +170,21 @@ module.exports = {
         }, 
         finishEditQuantity(index){
             this.drugs[index].hideQuantity = true;
-            console.log("non");
         },
         back(){
             this.$router.push('/Doctor_home');
         },
         sendPrescription(){
-            //A PLACER DANS LE INDEX.HTML ET LE VUE APPLICATION
-            // TODO : faire des conditions de verif des champs : nom, prenom, et au moins un médicament dans le tableau drugs
- 
+            console.log("longueur" + this.drugs.length);
+            if(this.newPatient_lastname == "" && this.newPatient_firstname == "" ){
+                this.message_error = "Veuillez entrer un nom et un prénom";
+                this.boolerror = true;
+            }
+            else if (this.drugs.length == 0) {
+                this.message_error = "Veuillez entrer au moins un médicament";
+                this.boolerror = true;
+            }
+            else {
             this.newPrescription.date = this.myDate;
             this.newPrescription.drugs = this.drugs;
             this.newPrescription.notes = this.notes;
@@ -183,11 +193,13 @@ module.exports = {
             this.newPrescription.patient_lastname = this.newPatient_lastname;
             this.newPrescription.patient_firstname = this.newPatient_firstname;
             this.sendMessage = true;
-            
+            this.boolerror = false;
             this.$emit('sendPrescription', this.newPrescription);
-            this.$router.push('/Doctor_home');
-            
-            console.log("VOILA CE QUE TU RECOIS : ",this.newPrescription);
+            setTimeout(() => {
+                this.$router.push('/Doctor_home');
+            }, 2000);
+            console.log("data prescription send : "+ this.newPrescription);
+            }
         },
         searchpatient(){
            
@@ -216,11 +228,9 @@ module.exports = {
             this.print_list_patient = false;
         },
         fillinputdrug(drug){ // remplir les champs de saisie avec les données du médicament sélectionné
-            console.log("la drogue c'est mal" + drug[0].drug_name);
             this.newDrug_name = drug[0].name;
             this.print_list_drug = false;
         }
-
     }, 
     created: function(){
                 this.drugs = [];
@@ -249,7 +259,7 @@ module.exports = {
     margin-right: auto;
     padding: 20px;
     padding-bottom: 40px;
-    margin-top: 7vh;
+    margin-top: 4vh;
     margin-bottom: 25px;
     border-radius: 20px;
 }
@@ -352,5 +362,13 @@ width: 20%;
 }
 #drug_table {
     width: 100%;
+}
+
+#message{
+    margin-top: 20px;
+}
+#message_error{
+    color: red;
+    padding-top: 15px;
 }
 </style>

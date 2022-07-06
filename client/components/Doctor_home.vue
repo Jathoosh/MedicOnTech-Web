@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Bonjour</h1>
+    <h1>Bonjour Dr {{sdatas.first_name}} {{sdatas.last_name}} ! </h1>
     <h4>Mes patients</h4>
     <hr />
     <div id="global"> 

@@ -75,6 +75,7 @@ var app = new Vue( {
       services: [],
     },
     liste_patient_search: [],
+    button_actionne: false
   },
   components: 
   {
@@ -267,6 +268,12 @@ var app = new Vue( {
     //==========================================================
     //Fonctions concernant les Emits et le reste
     //==========================================================
+    modify_profil(data)
+    {
+      //const res = await axios.update('api/update_person', data);
+      //TODO Temp
+      this.sdatas.mutuelle = data.mutuelle;
+    },
     getPrescriptions(data)
     {
       this.patientID = data;
@@ -300,6 +307,9 @@ var app = new Vue( {
       this.prescription_for_display.infos_patient = data.infos_patient;
       this.prescription_for_display.infos_prescription.doctor_infos = data.doctor_infos;
       this.$router.push("/Ordonnance");
+    },
+    gotoprofil(){
+      this.button_actionne = true;
     },
     OrdonnanceTutor()
     {

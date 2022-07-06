@@ -12,8 +12,7 @@
     <div class = "card_patient">
       <p id = "informations" class="rectangle">Ajout d'une personne à charge pour {{mdatas[index_history_patient].infos_patient.last_name}} {{mdatas[index_history_patient].infos_patient.first_name}}</p>
       <div class="content_container">
-        <!-- importer logo de la personne connectée -->
-        
+
         <div class="d-flex flex-row">
           <p class="image_profil text-center" id="nom_profil">{{initialesPatient()}} </p>
         </div>
@@ -33,7 +32,7 @@
             </tr>
             <tr>
               <th scope="row">Date de naissance</th>
-              <td><input type="date" v-model="newBirth_date" required></td>
+              <td><input type="date" min="1900-01-01" v-model="newBirth_date" required></td>
             </tr>
             
             <tr>
@@ -117,13 +116,18 @@ module.exports = {
           this.message_error = "Veuillez remplir au moins les champs nom, prénom et la date de naissance.";
           this.boolerror = true;
         }
+        // verifier que la date est au moins 1900-01-01
+        else if(this.newBirth_date < "1900-01-01"){
+          this.message_error = "Veuillez entrer une date de naissance valide.";
+          this.boolerror = true;
+        }
         else{
           // emit les données des champs de patient
         this.patient.last_name = this.newLast_name;
         this.patient.first_name = this.newFirst_name;
         this.patient.birth_date = this.newBirth_date;
         this.patient.mutuelle = this.newMutuelle;
-
+        this.boolerror = false;
         this.$emit("sendPac", this.patient);
         console.log(this.patient);
 
@@ -249,8 +253,8 @@ module.exports = {
   }
 
   .table{
-    width: 60%;
-    
+    width: 100%;
+    table-layout: auto;;
     display: flex;
     justify-content: space-between;
   }
@@ -284,6 +288,5 @@ module.exports = {
     margin-top: -39px;
     margin-left: 29px;
   }
-
 
 </style>
