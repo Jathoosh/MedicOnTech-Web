@@ -507,8 +507,6 @@ router.get('/recherchePatient/:first_name/:last_name', (req,res) => {
   })
 })
 
-// Modif mutuelle quand on fait modifier profil
-
 router.put('/modifMutuelle', (req,res) => {
   const Id_Patient = req.session.function_id;
   const mutuelle = req.body.mutuelle;
@@ -547,8 +545,81 @@ router.put('/modifMutuelle', (req,res) => {
   });
 })
 
-// Ajouter ordonnances à la bdd
 // Récupérer liste des médicaments quand le docteur cherche un pour ordonnances 
+
+router.get('/drugs/:drug_name', (req,res) => {
+  const drug_name = req.params.drug_name;
+  sequelize.query(`select drug.drug_name from drug where drug_name like '%${drug_name}%'`).then(result => {
+    res.status(200).json({
+      message : 'Données médicaments récupérées',
+      datas : result[0]
+    });
+  })
+})
+
+// Ajouter ordonnances à la bdd
+
+/*
+this.newPrescription.date = this.myDate;
+this.newPrescription.drugs = this.drugs;
+this.newPrescription.notes = this.notes;
+this.newPrescription.reusable = this.reusable;
+this.newPrescription.reuse = this.reuse;
+this.newPrescription.patient_lastname = this.newPatient_lastname;
+this.newPrescription.patient_firstname = this.newPatient_firstname;
+*/
+
+router.post('/sendPrescription', (req,res) => {
+  //Id_Prescription, creation_date, expiration_date, date_of_use, frequency_of_reuse, number_of_reuses, used, validity, note, reported, report_note, barcode_svg, Id_Doctor, Id_Patient
+  const Id_Doctor = req.session.function_id;
+  const patient = {last_name : req.body.patient_lastname, first_name : req.body.patient_firstname};
+  const drugs = req.body.drugs;
+  const notes = req.body.notes;
+  const reusable = req.body.reusable;
+  const reuse = req.body.reuse;
+  const date = req.body.date;
+
+  sequelize.query(`select Id_Patient from patient where last_name = '${patient.last_name}' and first_name = '${patient.first_name}'`).then(result => {
+    if (result[0].length == 0)
+    {
+      res.status(200).json({
+        message : 'Patient inconnu',
+        changed : false
+      });
+    }
+    else
+    {
+      const Id_Patient = result[0][0].Id_Patient;
+      sequelize.query(`insert into prescription (creation_date, expiration_date, frequency_of_reuse, number_of_reuses, used, validity, note, reported, barcode_svg, Id_Doctor, Id_Patient) values ('${date}', '${date}', '${reusable}', '${reuse}', '0', '1', '${notes}', '0', '', '${Id_Doctor}', '${Id_Patient}')`).then(result2 => {
+        if (result2[0].affectedRows == 1)
+        {
+          const Id_Prescription = result2[0].insertId;
+          drugs.forEach(drug => {
+            sequelize.query(`insert into prescription_drug (Id_Prescription, Id_Drug) values ('${Id_Prescription}', '${drug.Id_Drug}')`);
+          });
+          res.status(200).json({
+            message : 'Ordonnance envoyée',
+            changed : true
+          });
+        }
+        else
+        {
+          res.status(200).json({
+            message : 'Ordonnance non envoyée',
+            changed : false
+          });
+        }
+      }).catch(err => {
+        res.status(500).json({
+          message : 'Erreur lors de l\'envoi de l\'ordonnance',
+          changed : false
+        });
+      }
+      )
+    }
+  })
+})
+
 // Récupérer ordonnance en tant que pharmacien avec les inputs (vérifier le numéro de sécurité)
 
 // PARTIE APPLICATION

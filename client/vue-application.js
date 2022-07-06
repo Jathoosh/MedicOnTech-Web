@@ -80,6 +80,7 @@ var app = new Vue( {
     button_actionne: false, 
     check_connexion_mobile: false,
     mutual_change_state: "false",
+    liste_drug_search: [],
   },
   components: 
   {
@@ -278,6 +279,12 @@ var app = new Vue( {
       this.liste_patient_search = res.data.datas;
     },
 
+    async search_drug(data)
+    {
+      const res = await axios.get('api/drugs/'+data);
+      this.liste_drug_search = res.data.datas;
+    },
+
     async modify_profil(data)
     {
       const res = await axios.put('api/modifMutuelle', data);
@@ -289,6 +296,16 @@ var app = new Vue( {
         this.mutual_change_state = "true";
       }
     },
+    
+    async sendprescription(data){
+      const res = await axios.post('api/sendPrescription', data);
+      if(res.data.sent == true){
+        console.log("Je suis dans le vue application, c'est envoyé l'ordonnance");
+      }
+      else{
+        console.log("Je suis dans le vue application, c'est pas envoyé l'ordonnance");
+      }
+    },
 
     //==========================================================
     //Fonctions concernant les Emits, actions en local et le reste
@@ -298,9 +315,7 @@ var app = new Vue( {
     {
       this.patientID = data;
     },
-    sendPrescription(data){
-      
-    },
+    
     infos_patient(data)
     {
       this.index_history_patient = data.index;

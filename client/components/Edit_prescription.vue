@@ -36,7 +36,7 @@
                         <label style="font-size:30px; margin-bottom:5px"><strong>Ajouter un médicament</strong></label>
                         <br>
                         <input type="text" v-model="newDrug_name" placeholder="Nom du médicament"/>
-                        <button @click="searchdrug()">Rechercher un médicament</button>
+                        <button type="button" @click="searchdrug()">Rechercher un médicament</button>
                         
                         <br>
                         <br>
@@ -46,10 +46,10 @@
                         </div>
                         <br>
                         
-                        <button>Ajouter</button>
+                        <button type="submit">Ajouter</button>
                     </form>
                 
-                    <listdrug id="drug_table" @fillinputdrug = "fillinputdrug" v-if="print_list_drug == true"></listdrug>
+                    <listdrug id="drug_table" @fillinputdrug = "fillinputdrug" :liste_drug_search = "liste_drug_search" v-if="print_list_drug == true"></listdrug>
                 </div>
                 <br>
                 <!--Affichage de la liste de médicaments ajoutée-->
@@ -112,7 +112,12 @@ module.exports = {
             type: Array,
             required: true,
             default: []
-        }
+        },
+        liste_drug_search: {
+            type: Array,
+            required: true,
+            default: []
+        },
     },
     data() { 
         return {
@@ -175,7 +180,6 @@ module.exports = {
             this.$router.push('/Doctor_home');
         },
         sendPrescription(){
-            console.log("longueur" + this.drugs.length);
             if(this.newPatient_lastname == "" && this.newPatient_firstname == "" ){
                 this.message_error = "Veuillez entrer un nom et un prénom";
                 this.boolerror = true;
@@ -185,20 +189,19 @@ module.exports = {
                 this.boolerror = true;
             }
             else {
-            this.newPrescription.date = this.myDate;
-            this.newPrescription.drugs = this.drugs;
-            this.newPrescription.notes = this.notes;
-            this.newPrescription.reusable = this.reusable;
-            this.newPrescription.reuse = this.reuse;
-            this.newPrescription.patient_lastname = this.newPatient_lastname;
-            this.newPrescription.patient_firstname = this.newPatient_firstname;
-            this.sendMessage = true;
-            this.boolerror = false;
-            this.$emit('sendPrescription', this.newPrescription);
-            setTimeout(() => {
-                this.$router.push('/Doctor_home');
-            }, 2000);
-            console.log("data prescription send : "+ this.newPrescription);
+                this.newPrescription.date = this.myDate;
+                this.newPrescription.drugs = this.drugs;
+                this.newPrescription.notes = this.notes;
+                this.newPrescription.reusable = this.reusable;
+                this.newPrescription.reuse = this.reuse;
+                this.newPrescription.patient_lastname = this.newPatient_lastname;
+                this.newPrescription.patient_firstname = this.newPatient_firstname;
+                this.sendMessage = true;
+                this.boolerror = false;
+                this.$emit('sendprescription', this.newPrescription);
+                // setTimeout(() => {
+                //     this.$router.push('/Doctor_home');
+                // }, 2000);
             }
         },
         searchpatient(){
@@ -213,8 +216,7 @@ module.exports = {
         },
         searchdrug(){
             if(this.newDrug_name != ""){
-                console.log("med :  " + this.newDrug_name);
-                this.$emit('sendToBackDrug', this.newDrug_name);
+                this.$emit('search_drug', this.newDrug_name);
                 this.print_list_drug = true;
             }
             else{
@@ -228,7 +230,7 @@ module.exports = {
             this.print_list_patient = false;
         },
         fillinputdrug(drug){ // remplir les champs de saisie avec les données du médicament sélectionné
-            this.newDrug_name = drug[0].name;
+            this.newDrug_name = drug;
             this.print_list_drug = false;
         }
     }, 
