@@ -494,6 +494,91 @@ router.get('/doctor_mdatas_services', (req,res) => {
   })
 })
 
+router.get('/pharmacist_mdatas/:prescription/:check_number', (req,res) => {
+  const Id_Prescription = req.params.prescription;
+  const check_number = req.params.check_number;
+  mdatas = [];
+  sequelize.query(`SELECT Id_Patient FROM Patient where social_security_number = '${check_number}'`).then(result => {
+    if (result[0].length == 0)
+    {
+      res.status(200).json({
+        message : 'Patient non trouvé',
+        state : false
+      });
+    }
+    else
+    {
+      sequelize.query(`SELECT person.*, patient.Id_Patient, prescription.*, drug.*, doctor_infos.email_address doctor_mail, doctor_infos.first_name doctor_first, doctor_infos.last_name doctor_last, doctor_infos.phone doctor_phone, professional.workplace_name, speciality.speciality_name, postal_address.* from prescription JOIN patient USING (Id_Patient) JOIN person USING (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) join doctor Using (Id_Doctor) Join professional on doctor.Id_Person = professional.Id_Person Join person as doctor_infos On professional.Id_Person = doctor_infos.Id_Person Join postal_address on doctor_infos.Id_Postal_address = postal_address.Id_Postal_address join doctor_speciality using(Id_Doctor) join speciality using(Id_Speciality) WHERE Id_Prescription = ${Id_Prescription	} and Id_Patient = ${result[0][0].Id_Patient}`).then(result2 => {
+        /*
+        {
+    "infos_prescription": {
+        "Id_Prescription": 7,
+        "creation_date": "2002-08-17",
+        "expiration_date": "2002-11-17",
+        "date_of_use": "2002-11-17",
+        "frequency_of_reuse": 0,
+        "number_of_reuses": 0,
+        "used": 1,
+        "validity": 0,
+        "note": "TODOTEXTE",
+        "reported": 1,
+        "report_note": "REPORTTODO",
+        "doctor_infos": {
+            "workplace_name": "CLINIQUE DU TERTRE ROUGE",
+            "first_name": "Camille",
+            "last_name": "Moreau",
+            "speciality": "Cardiologue",
+            "mail": "moreau.camille@medecin.fr",
+            "phone": "01 84 88 37 10",
+            "address": {
+                "door_number": null,
+                "road_number": "3",
+                "road_name": "Rue Alexandre Dumas",
+                "zip_code": "51110",
+                "town": "Bazancourt",
+                "country": "France"
+            }
+        }
+    },
+    "drugs": [
+        {
+            "Id_Drug": 60549797,
+            "drug_name": "FOSTIMONKIT 150 UI",
+            "drug_format": "poudre et  solvant pour solution injectable",
+            "drug_application": "sous-cutanée",
+            "autorisation_status": "Autorisation active",
+            "comercialised": "Commercialisée",
+            "comercialised_on": "2006-08-09",
+            "warning_stock": 0,
+            "comercialised_by": " IBSA PHARMA SAS",
+            "drug_price": null,
+            "reimbursement_rate": null
+        },
+    ],
+    "services": [
+        {
+            "Id_Prescription": 7,
+            "services": [
+                {
+                    "Id_Service": 10,
+                    "service_name": "Soins dentaires"
+                },
+            ]
+        }
+    ],
+    "infos_patient": {
+        "first_name": "Ross",
+        "last_name": "O'brien"
+    }
+} */
+        result2[0].forEach((row,n) => {
+          //TODO
+        })
+      })
+    }
+  })
+})
+
 // PARTIE FONCTIONNELLE DU SITE
 
 router.get('/recherchePatient/:first_name/:last_name', (req,res) => {
