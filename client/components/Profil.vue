@@ -40,7 +40,7 @@
             </tr>
             <tr>
               <th scope="row">Mutuelle</th>
-              <td><input v-model="sdatas.mutuelle"></td>
+              <td><input v-model="mutuelle"></td>
             </tr>
           </tbody>
         </table> 
@@ -51,7 +51,9 @@
 
       </div>
       <div class="buttonModify">
-        <button @click="modifyInformationsProfil" class="btn btn-outline-dark ml-2" type="submit">Modifier</button>
+        <p class="p" id="add_message">{{message}}</p>
+        <p v-if="hide_lenght == true" id="lenght_message">Le numéro de mutuelle doit contenir au moins 8 caractères</p>
+        <button @click="modifyInformationsProfil()" class="btn btn-outline-dark ml-2">Ajouter une mutuelle</button>
       </div>
     </div> 
     
@@ -73,10 +75,34 @@ module.exports = {
         },
       },
     },
+    data() {
+      return {
+        mutuelle: "",
+        hide_lenght: false,
+        message: "",
+      };
+    },
+    mounted() {
+      this.mutuelle = this.sdatas.mutuelle;
+    },
     methods:{
-      modifyInformationsProfil: function(){
-        this.$emit("modify", this.sdatas);
-        //console.log(this.sdatas); //renvoie nouvelles informations Patient
+      modifyInformationsProfil(){
+        if(this.mutuelle != null && this.mutuelle.length < 8){
+          this.hide_lenght = true;
+        }
+        else if (this.mutuelle == "" || this.mutuelle == null){
+          this.hide_lenght = true;
+        }
+        else {
+          this.hide_lenght = false;
+          setTimeout(() => {
+            this.message = "✔";
+          }, 0001);
+          setTimeout(() => {
+            this.message = "";
+          }, 4000);
+          this.$emit("modify_profil", {mutuelle:this.mutuelle});
+        }
       },
       retourPagePrincipale: function(){
         this.$emit("retour page principale");
@@ -159,12 +185,12 @@ module.exports = {
   }
 
   .buttonModify{
-    display:flex;
-    align-items: flex-end;
-    align-content: flex-end;
-    flex-direction: column;
-    margin-right: 20px;
-    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    place-content: flex-end;
+    flex-direction: row;
+    padding-right: 4%;
+    margin-bottom: 1%;
   }
 
   .image_formulaire{
@@ -187,5 +213,24 @@ module.exports = {
     margin-left: 29px;
   }
 
+.p {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: 10px;
+}
+
+#add_message{
+  color: green;
+  font-size:30px; 
+  display: flex;
+  -content: center;
+}
+
+#lenght_message{
+    margin-top: 0;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    color: red;
+}
 
 </style>

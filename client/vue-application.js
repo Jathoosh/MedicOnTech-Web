@@ -268,6 +268,12 @@ var app = new Vue( {
     //==========================================================
     //Fonctions concernant les Emits et le reste
     //==========================================================
+    modify_profil(data)
+    {
+      //const res = await axios.update('api/update_person', data);
+      //TODO Temp
+      this.sdatas.mutuelle = data.mutuelle;
+    },
     getPrescriptions(data)
     {
       this.patientID = data;
