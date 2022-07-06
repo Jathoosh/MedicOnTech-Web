@@ -34,17 +34,18 @@
                     </div>
 
                     <div class="bodyOrdonnance">
-                        <div class="bodyHeadearContainer">
+                        <div class="bodyHeaderContainer">
                             <div class="bodyHeader">
-                                <p id="ID">ID : {{ generateBarCodeNumber(prescription_for_display.infos_prescription.Id_Prescription) }}</p>
                                 <p>Fait le {{ changeDate(prescription_for_display.infos_prescription.creation_date) }}.</p><br>
 
                                 <!-- Information du Patient - Table Id_Patient & Person-->
                                 <p>M. {{prescription_for_display.infos_patient.first_name}} {{prescription_for_display.infos_patient.last_name}}</p><br>
                             </div>
 
-                            <img id="code_barres" :src="generateBarCode(prescription_for_display.infos_prescription.Id_Prescription )" alt="code_barres">
-
+                            <div class="code_barres_container">
+                                <img id="code_barres" :src="generateBarCode(prescription_for_display.infos_prescription.Id_Prescription )" alt="code_barres">
+                                <!-- <p id="ID">{{ generateBarCodeNumber(prescription_for_display.infos_prescription.Id_Prescription) }}</p> -->
+                            </div>
                         </div>
 
                         <!-- Information Liste de médicaments - Table Id_Prescription & Drug-->
@@ -60,7 +61,7 @@
 
                         <!-- Informtion Ordonnance Note & Renouvelabilité -->
                         <p>Notes : {{ prescription_for_display.infos_prescription.note }}</p><br>            
-                        <p>Ordonnance renouvelable {{ prescription_for_display.infos_prescription.number_of_reuses }} 
+                        <p v-if="prescription_for_display.infos_prescription.number_of_reuses!=0">Ordonnance renouvelable {{ prescription_for_display.infos_prescription.number_of_reuses }} 
                             fois tous les {{ prescription_for_display.infos_prescription.frequency_of_reuse }} jours.</p><br><br>
 
                         <div class="statutContainer">
@@ -119,7 +120,7 @@ module.exports = {
                 barcode = "0" + barcode;
             }
             console.log(barcode);
-            return "http://bwipjs-api.metafloor.com/?bcid=ean13&text=" + barcode;
+            return "http://bwipjs-api.metafloor.com/?bcid=ean13&text=" + barcode + "&includetext";
         }
     },
     props:{
@@ -229,6 +230,8 @@ module.exports = {
         background-color: #e0e0e0;
         border-radius: 8px;
         padding: 10px;
+        padding-top: 30px;
+        padding-bottom: 40px;
     }
 
     .headerOrdonnance{
@@ -260,24 +263,42 @@ module.exports = {
     .bodyOrdonnance{
         font-size: 0.9em;
         font-weight: bold;
-        margin-left: 100px;
+        margin-left: 70px;
         margin-top: 50px;
     }
 
-    .bodyHeaderOrdonnance{
+    .bodyHeaderContainer{
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         flex-wrap: nowrap;
     }
 
+    .code_barres_container{
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    #code_barres{
+        margin-right: 60px;
+        height: 100px;
+    }
+
+    #ID{
+        color:grey;
+        letter-spacing: 2px;
+    }
+
     #imprimer{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: flex-end;
-    justify-content: flex-end;
-    margin-top: 30px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: flex-end;
+        justify-content: flex-end;
+        margin-top: 30px;
     }
 
     button {
@@ -287,8 +308,7 @@ module.exports = {
         margin-left: 5px;
         margin-right: 5px;
         border-radius: 7px;
-        border: 0.4px solid rgb(49, 49, 49);
-
+        border: none;
     }
 
     button:hover {
@@ -297,7 +317,4 @@ module.exports = {
 
     }
 
-    #ID{
-        color:grey;
-    }
 </style>
