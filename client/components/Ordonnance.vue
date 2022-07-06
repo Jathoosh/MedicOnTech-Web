@@ -124,36 +124,6 @@ module.exports = {
         }
     },
     props:{
-        // mdatas: {
-        //     type: Array,
-        //     required: true,
-        //     default: function () {
-        //         return [];
-        //     }
-        // },
-        // sdatas: {
-        //     type: Object,
-        //     required: true,
-        //     default: function () {
-        //         return [];
-        //     }
-        // },
-        // sdatas_comp: {
-        //     type: Array,
-        //     required: true,
-        //     default: function () {
-        //         return [];
-        //     }
-        // },
-        // index_pac: {
-        //     type: Number,
-        //     required: true,
-        //     default: function () {
-        //         return 0;
-        //     }
-        // },
-        // tutor_bool: Boolean,
-        // index_ordonnance: Number,
         prescription_for_display: {
             type: Object,
             required: true,
