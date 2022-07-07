@@ -91,6 +91,7 @@ CREATE TABLE Patient(
    social_security_number VARCHAR(50),
    Id_Mutual_insurance INT,
    Id_Person INT NOT NULL,
+   Id_Device INT,
    PRIMARY KEY(Id_Patient),
    FOREIGN KEY(Id_Mutual_insurance) REFERENCES Mutual_insurance(Id_Mutual_insurance),
    FOREIGN KEY(Id_Person) REFERENCES Person(Id_Person),
@@ -362,6 +363,7 @@ INSERT INTO Doctor (Id_Person) VALUES
 (40);
 
 INSERT INTO Mutual_insurance(mutual_name) VALUES
+("Pas de Mutuelle"),
 ("APREVA"),
 ("ASPBTP"),
 ("CCMO"),

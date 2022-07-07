@@ -7,8 +7,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(d, index) in table_drug" :key="index">
-          <td>{{ d.name}} <button class="btn btn-outline-secondary" style="float:right;" @click="sendDrug(index)">Selectionner</button></td>
+        <tr v-for="(d, index) in liste_drug_search" :key="index">
+        <td>{{ d.drug_name }} <button class="btn btn-outline-secondary" style="float:right;" @click="sendDrug(index)">Selectionner</button></td>
         </tr>
       </tbody>
     </table>
@@ -19,30 +19,17 @@
 module.exports=  {
     name: 'listDrug',
     props: {
-    // Kdo pour jathoosh
-      //  infos_drug: {
-      //   type: Array,
-      //   required: true,
-      //   default: function () {
-      //     return [];
-      //   }
-      // },
-   },
-    data() {
-      return {
-        table_drug: [
-          {
-            name: "Doliprane",
-          },
-          {
-            name: "Eufon",
-          }
-        ],
-      };
+      liste_drug_search: {
+        type: Array,
+        required: true,
+        default: function () {
+          return [];
+        }
+      },
     },
     methods: {
       sendDrug(index) {
-        this.$emit('fillinputdrug', [this.table_drug[index]]);
+        this.$emit('fillinputdrug', this.liste_drug_search[index].drug_name);
       }
     }
 }

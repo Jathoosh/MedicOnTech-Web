@@ -26,6 +26,7 @@ const listpatient = window.httpVueLoader('./components/listPatient.vue');
 const listdrug = window.httpVueLoader('./components/listDrug.vue');
 // Page de fonctionnalités
 const LoginRetrieve = window.httpVueLoader('./pages/LoginRetrieve.vue');
+const mobileLogin = window.httpVueLoader('./pages/mobilelogin.vue');
 
 const routes = [
   { path: '/login', component: Home },
@@ -43,7 +44,8 @@ const routes = [
   { path: '/Contact', name:'Contact', component: Contact }, //Verifier TODO  
   { path: '/A_propos', name:'A_propos', component: A_propos }, //Verifier TODO  
   { path: '/Faq', name:'Faq', component: Faq },
-  { path: '/login_retrieve', name:'login-retrieve', component: LoginRetrieve } //Verifier TODO
+  { path: '/login_retrieve', name:'login-retrieve', component: LoginRetrieve }, //Verifier TODO
+  { path: '/mobile_login', name:'mobile-login', component: mobileLogin }, //Verifier TODO
 
 ]
 
@@ -65,6 +67,7 @@ var app = new Vue( {
     index_history_patient: 0,
     index_pac: 0,
     tutor_bool: true,
+    status: 0,
     index_ordonnance: 0, // voir si nécessaire
     prescription_for_display: {
       infos_patient: {first_name: '',last_name: ''},
@@ -75,6 +78,10 @@ var app = new Vue( {
       services: [],
     },
     liste_patient_search: [],
+    button_actionne: false, 
+    check_connexion_mobile: false,
+    mutual_change_state: "false",
+    liste_drug_search: [],
   },
   components: 
   {
@@ -137,6 +144,10 @@ var app = new Vue( {
       };
       this.reloadData();
     },
+    async checkconnexionmobile(){
+      const res = await axios.get('/api/motapp/setconnexion');
+      this.check_connexion_mobile = res.status === 200? true : false;
+    },
 
     //==========================================================
     //Méthode pour récupérer les données de la base de données au chargement de la page
@@ -173,7 +184,8 @@ var app = new Vue( {
         const res2 = await axios.get('api/doctor_mdatas_services');
         res.data.datas.forEach(element => {
           element.prescriptions.forEach(prescription => {
-            prescription.services = res2.data.datas.filter(service => service.Id_Prescription == prescription.infos_prescription.Id_Prescription)[0].services;
+            let forservice = res2.data.datas.filter(service => service.Id_Prescription == prescription.infos_prescription.Id_Prescription);
+            prescription.services = forservice.length > 0 ? forservice[0].services : [];
           });
         });
         return res.data.datas;
@@ -250,12 +262,17 @@ var app = new Vue( {
       }
       else
       {
-        this.goToPage('/login');
+        var current_url = window.location.href;
+        current_url = current_url.substring(current_url.lastIndexOf('/'), current_url.length);
+        if(current_url != '/mobile_login'){
+          this.goToPage('/login');
+        }
+        
       }
     },
 
     //==========================================================
-    //Méthode pour récupérer les données de la base de données durant le fonctionnement
+    //Méthode pour intéragir avec la base de données durant le fonctionnement
     //==========================================================
 
     async recherchePatient(data)
@@ -264,22 +281,44 @@ var app = new Vue( {
       this.liste_patient_search = res.data.datas;
     },
 
-    //==========================================================
-    //Fonctions concernant les Emits et le reste
-    //==========================================================
-    modify_profil(data)
+    async search_drug(data)
     {
-      //const res = await axios.update('api/update_person', data);
-      //TODO Temp
-      this.sdatas.mutuelle = data.mutuelle;
+      const res = await axios.get('api/drugs/'+data);
+      this.liste_drug_search = res.data.datas;
     },
+
+    async modify_profil(data)
+    {
+      const res = await axios.put('api/modifMutuelle', data);
+      if(res.data.changed == true){
+        this.sdatas.mutual_name = res.mutual_name;
+        this.mutual_change_state = "changed";
+      }
+      else{
+        this.mutual_change_state = "true";
+      }
+    },
+    
+    async sendprescription(data){
+      const res = await axios.post('api/sendPrescription', data);
+      console.log(res.data);
+      if(res.data.sent == true){
+        this.reloadData();
+      }
+      else{
+        console.log("Je suis dans le vue application, c'est pas envoyé l'ordonnance");
+      }
+    },
+
+    //==========================================================
+    //Fonctions concernant les Emits, actions en local et le reste
+    //==========================================================
+    
     getPrescriptions(data)
     {
       this.patientID = data;
     },
-    sendPrescription(data){
-      
-    },
+    
     infos_patient(data)
     {
       this.index_history_patient = data.index;
@@ -293,6 +332,15 @@ var app = new Vue( {
     tutor_true(){
       this.tutor_bool = true;
     },
+    status_patient(){
+      this.status = 0;
+    },
+    status_doctor(){
+      this.status = 1;
+    },
+    status_pharmacist(){
+      this.status = 2;
+    },
     save_index_ordonnance(data){
       this.index_ordonnance = data.index;
     },
@@ -300,6 +348,15 @@ var app = new Vue( {
       this.prescription_for_display = data.prescription;
       this.prescription_for_display.infos_patient = data.infos_patient;
       this.$router.push("/Ordonnance");
+    },
+    save_ordonnance_doctor(data){
+      this.prescription_for_display = data.prescription;
+      this.prescription_for_display.infos_patient = data.infos_patient;
+      this.prescription_for_display.infos_prescription.doctor_infos = data.doctor_infos;
+      this.$router.push("/Ordonnance");
+    },
+    gotoprofil(){
+      this.button_actionne = true;
     },
     OrdonnanceTutor()
     {

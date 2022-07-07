@@ -28,9 +28,20 @@
         <p v-if="d.infos_prescription.reported == true">  Raisons du signalement : {{d.infos_prescription.report_note}}</p>
       </div>
 
-      <div class="buttonRedirect">
-        <button @click="redirectionToOrdonnance()">Voir le détail</button> 
-      </div>
+
+  <br>
+
+  <div class="prescription_info" v-for="(d, index) in filteredData" :key="index"> 
+    <div class="detail">
+      <h2>Fait le {{changeDate(d.infos_prescription.creation_date)}} - expire le {{changeDate(d.infos_prescription.expiration_date)}}</h2>
+      <p><strong>Etat ordonnance : {{statePres(d.infos_prescription.validity)}}</strong></p>
+      <p>Nombre de réutilisations : {{d.infos_prescription.frequency_of_reuse}}</p>
+      <p>Ordonnance signalée : {{reportedPres(d.infos_prescription.reported)}}</p>
+      <p  v-if="d.infos_prescription.reported == true">  Raisons du signalement : {{d.infos_prescription.report_note}}</p>
+    </div>
+
+    <div class="buttonRedirect">
+        <button @click="redirectionToOrdonnance(index)">Voir le détail</button> 
     </div>
     <br>
 
@@ -40,7 +51,10 @@
 <script>
 module.exports = {
   name: "History_patient",
- props: {
+  components: {
+    Ordonnance,
+  },
+  props: {
     sdatas: Object,
     mdatas: {
       type: Array,
@@ -69,8 +83,9 @@ module.exports = {
       this.$router.push("/Doctor_home");
     },
 
-    redirectionToOrdonnance: function () {
-      this.$router.push("/Ordonnance");
+    redirectionToOrdonnance: function (index) {
+      this.$emit('save_ordonnance_doctor', {prescription : this.mdatas[this.index_history_patient].prescriptions[index], infos_patient : {first_name : this.mdatas[this.index_history_patient].infos_patient.first_name, last_name : this.mdatas[this.index_history_patient].infos_patient.last_name}, doctor_infos : this.sdatas});
+      this.$emit('status_doctor');
     },
 
     redirectToPac: function () {

@@ -40,5 +40,3 @@ SELECT * from speciality; /*bon*/
 -- DROP TABLE IF EXISTS professional;
 -- DROP TABLE IF EXISTS service;
 -- DROP TABLE IF EXISTS speciality;
-
-select first_name, last_name, social_security_number, birth_date from Person join patient using (Id_Person) where first_name like "%" and last_name like "O%";
