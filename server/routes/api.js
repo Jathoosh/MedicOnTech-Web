@@ -538,8 +538,8 @@ router.get('/pharmacist/:prescription/:check_number', (req,res) => {
                 address : {
                   //door_number, number, road, zip_code, town, country
                   door_number : row.door_number,
-                  number : row.number,
-                  road : row.road,
+                  road_number : row.number,
+                  road_name : row.road,
                   zip_code : row.zip_code,
                   town : row.town,
                   country : row.country
@@ -550,8 +550,8 @@ router.get('/pharmacist/:prescription/:check_number', (req,res) => {
             toreturn.drugs = [];
             toreturn.services = [];
             toreturn.infos_patient = {
-              first_patient : row.first_name,
-              last_patient : row.last_name,
+              first_name : row.first_name,
+              last_name : row.last_name,
             }
           }
           toreturn.drugs.push({

@@ -10,7 +10,7 @@
         <div class="ordonnance" id="ordonnanceForPrint">
             <div>
 
-                <div class="headerOrdonnance" v-if="status==0">
+                <div class="headerOrdonnance" v-if="status==0 || status==2">
                     <!-- Information du Docteur - Table Id_Doctor & Person-->
                     <p id="doctorContainer">
                         Dr. {{ prescription_for_display.infos_prescription.doctor_infos.first_name }} {{ prescription_for_display.infos_prescription.doctor_infos.last_name }}<br>
@@ -117,7 +117,7 @@
 
 
         
-        <button type="button" id="imprimer" @click="print()">Imprimer l'ordonnance</button><hr>   
+        <button v-if="status==0 || status==1" type="button" id="imprimer" @click="print()">Imprimer l'ordonnance</button><hr>   
     </div>
 </template>
 

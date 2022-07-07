@@ -13,7 +13,9 @@
         <!-- Affichage de l'ordonnance seulement si la fonction scanPrescription renvoit true -->
         <div v-if="scanprescription_bool == true">
 
-            <ordonnance :prescription_for_display="prescription_for_display"></ordonnance>
+            <ordonnance 
+            :status="status"
+            :prescription_for_display="prescription_for_display"></ordonnance>
 
             <div class="buttonValider">
                 <button @click="validerOrdonnance" type="submit">Valider ordonnance</button>
@@ -69,6 +71,14 @@ module.exports = {
                 return false;
             }
         },
+        status: 
+        {
+            type: Number,
+            required: true,
+            default: function () {
+                return 0;
+            }
+        },
     },
     data(){
         return{
@@ -85,6 +95,7 @@ module.exports = {
             if(this.checkEAN13Digits(this.Id_Ordonnance.toString()))
             {
             this.$emit('scanprescription', {prescription : this.Id_Ordonnance, check_security : this.check_security});
+            this.$emit('status_pharmacist');
             }
             else
             {
@@ -105,13 +116,12 @@ module.exports = {
             let sum2 = 0;
             for (let i = 0; i<str.length-1;i++){
                 if (i%2 == 0){
-                    sum1 = sum1 + sum1
+                    sum1 = sum1 + str[i]
                 }
                 else{
-                    sum2 = sum2 + sum2
+                    sum2 = sum2 + str[i]
                 }
             }
-            console.log(((sum1*3 + sum2)%10 == 0)? 0 : (10 - (sum1*3 + sum2)%10));
             return str[str.length-1] == ((sum1*3 + sum2)%10 == 0)? 0 : (10 - (sum1*3 + sum2)%10)
         } 
     },
