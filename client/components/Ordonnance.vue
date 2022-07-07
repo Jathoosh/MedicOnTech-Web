@@ -80,7 +80,6 @@
                     <p v-for="(ligne,index_drug) in prescription_for_display.drugs" :key="index_drug">
                     - {{ ligne.drug_name }}
                     </p><br>
-                    <!-- - {{ ligne.drug_quantity }} ???-->
                     
                     <!-- Information Liste de services - Table Id_Prescription & Service-->
                     <h5>Services</h5>
@@ -173,13 +172,6 @@ module.exports = {
         status: Number,
     },
     mounted() {
-        //Parcourir la liste des Prescription d'un Patient et récupérer les données de la Presciption
-        //Afficher les données de la Prescription (tables Prescription, Drug et Service) dans la vue 
-        //Afficher les données du Docteur (table Person et Speciality) dans la vue en haut à gauche de l'ordonnance
-        //Afficher les données du Lieu de travail (table Doctor) dans la vue en hat à droite de l'ordonnance
-
-        //Pour Avoir une impression d'ordenance propre
-        //beforePrint
         window.addEventListener('beforeprint', function () {
             const header = document.getElementById('header');
             const footer = document.getElementById('footer');

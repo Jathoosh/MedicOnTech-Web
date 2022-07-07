@@ -133,8 +133,6 @@ module.exports = {
         } 
     },
     mounted(){
-        // afficher l'ordonnance du patient en fonction de son id
-        // pour ce faire, il faut récupérer l'id_prescription du patient associé de la table patient
     }
 }
 </script>

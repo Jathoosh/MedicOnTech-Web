@@ -167,9 +167,6 @@ module.exports = {
         tutor_bool: Boolean,
     },
     mounted() {
-        //Afficher la liste des ordonnances en fonction du bon patient
-        //Soit le Tuteur 
-        //Soit la bonne personne à sa charge (en fonction du bouton appuyé dans PatientInCharge)
     }
 };
 </script>
