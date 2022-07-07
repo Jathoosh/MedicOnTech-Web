@@ -13,7 +13,9 @@
         <!-- Affichage de l'ordonnance seulement si la fonction scanPrescription renvoit true -->
         <div v-if="scanprescription_bool == true">
 
-            <ordonnance :prescription_for_display="prescription_for_display"></ordonnance>
+            <ordonnance 
+            :status="status"
+            :prescription_for_display="prescription_for_display"></ordonnance>
 
             <div class="buttonValider">
                 <button @click="validerOrdonnance" type="submit">Valider ordonnance</button>
@@ -23,7 +25,7 @@
             <h4> Signalement </h4> 
 
             <form> 
-                <textarea class="form-control" placeholder="Cause du signalement, ... ">  </textarea> 
+                <textarea class="form-control" placeholder="Cause du signalement, ... " v-model="signalement_text">  </textarea> 
             </form>
 
             <div class="buttonSignaler"> 
@@ -69,11 +71,20 @@ module.exports = {
                 return false;
             }
         },
+        status: 
+        {
+            type: Number,
+            required: true,
+            default: function () {
+                return 0;
+            }
+        },
     },
     data(){
         return{
             Id_Ordonnance: '',
             check_security: '',
+            signalement_text: '',
         }
     },
     methods: {
@@ -85,6 +96,7 @@ module.exports = {
             if(this.checkEAN13Digits(this.Id_Ordonnance.toString()))
             {
             this.$emit('scanprescription', {prescription : this.Id_Ordonnance, check_security : this.check_security});
+            this.$emit('status_pharmacist');
             }
             else
             {
@@ -92,32 +104,35 @@ module.exports = {
             }
         },
         validerOrdonnance: function(){
-            //this.$emit("ordonannce validée", this.id_prescription);
-            alert("Ordonnance validée");
+            //Décrémenter de 1 number_of_reuse et si number_of_reuse == 0, passer validity à 0
+            if (this.prescription_for_display.infos_prescription.used === 1 || this.prescription_for_display.infos_prescription.validity === 0)
+            {
+                alert("L'ordonnance est déjà validée");
+            }
+            else
+            {
+                this.$emit('validate_prescription', {Id_Prescription:this.prescription_for_display.infos_prescription.Id_Prescription, check_security: this.check_security});
+            }
         },
         signalerOrdonnance: function(){
-            var idOrdonnanceSignalee = document.getElementById("signaler").value;
-            //sera à modifier pour qu'on puisse récupérer l'id de l'ordonnance => backend
-            alert(idOrdonnanceSignalee);
+            this.$emit("ordonnance_signalee", {Id_Prescription:this.prescription_for_display.infos_prescription.Id_Prescription, check_security: this.check_security,report_note : this.signalement_text});
+            alert("Cette ordonnance a été signalée");
         },
         checkEAN13Digits(str){ //Le str est le code barre en nombre, faites attention à ce qu'il n'y ait que des nombres
             let sum1 = 0;
             let sum2 = 0;
             for (let i = 0; i<str.length-1;i++){
                 if (i%2 == 0){
-                    sum1 = sum1 + sum1
+                    sum1 = sum1 + str[i]
                 }
                 else{
-                    sum2 = sum2 + sum2
+                    sum2 = sum2 + str[i]
                 }
             }
-            console.log(((sum1*3 + sum2)%10 == 0)? 0 : (10 - (sum1*3 + sum2)%10));
             return str[str.length-1] == ((sum1*3 + sum2)%10 == 0)? 0 : (10 - (sum1*3 + sum2)%10)
         } 
     },
     mounted(){
-        // afficher l'ordonnance du patient en fonction de son id
-        // pour ce faire, il faut récupérer l'id_prescription du patient associé de la table patient
     }
 }
 </script>

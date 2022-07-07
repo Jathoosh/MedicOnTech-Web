@@ -10,7 +10,7 @@
         <div class="ordonnance" id="ordonnanceForPrint">
             <div>
 
-                <div class="headerOrdonnance" v-if="status==0">
+                <div class="headerOrdonnance" v-if="status==0 || status==2">
                     <!-- Information du Docteur - Table Id_Doctor & Person-->
                     <p id="doctorContainer">
                         Dr. {{ prescription_for_display.infos_prescription.doctor_infos.first_name }} {{ prescription_for_display.infos_prescription.doctor_infos.last_name }}<br>
@@ -80,7 +80,6 @@
                     <p v-for="(ligne,index_drug) in prescription_for_display.drugs" :key="index_drug">
                     - {{ ligne.drug_name }}
                     </p><br>
-                    <!-- - {{ ligne.drug_quantity }} ???-->
                     
                     <!-- Information Liste de services - Table Id_Prescription & Service-->
                     <h5>Services</h5>
@@ -117,7 +116,7 @@
 
 
         
-        <button type="button" id="imprimer" @click="print()">Imprimer l'ordonnance</button><hr>   
+        <button v-if="status==0 || status==1" type="button" id="imprimer" @click="print()">Imprimer l'ordonnance</button><hr>   
     </div>
 </template>
 
@@ -173,13 +172,6 @@ module.exports = {
         status: Number,
     },
     mounted() {
-        //Parcourir la liste des Prescription d'un Patient et récupérer les données de la Presciption
-        //Afficher les données de la Prescription (tables Prescription, Drug et Service) dans la vue 
-        //Afficher les données du Docteur (table Person et Speciality) dans la vue en haut à gauche de l'ordonnance
-        //Afficher les données du Lieu de travail (table Doctor) dans la vue en hat à droite de l'ordonnance
-
-        //Pour Avoir une impression d'ordenance propre
-        //beforePrint
         window.addEventListener('beforeprint', function () {
             const header = document.getElementById('header');
             const footer = document.getElementById('footer');
@@ -215,7 +207,7 @@ module.exports = {
         });
         //failToPrint
         window.addEventListener('failtoprint', function () {
-            console.log('failToPrint');
+            alert("Veuillez réessayer");
         });
     },
 
