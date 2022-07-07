@@ -773,6 +773,18 @@ router.get("/motapp/doctor/:id", (req, res) => {
     });
 });
 
+router.get("/motapp/charge/:id", (req, res) => {
+  id = req.params.id;
+  sequelize
+    .query(
+      `SELECT * from Patient Join person Using (Id_Person) where Id_Tutor = (Select Id_Person from patient where Id_Patient = ${id})`
+    )
+    .then((result) => {
+      console.log(result[0]);
+      res.status(200).json({ result: result[0] });
+    });
+});
+
 router.get("/motapp/getdeviceid", (req, res) => { //Give first time unique id for the device
   sequelize.query("SELECT Id_Device FROM patient ORDER BY Id_Device DESC LIMIT 1").then((result) => {
     //add 1 to the last id
@@ -826,5 +838,6 @@ router.post("/motapp/checkconnexion", (req, res) => { // Pour le fetch de l'appl
     }
   });
 })
+
 
 module.exports = router;
