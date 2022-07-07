@@ -7,7 +7,7 @@
     
     <div>
       <p id="texte_presentation_equipe"> 
-        À l’apparition d'un appel d’offre, MedicOnTech a vu le jour pour répondre à ce besoin. 
+        À l’apparition d'un appel d’offres, MedicOnTech a vu le jour pour répondre à ce besoin. 
         Groupe d’ingénieur du numérique en devenir, comportant 6 membres de 1ère année du cycle ingénieur (L3) se spécialisant en IT, nous nous sommes réunis pour développer notre solution alliant les domaines médicales et technologiques.
       </p>
     </div>
@@ -61,7 +61,7 @@ module.exports = {
 }
 </script>
 
-<style>
+<style scoped>
   
   .container{
     width: 100%;

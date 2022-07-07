@@ -1,42 +1,74 @@
 <template>
     <div>
         <div class="topContainer">
-            <h3>Bonjour {{mdatas}} !</h3>
-            <button @click="goToPatientInCharge" id="buttons">Personnes à charge</button>
+            <h3>Bonjour {{sdatas.first_name}} {{sdatas.last_name}} !</h3>
         </div>
 
-        <div id="container">
-        <input
-            class="SearchBar"
-            type="search"
-            v-model="search"
-            placeholder="Rechercher une ordonnance"
-            size="28"
-        />
-        </div>
-
-        <h3>Filtres</h3>
-        <hr/>
+        <h4>Filtres</h4>
+        <hr>
         <div class="filtre">
-        
             <h4>Date</h4>
-            <input class="filter_date" type="date" placeholder="Date" size="28" />
-            <h4>Médicaments</h4>
-            <input class="filter_drug" type="text" placeholder="Medicament" size="15" />
-
-            <h4>Quantité</h4>
-
-            <select class="filter_select">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            </select>
-
+            <input class="filter_date" type="date" v-model="input_date" placeholder="Date" size="28" />
         </div>
 
-<!-- ICI CODE ADIEU -->
+        <div v-if="tutor_bool==true">
+            <div id="global" v-for="(ligne, index) in filteredDataTutor" :key="index">
+                <div class="prescriptionCard">
+                    <div>
+                        <h2>
+                            Par Dr. {{ ligne.infos_prescription.doctor_infos.first_name }} {{ ligne.infos_prescription.doctor_infos.last_name }}
+                            - Pour {{ sdatas.first_name }} {{ sdatas.last_name }}
+                        </h2>                       
+                        <h4> 
+                            Fait le {{ changeDate(ligne.infos_prescription.creation_date) }}
+                            - Expire le {{ changeDate(ligne.infos_prescription.expiration_date) }} <br>
+                        </h4>
+
+                        <div class="statePrescription">
+                            <p v-if="ligne.infos_prescription.used==true">Ordonnance utilisée le {{ changeDate(ligne.infos_prescription.date_of_use) }}.</p>
+                            <p v-if="ligne.infos_prescription.validity==false">Oronnance invalide.</p>
+                            <p v-if="ligne.infos_prescription.reported==true">
+                                Ordonnance signalée :<br>
+                                {{ligne.infos_prescription.report_note}}
+                            </p>  
+                        </div>
+
+                        <!-- <p id="ID"> ID : {{ generateBarCodeNumber(ligne.infos_prescription.Id_Prescription) }}</p> -->
+                    </div> 
+                    <button id="detail" @click="toOrdonnance(index)">Voir le détail</button>
+                </div>
+            </div>
+        </div>
+
+        <div v-else>
+            <div id="global" v-for="(ligne, index) in filteredData" :key="index">
+                <div class="prescriptionCard">
+                    <div>
+                        <h2>
+                            Par Dr. {{ ligne.infos_prescription.doctor_infos.first_name }} {{ ligne.infos_prescription.doctor_infos.last_name }}
+                            - Pour {{ mdatas[index_pac].infos_pac.first_name }} {{ mdatas[index_pac].infos_pac.last_name }}
+                        </h2>
+                        <h4>
+                            Fait le {{ changeDate(ligne.infos_prescription.creation_date) }}
+                            - Expire le {{ changeDate(ligne.infos_prescription.expiration_date) }}
+                        </h4>
+                        <div class="statePrescription">
+                            <p v-if="ligne.infos_prescription.used==true">Ordonnance utilisée le {{ changeDate(ligne.infos_prescription.date_of_use) }}.</p>
+                            <p v-if="ligne.infos_prescription.validity==false">Oronnance invalide.</p>
+                            <p v-if="ligne.infos_prescription.reported==true">
+                                Ordonnance signalée.<br>
+                                {{ligne.infos_prescription.report_note}}
+                            </p>  
+                        </div>
+
+                        <!-- <p id="ID"> ID : {{ ligne.infos_prescription.Id_Prescription }}</p> -->
+                    </div> 
+
+                    <button id="detail" @click="toOrdonnance(index)">Voir le détail</button>
+                </div>
+            </div>
+
+        </div>
     </div>
 </template>
 
@@ -45,181 +77,66 @@ module.exports = {
   name: "PatientHome",
     data() {
         return {
-            // tutor: {
-            //     first_name: 'Thomas',
-            //     last_name: 'DUPONT',
-            //     phone: '06-12-34-56-78',
-            //     email_address: 'testPatient.adresse@gmail.com',
-            //     listOrdonnance: [{
-            //         Id_Prescription: '0362819304',
-            //         creation_date: '01/01/2020',
-            //         date_of_use: '12/04/2020',
-            //         number_of_reuses: '1',
-            //         used: 'true',
-            //         validity: 'true',
-            //         note: 'Le médicament est bon',
-            //         reported: 'true',
-            //         listDrug: [
-            //             {drug_name: 'Medoc1',
-            //             quantity: '1'},
-            //             {drug_name: 'Medoc2',
-            //             quantity: '2'},
-            //         ],
-            //         listService: [
-            //             {service_name: 'Service1',
-            //             quantity: '1'},
-            //             {service_name: 'Service2',
-            //             quantity: '2'},
-            //         ],
-            //     },],
-            // },
-            // doctor: {
-            //     first_name: 'CHEVALIER',
-            //     last_name: 'Jean',
-            //     phone: '06-50-30-01-59',
-            //     email_address: 'testDoctor.adresse@gmail.com',
-            //     work_place: 'Hôpital de la ville',
-            //     work_name: 'Rue de la ville',
-            //     work_phone: '06-50-30-01-95',
-            //     work_email_address: 'hopital.adresse@gmail.com'},
-            // speciality: {
-            //     speciality_name: 'Dentiste',
-            // },
-            // listPatient: [
-            // {
-            //     first_name: 'ThomasBB',
-            //     last_name: 'DUPONT',
-            //     phone: '06-12-34-56-66',
-            //     email_address: 'testPatientInCharge.adresse@gmail.com',
-            //     listOrdonnance: [{
-            //         Id_Prescription: '0362819304',
-            //         creation_date: '01/01/2020',
-            //         date_of_use: '12/04/2020',
-            //         number_of_reuses: '1',
-            //         used: 'true',
-            //         validity: 'true',
-            //         note: 'Le médicament est bon',
-            //         reported: 'true',
-            //         listDrug: [
-            //             {drug_name: 'Medoc1',
-            //             quantity: '1'},
-            //             {drug_name: 'Medoc2',
-            //             quantity: '2'},
-            //         ],
-            //         listService: [
-            //             {service_name: 'Service1',
-            //             quantity: '1'},
-            //             {service_name: 'Service2',
-            //             quantity: '2'},
-            //         ],
-            //     },
-            //     {
-            //         Id_Prescription: '0274849139',
-            //         creation_date: '11/01/2020',
-            //         date_of_use: '23/05/2020',
-            //         number_of_reuses: '2',
-            //         used: 'false',
-            //         validity: 'false',
-            //         note: 'La séance de kinésithérapie est nécessaire',
-            //         reported: 'false',
-            //         listDrug: [
-            //             {drug_name: 'Medoc3',
-            //             quantity: '3'},
-            //             {drug_name: 'Medoc4',
-            //             quantity: '4'}
-            //         ],
-            //         listService: [
-            //             {service_name: 'Service3',
-            //             quantity: '3'},
-            //             {service_name: 'Service4',
-            //             quantity: '4'},
-            //         ],
-
-            //     }],
-            // },  
-            // {
-            //     first_name: 'ThomasBBB',
-            //     last_name: 'DUPONT',
-            //     phone: '06-12-34-56-33',
-            //     email_address: 'testPatientInCharge2.adresse@gmail.com',
-            //     listOrdonnance: [{
-            //         Id_Prescription: '0362819304',
-            //         creation_date: '01/01/2020',
-            //         date_of_use: '12/04/2020',
-            //         number_of_reuses: '1',
-            //         used: 'true',
-            //         validity: 'true',
-            //         note: 'Le médicament est bon',
-            //         reported: 'true',
-            //         listDrug: [
-            //             {drug_name: 'Medoc1',
-            //             quantity: '1'},
-            //             {drug_name: 'Medoc2',
-            //             quantity: '2'},
-            //         ],
-            //         listService: [
-            //             {service_name: 'Service11',
-            //             quantity: '1'},
-            //             {service_name: 'Service22',
-            //             quantity: '2'},
-            //         ],
-            //     },
-            //     {
-            //         Id_Prescription: '0274849139',
-            //         creation_date: '11/01/2020',
-            //         date_of_use: '23/05/2020',
-            //         number_of_reuses: '2',
-            //         used: 'false',
-            //         validity: 'false',
-            //         note: 'La séance de kinésithérapie est nécessaire',
-            //         reported: 'false',
-            //         listDrug: [
-            //             {drug_name: 'Medoc33',
-            //             quantity: '3'},
-            //             {drug_name: 'Medoc44',
-            //             quantity: '4'}
-            //         ],
-            //         listService: [
-            //             {service_name: 'Service33',
-            //             quantity: '3'},
-            //             {service_name: 'Service44',
-            //             quantity: '4'},
-            //         ],
-
-            //     }],
-            // },
-            // ],
             
-            search: "",
+            input_date: "",
             
         }
     },
     methods: {
-        toOrdonnance: function () {
-        this.$router.push("/Ordonnance");
-        },
-        goToPatientInCharge: function () {
-        this.$router.push("/PatientInCharge");
-        },
-    },
-    computed: {
-        filteredPatients() {
-        return this.patient.filter((patient) => {
-            return (
-            patient.last_name.toLowerCase().indexOf(this.search.toLowerCase()) >
-            -1
-            );
-        });
-        },
-    },
-    props:{
-        index_pac: {
-            type: Number,
-            required: true,
-            default: function () {
-                return 0;
+        toOrdonnance: function (index) {
+            if (this.tutor_bool==true) {
+                this.$emit('save_ordonnance', {prescription : this.sdatas_comp[index], infos_patient : {first_name : this.sdatas.first_name, last_name : this.sdatas.last_name}});
+                this.$emit('status_patient');
+            }
+            else {
+                this.$emit('save_ordonnance', {prescription : this.mdatas[this.index_pac].prescriptions_pac[index], infos_patient : {first_name : this.mdatas[this.index_pac].infos_pac.first_name, last_name : this.mdatas[this.index_pac].infos_pac.last_name}});
+                this.$emit('status_patient');
             }
         },
+        generateBarCodeNumber(Id_Prescription){
+            var barcode = Id_Prescription.toString();
+            while (barcode.length < 12) {
+                barcode = "0" + barcode;
+            }
+            return barcode; 
+        },
+        changeDate(date){
+            dateSplit = date.split('-');
+            return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
+        }
+    },
+    computed: {
+    filteredDataTutor() {
+        var select_date = this.input_date;
+        var date = new Date(select_date).getTime();
+
+        if(select_date == ""){
+            return this.sdatas_comp;
+        }
+        else{
+            return this.sdatas_comp.filter(function (ligne) {
+            return new Date(ligne.infos_prescription.creation_date).getTime() >= date;
+            });
+        }
+      
+    },
+    filteredData() {
+        var select_date = this.input_date;
+        var date = new Date(select_date).getTime();
+
+        if(select_date == ""){
+            return this.mdatas[this.index_pac].prescriptions_pac;
+        }
+        else{
+            return this.mdatas[this.index_pac].prescriptions_pac.filter(function (ligne) {
+            return new Date(ligne.infos_prescription.creation_date).getTime() >= date;
+            });
+        }
+      
+    }
+
+    },
+    props:{
         mdatas: {
             type: Array,
             required: true,
@@ -231,7 +148,21 @@ module.exports = {
             type: Object,
             required: true,
             default: function () {
+                return {};
+            }
+        },
+        sdatas_comp: {
+            type: Array,
+            required: true,
+            default: function () {
                 return [];
+            }
+        },
+        index_pac: {
+            type: Number,
+            required: true,
+            default: function () {
+                return 0;
             }
         },
         tutor_bool: Boolean,
@@ -261,7 +192,6 @@ module.exports = {
         margin-left: auto;
         margin-right: auto;
         padding: 20px;
-        padding-bottom: 40px;
         margin-top: 7vh;
         margin-bottom: 25px;
     }
@@ -272,9 +202,8 @@ module.exports = {
     }
     .filter_date {
         max-height: 20px;
-        margin-top:15px;
         margin-left: 15px;
-        margin-right: 15px;
+        align-self: center;
     }
 
     .filter_drug {
@@ -310,7 +239,7 @@ module.exports = {
         margin-left: 5px;
         margin-right: 5px;
         border-radius: 7px;
-        border: 0.4px solid rgb(49, 49, 49);
+        border: none;
     }
 
     button:hover {
@@ -332,9 +261,8 @@ module.exports = {
     }
 
     .statePrescription {
-        margin: 10px;
+        margin-top: 20px;
         margin-left: 35px;
-
     }
 
     #ID{

@@ -15,8 +15,10 @@
                     <br>
                     <input class="inputName" v-model="newPatient_lastname" type="text" placeholder="Nom" required/>
                     <input class="inputName" v-model="newPatient_firstname" type="text" placeholder="Prénom" required/>
+                    <button @click="searchpatient()">Rechercher</button>
+                    <listpatient @fillinput = "fillinput" :liste_patient_search = "liste_patient_search" v-if="print_list_patient == true"> </listpatient>
                 </div>
-            
+
                 <div class="date_container">
                     <div style="margin-right:5px">
                         <p>Le </p>
@@ -28,17 +30,27 @@
             </div>
             <br>
             <div class="input_medicament_info">
-                <label style="font-size:30px; margin-bottom:5px"><strong>Ajouter un médicament</strong></label>
-                <!--input pour ajouter le médicament-->
-                <form v-on:submit.prevent="addDrug">
-                    <input type="text" v-model="newDrug_name" placeholder="Nom du médicament"/>
-                    <input type="number" v-model="newDrug_quantity" placeholder="Quantité" required />
-                    <br>
-                    <br>
-                    <input id="notes_input" type="text" v-model="newDrug_notes" placeholder="Notes"/>
-                    <br>
-                    <button>Ajouter</button>
-                </form>
+                <div id="container_drug">
+                    <!--input pour ajouter le médicament-->
+                    <form id="form_add" v-on:submit.prevent="addDrug">
+                        <label style="font-size:30px; margin-bottom:5px"><strong>Ajouter un médicament</strong></label>
+                        <br>
+                        <input type="text" v-model="newDrug_name" placeholder="Nom du médicament"/>
+                        <button type="button" @click="searchdrug()">Rechercher un médicament</button>
+                        
+                        <br>
+                        <br>
+                        <div>
+                            <input type="number" min="1" v-model="newDrug_quantity" placeholder="Quantité" required />
+                            <input id="notes_input" type="text" v-model="newDrug_notes" placeholder="Notes"/>
+                        </div>
+                        <br>
+                        
+                        <button type="submit">Ajouter</button>
+                    </form>
+                
+                    <listdrug id="drug_table" @fillinputdrug = "fillinputdrug" :liste_drug_search = "liste_drug_search" v-if="print_list_drug == true"></listdrug>
+                </div>
                 <br>
                 <!--Affichage de la liste de médicaments ajoutée-->
                 <table class="table table-striped table-bordered">
@@ -77,17 +89,36 @@
             <br>
             <br>
             <div class="send" style="text-align:center; ">
-             <button type="button" style="width:40%;" @click="sendPrescription()">Envoyer</button>
-             <p v-if="sendMessage === true">Ordonannance envoyée</p>
+                <button type="button" style="width:40%;" @click="sendPrescription()">Envoyer</button>
+                <p id="message" v-if="sendMessage === true">Ordonnance envoyée. Redirection dans 2s.</p>
+                <p id="message_error" v-if="boolerror == true">{{message_error}}</p>
             </div>
             </form>
+           
         </div>
     </div>
 </template>
 
 <script>
+
 module.exports = {
     name: 'Edit_prescription',
+    components: {
+        listpatient:listpatient,
+        listdrug: listdrug,
+    },
+    props: {
+        liste_patient_search: {
+            type: Array,
+            required: true,
+            default: []
+        },
+        liste_drug_search: {
+            type: Array,
+            required: true,
+            default: []
+        },
+    },
     data() { 
         return {
             reusable : false,
@@ -120,7 +151,10 @@ module.exports = {
                 reuse: "",
             },
             sendMessage: false, // message de confirmation d'envoi de l'ordonnance
-
+            print_list_patient: false, // affichage de la liste des patients
+            print_list_drug: false, // affichage de la liste des médicaments
+            message_error : "",
+            boolerror : false, 
         }
     },
     methods: {
@@ -141,42 +175,77 @@ module.exports = {
         }, 
         finishEditQuantity(index){
             this.drugs[index].hideQuantity = true;
-            console.log("non");
         },
         back(){
             this.$router.push('/Doctor_home');
         },
         sendPrescription(){
-            //A PLACER DANS LE INDEX.HTML ET LE VUE APPLICATION
-            // TODO : faire des conditions de verif des champs : nom, prenom, et au moins un médicament dans le tableau drugs
- 
-            this.newPrescription.date = this.myDate;
-            this.newPrescription.drugs = this.drugs;
-            this.newPrescription.notes = this.notes;
-            this.newPrescription.reusable = this.reusable;
-            this.newPrescription.reuse = this.reuse;
-            this.newPrescription.patient_lastname = this.newPatient_lastname;
-            this.newPrescription.patient_firstname = this.newPatient_firstname;
-            this.sendMessage = true;
-            
-            this.$emit('sendPrescription', this.newPrescription);
-            this.$router.push('/Doctor_home');
-            
-            console.log("VOILA CE QUE TU RECOIS : ",this.newPrescription);
+            if(this.newPatient_lastname == "" && this.newPatient_firstname == "" ){
+                this.message_error = "Veuillez entrer un nom et un prénom";
+                this.boolerror = true;
+            }
+            else if (this.drugs.length == 0) {
+                this.message_error = "Veuillez entrer au moins un médicament";
+                this.boolerror = true;
+            }
+            else {
+                this.newPrescription.date = this.myDate;
+                this.newPrescription.drugs = this.drugs;
+                this.newPrescription.notes = this.notes;
+                this.newPrescription.reusable = this.reusable;
+                this.newPrescription.reuse = this.reuse;
+                this.newPrescription.patient_lastname = this.newPatient_lastname;
+                this.newPrescription.patient_firstname = this.newPatient_firstname;
+                this.sendMessage = true;
+                this.boolerror = false;
+                this.$emit('sendprescription', this.newPrescription);
+                // setTimeout(() => {
+                //     this.$router.push('/Doctor_home');
+                // }, 2000);
+            }
         },
+        searchpatient(){
+           
+            if(this.newPatient_lastname != "" || this.newPatient_firstname != ""){
+                this.$emit('search_patient', {last_name:(this.newPatient_lastname == "" ? "=" : this.newPatient_lastname), first_name:(this.newPatient_firstname  == "" ? "=" : this.newPatient_firstname)});
+                this.print_list_patient = true;
+            }
+            else{
+                alert("Veuillez remplir les champs nom et/ou prénom");
+            }
+        },
+        searchdrug(){
+            if(this.newDrug_name != ""){
+                this.$emit('search_drug', this.newDrug_name);
+                this.print_list_drug = true;
+            }
+            else{
+                alert("Veuillez remplir le champ nom du médicament");
+            }
+        },
+
+        fillinput(patient){ // remplir les champs de saisie avec les données du patient sélectionné
+            this.newPatient_lastname = patient[0].last_name;
+            this.newPatient_firstname = patient[0].first_name;
+            this.print_list_patient = false;
+        },
+        fillinputdrug(drug){ // remplir les champs de saisie avec les données du médicament sélectionné
+            this.newDrug_name = drug;
+            this.print_list_drug = false;
+        }
     }, 
     created: function(){
                 this.drugs = [];
                 this.newDrug_name = "";
                 this.newDrug_quantity = "";
                 this.newDrug_notes = "";
-                }
+                },
     
 
 }
 </script>
 
-<style>
+<style scoped>
 .head {
     display: flex;
     justify-content: space-between;
@@ -192,7 +261,7 @@ module.exports = {
     margin-right: auto;
     padding: 20px;
     padding-bottom: 40px;
-    margin-top: 7vh;
+    margin-top: 4vh;
     margin-bottom: 25px;
     border-radius: 20px;
 }
@@ -279,8 +348,29 @@ width: 20%;
 }
 
 #notes_input {
-    width:29%;
-    height:60px;
+    width:300px;
+
     margin-bottom:20px;
+}
+#container_drug {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+
+}
+#form_add {
+    width: 100%;
+}
+#drug_table {
+    width: 100%;
+}
+
+#message{
+    margin-top: 20px;
+}
+#message_error{
+    color: red;
+    padding-top: 15px;
 }
 </style>

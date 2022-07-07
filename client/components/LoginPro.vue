@@ -3,7 +3,7 @@
         <!--Login form-->
         <div id="rectangle">
             <div class="title">
-                <h1>Connexion Alternatif</h1>
+                <h1>Connexion Alternative</h1>
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Adresse Email</label>

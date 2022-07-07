@@ -8,17 +8,12 @@
         <button @click="retourPagePrincipale" class="btn btn-outline-dark ml-2" type="submit">Retour</button>
       </div>
     </div>
-    
-    
 
   <div class="container">
     <div class = "card_patient">
       <p id = "informations" class="rectangle"> Vos informations </p>
-      <div class="content_container">
-        <!-- importer logo de la personne connectée -->
-        
-        
-        <div class="d-flex flex-row">
+      <div class="content_container">       
+        <div>
           <p class="image_profil text-center" id="nom_profil"> {{ initialesPatient() }} </p>
         </div>
         
@@ -28,24 +23,24 @@
           <tbody>
               <tr>
                 <th scope="row">Nom de famille</th>
-                <td>{{patient.last_name}}</td>
+                <td>{{sdatas.last_name}}</td>
               </tr>
 
             <tr>
               <th scope="row">Prénom</th>
-              <td>{{patient.first_name}}</td>
+              <td>{{sdatas.first_name}}</td>
             </tr>
             <tr>
               <th scope="row">Date de naissance</th>
-              <td>{{patient.birth_date}}</td>
+              <td>{{sdatas.birth_date}}</td>
             </tr>
             <tr>
               <th scope="row">Adresse mail</th>
-              <td><input v-model="patient.email_adress"></td>
+              <td>{{sdatas.mail}}</td>
             </tr>
             <tr>
               <th scope="row">Mutuelle</th>
-              <td><input v-model="patient.mutuelle"></td>
+              <td><input v-model="mutuelle"></td>
             </tr>
           </tbody>
         </table> 
@@ -56,7 +51,9 @@
 
       </div>
       <div class="buttonModify">
-        <button @click="modifyInformationsProfil" class="btn btn-outline-dark ml-2" type="submit">Modifier</button>
+        <p class="p" id="add_message">{{message}}</p>
+        <p v-if='hide_length == "true"' id="lenght_message">Le nom de la mutuelle est incorrect</p>
+        <button @click="modifyInformationsProfil()" class="btn btn-outline-dark ml-2">Ajouter une mutuelle</button>
       </div>
     </div> 
     
@@ -69,29 +66,53 @@
 <script>
 module.exports = {
     name: 'modify-card',
-    data(){
-        return{
-          patient:
-            {
-              last_name: 'Last name',
-              first_name: 'First name',
-              birth_date: 'Date de naissance',
-              email_adress: 'Adresse Mail',
-              mutuelle: 0,
-            }
+    props: {
+      sdatas: {
+        type: Object,
+        required: false,
+        default: function () {
+          return {};
+        },
+      },
+      hide_length: {
+        type: String,
+        default: "false",
+        validator(value) {
+          return ["true", "false", "changed"].includes(value)
+        },
+      },
+
+    },
+    data() {
+      return {
+        mutuelle: "",
+        message: "",
+      };
+    },
+    mounted() {
+      this.mutuelle = this.sdatas.mutual_name;
+      //watch hide_length
+      this.$watch('hide_length', (value) => {
+        if (value == "changed") {
+          setTimeout(() => {
+          this.message = "✔";
+          }, 0001);
+          setTimeout(() => {
+            this.message = "";
+          }, 4000);
         }
+      });
     },
     methods:{
-      modifyInformationsProfil: function(){
-        this.$emit("modify", this.patient);
-        console.log(this.patient); //renvoie nouvelles informations Patient
+      modifyInformationsProfil(){
+        this.$emit("modify_profil", {mutuelle:this.mutuelle});
       },
       retourPagePrincipale: function(){
         this.$emit("retour page principale");
-        this.$router.push("/PatientHome");
+        this.$router.push("/Patient_home");
       }, 
       initialesPatient: function(){
-        var String = this.patient.last_name[0] + this.patient.first_name[0];
+        var String = this.sdatas.first_name[0] + this.sdatas.last_name[0];
         return String;
       }
     }
@@ -99,7 +120,7 @@ module.exports = {
 }
 </script>
 
-<style>
+<style scoped>
   .test {
     display: flex;
     justify-content: space-between ;
@@ -136,14 +157,11 @@ module.exports = {
   width: fit-content;
   }
   .card_patient{
-
-
     background: rgba(216, 216, 216, 0.5);
     border-radius: 20px;
 
     display: flex;
     flex-direction: column;
-
   }
 
   #informations{
@@ -162,20 +180,20 @@ module.exports = {
     padding-right: 100px;
   }
 
-  .table{
-    width: 60%;
-    
+  .table{   
     display: flex;
     justify-content: space-between;
+    table-layout: auto;
+    width: 100%;
   }
 
   .buttonModify{
-    display:flex;
-    align-items: flex-end;
-    align-content: flex-end;
-    flex-direction: column;
-    margin-right: 20px;
-    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    place-content: flex-end;
+    flex-direction: row;
+    padding-right: 4%;
+    margin-bottom: 1%;
   }
 
   .image_formulaire{
@@ -198,5 +216,24 @@ module.exports = {
     margin-left: 29px;
   }
 
+.p {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: 10px;
+}
+
+#add_message{
+  color: green;
+  font-size:30px; 
+  display: flex;
+  -content: center;
+}
+
+#lenght_message{
+    margin-top: 0;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    color: red;
+}
 
 </style>

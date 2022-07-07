@@ -16,16 +16,17 @@
             <router-link to="/pharmacist_home" v-if="sdatas.profession.name===''">Page Pharmacien</router-link>
             <router-link to="/doctor_home" v-if="sdatas.profession.name===''">Page Médecin</router-link>
             <router-link to="/patient_home" v-if="sdatas.profession.name===''">Page Patient</router-link>
-            <router-link to="/doctor_home" v-if="sdatas.profession.name==='Doctor'">Mes patients</router-link>
+            <a v-if="sdatas.profession.name!==''" @click="logout">Deconnexion</a>
+            <router-link to="/Doctor_home" v-if="sdatas.profession.name==='Doctor'">Mes patients</router-link>
             <router-link to="/edit_prescription" v-if="sdatas.profession.name==='Doctor'">Rédiger Ordonnance</router-link>
-            <router-link to="/" v-if="sdatas.profession.name==='Patient'">Mes Ordonnances</router-link>
-            <router-link to="/" v-if="sdatas.profession.name==='Patient'">Personnes à charges</router-link>
-            <router-link to="/" v-if="sdatas.profession.name==='Patient'">Autre ?????</router-link>
+            <router-link to="/Patient_home" v-if="sdatas.profession.name==='Patient'  && tutor_bool === true">Mes Ordonnances</router-link>
+            <button v-if="sdatas.profession.name==='Patient' && tutor_bool === false" @click="OrdonnanceTutor">Mes Ordonnances</button>
+            <router-link to="/PatientInCharge" v-if="sdatas.profession.name==='Patient'">Personnes à charges</router-link>
             <router-link to="/" v-if="sdatas.profession.name==='Pharmacist'">Scanner Ordonnance</router-link>
             <router-link to="/" v-if="sdatas.profession.name==='Pharmacist'">Autre ?????</router-link>
           </nav>
 
-            <p class="image_profil text-center" 
+          <p v-if="sdatas.Id_Person > 0" class="image_profil text-center" 
             id="nom_img_profil" 
             @click="activateCard()"> {{ initialesPatient() }} </p>
         </div>
@@ -35,11 +36,11 @@
 
     <button @click="login({mail:'moreau.camille@medecin.fr',password:'123'})" >connexion docteur (1) Camille Moreau</button>
     <button @click="login({mail:'laurent.sara@pharmacien.fr',password:'123'})" >connexion pharmacien (7) Sara Laurent</button>
-    <button @click="login({mail:'rhoncus@google.edu',password:'123'})" >connexion patient (7) Keaton Smith</button>
+    <button @click="login({mail:'sapien.cursus@protonmail.couk',password:'123'})" >connexion patient (5) Ross O'brien</button>
 
     <!-- TODO à rajuster pour que la card soit juste en dessous du profil --> 
     <div id="carteSuperposee" class="cardPosition">
-      <infocard v-if="card == true" @disapear="disapear"/>
+      <infocard :sdatas = "sdatas" v-if="card == true" @disapear="disapear" :button_actionne = "button_actionne"/>
     </div>
     <!-- {{sdatas}} -->
   </div>
@@ -55,6 +56,8 @@ module.exports = {
       required: false,
       default: {},
     },
+    tutor_bool: Boolean,
+    button_actionne: Boolean
   },
   data(){
     return{
@@ -83,14 +86,22 @@ module.exports = {
     }, 
     disapear(){
       this.card = false;
+      this.$emit('gotoprofil')
     },
     initialesPatient: function(){
-        var String = this.last_name[0] + this.first_name[0];
+        var String = this.sdatas.first_name[0] + this.sdatas.last_name[0];
         return String;
       },
     login: function(data){
       this.$emit('login', data);
+    },
+    OrdonnanceTutor: function () {   
+      this.$emit('tutor_true');
+    },
+    logout: function(){
+      this.$emit('logout');
     }
+
 
   },
 };
@@ -201,7 +212,11 @@ nav > a.router-link-exact-active.router-link-active:hover {
   margin-right: 25px;
 }
 
-nav > a {
+button{
+  border: none;
+}
+
+nav > a, button {
   background-color: rgb(236, 235, 235);
   color: rgb(49, 49, 49);
   margin: 5px;
@@ -209,7 +224,7 @@ nav > a {
   text-decoration: none;
   border-radius: 7px;
 }
-nav > a:hover {
+nav > a:hover, button:hover {
   background-color: #b9b9b9;
 }
 nav > a.router-link-exact-active.router-link-active
@@ -233,9 +248,7 @@ nav > a.router-link-exact-active.router-link-active
 }
 
 #nom_img_profil{
-  margin-bottom: 0px;
-  margin-top: 7px; 
-  margin-right: 19px; 
+  margin: auto;
   font-size: 1.5em;
   padding-top: 5px;
 }

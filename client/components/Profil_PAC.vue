@@ -1,12 +1,8 @@
 <template>
   <div>
-    <p>NRTIAEZHGIOEZH</p>
   <div class="main_container">
-    <div class = "test"> <!-- TTTTTEEEEESSSSTTTT -->
-      <p class="title_profil">Profil de {{patient.first_name}} {{patient.last_name}}</p>
-
-      <div >
-        <button @click="redirectToHistoryPatient()" class="btn btn-outline-dark ml-2" type="submit">Retour</button>
+      <div id="retour_container">
+        <button id="button" @click="redirectToHistoryPatient()" type="submit">Retour</button>
       </div>
     </div>
     
@@ -14,13 +10,11 @@
 
   <div class="container">
     <div class = "card_patient">
-      <p id = "informations" class="rectangle">Ajout d'une personne à charge</p>
+      <p id = "informations" class="rectangle">Ajout d'une personne à charge pour {{mdatas[index_history_patient].infos_patient.last_name}} {{mdatas[index_history_patient].infos_patient.first_name}}</p>
       <div class="content_container">
-        <!-- importer logo de la personne connectée -->
-        
-        
+
         <div class="d-flex flex-row">
-          <p class="image_profil text-center" id="nom_profil"> New </p>
+          <p class="image_profil text-center" id="nom_profil">{{initialesPatient()}} </p>
         </div>
         
         <div>
@@ -29,21 +23,21 @@
           <tbody>
               <tr>
                 <th scope="row">Nom de famille</th>
-                <td><input v-model="patient.last_name"></td>
+                <td><input type="text" v-model="newLast_name" required></td>
               </tr>
 
             <tr>
               <th scope="row">Prénom</th>
-              <td><input v-model="patient.first_name"></td>
+              <td><input type="text" v-model="newFirst_name" required></td>
             </tr>
             <tr>
               <th scope="row">Date de naissance</th>
-              <td><input v-model="patient.birth_date" type="date"></td>
+              <td><input type="date" min="1900-01-01" v-model="newBirth_date" required></td>
             </tr>
             
             <tr>
               <th scope="row">Mutuelle</th>
-              <td><input v-model="patient.mutuelle"></td>
+              <td><input type="text" v-model="newMutuelle"></td>
             </tr>
           </tbody>
         </table> 
@@ -54,14 +48,18 @@
 
       </div>
       <div class="buttonModify">
-        <button @click="sendPac" class="btn btn-outline-dark ml-2" type="submit">Ajouter patient</button>
+        <p class="p" id="add_message">{{message}}</p>
+        <p id="error_message" v-if="boolerror == true">{{message_error}}</p>
+        <button @click="sendPac()" class="btn btn-outline-dark ml-2">Ajouter patient</button>
+        <br>
       </div>
+       
+      <br>
     </div> 
     
   </div>
-  </div>
   <br>
-</div>
+  </div>
 </template>
 
 <script>
@@ -70,42 +68,129 @@ module.exports = {
     data(){
         return{
           patient:
-            {
-              last_name: 'Last name',
-              first_name: 'First name',
-              birth_date: 'Date de naissance',
-              email_adress: 'Adresse Mail',
-              mutuelle: 0,
-            }
+              [{
+                last_name: "",
+                first_name: "",
+                birth_date: "",
+                mutuelle: "",
+              }],
+
+            newLast_name: "",
+            newFirst_name: "",
+            newBirth_date: "",
+            newMutuelle: "",
+            message: "",
+            message_error: "",
+            boolerror: false,
         }
     },
+    props: {
+        sdatas: Object,
+        mdatas: {
+          type: Array,
+          required: true,
+          default: function () {
+            return [];
+          }
+        },
+        index_history_patient: {
+          type: Number,
+          required: true,
+          default: function () {
+            return 0;
+          }
+        },
+    },
     methods:{
-      modifyInformationsProfil: function(){
-        this.$emit("modify", this.patient);
-        console.log(this.patient); //renvoie nouvelles informations Patient
-      },
-      retourPagePrincipale: function(){
-        this.$emit("retour page principale");
-        this.$router.push("/PatientHome");
-      }, 
-      redirectToHistoryPatient: function(){
-        this.$emit("redirect to history patient");
-        this.$router.push("/History_patient");
-     },
       initialesPatient: function(){
-        var String = this.patient.last_name[0] + this.patient.first_name[0];
+        
+        var String = this.mdatas[this.index_history_patient].infos_patient.first_name[0] + this.mdatas[this.index_history_patient].infos_patient.last_name[0];
         return String;
       },
-        sendPac: function(){
-            this.$emit("sendpac", this.patient);
-            this.$router.push("/History_patient");
+      redirectToHistoryPatient(){
+        this.$router.push("/History_patient");
+      },
+      sendPac(){
+        // verifier que les champs last_name et first_name et birth_date sont remplis
+        if(this.newLast_name == "" || this.newFirst_name == "" || this.newBirth_date == ""){
+          this.message_error = "Veuillez remplir au moins les champs nom, prénom et la date de naissance.";
+          this.boolerror = true;
         }
+        // verifier que la date est au moins 1900-01-01
+        else if(this.newBirth_date < "1900-01-01"){
+          this.message_error = "Veuillez entrer une date de naissance valide.";
+          this.boolerror = true;
+        }
+        else{
+          // emit les données des champs de patient
+        this.patient.last_name = this.newLast_name;
+        this.patient.first_name = this.newFirst_name;
+        this.patient.birth_date = this.newBirth_date;
+        this.patient.mutuelle = this.newMutuelle;
+        this.boolerror = false;
+        this.$emit("sendPac", this.patient);
+        console.log(this.patient);
+
+        // vider les champs remplis
+        
+        this.newLast_name = "";
+        this.newFirst_name = "";
+
+        this.newBirth_date = "";
+        this.newMutuelle = "";
+
+        setTimeout(() => {
+          this.message = "✔";
+         }, 0001);
+        setTimeout(() => {
+           this.message = "";
+         }, 4000);
+        }
+      },
+      
     }
    
 }
 </script>
 
-<style>
+<style scoped>
+#error_message{
+  color: red;
+  margin-right: 15%;
+}
+#add_message{
+  color: green;
+  font-size:30px; 
+  display: flex;
+  -content: center;
+}
+#retour_container{
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+  width: 100%;
+}
+
+.p {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: 10px;
+}
+
+#button {
+        color: rgb(49, 49, 49);
+        text-decoration: none;
+        padding: 10px;
+        margin-left: 5px;
+        margin-right: 5px;
+        border-radius: 7px;
+        border: none;
+    }
+
+    button:hover {
+        background-color: #b1b1b1;
+        transition: background-color 0.5s;
+    }
   .test {
     display: flex;
     justify-content: space-between ;
@@ -127,7 +212,7 @@ module.exports = {
 
   #nom_profil{
     margin-bottom: 0rem;
-    padding-top: 14px;
+    padding-top: 20px;
     font-size: 40px;
   }
 
@@ -168,19 +253,20 @@ module.exports = {
   }
 
   .table{
-    width: 60%;
-    
+    width: 100%;
+    table-layout: auto;;
     display: flex;
     justify-content: space-between;
   }
 
   .buttonModify{
     display:flex;
-    align-items: flex-end;
+    align-items: center;
     align-content: flex-end;
-    flex-direction: column;
-    margin-right: 20px;
-    margin-bottom: 10px;
+    justify-content: flex-end;
+    flex-direction: row;
+    padding-right: 62px;
+
   }
 
   .image_formulaire{
@@ -202,6 +288,5 @@ module.exports = {
     margin-top: -39px;
     margin-left: 29px;
   }
-
 
 </style>

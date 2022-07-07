@@ -3,62 +3,118 @@
 
         <div class="topContainer" id="toDisapearForPrint">
             <h3>Détails de l'ordonnance</h3>
-            <button @click="backHome" id="buttons">Retour</button>
+            <button @click="backHomePatient" id="buttons" v-if="status==0">Retour</button>
+            <button @click="backHomeDoctor" id="buttons" v-if="status==1">Retour</button>
         </div>
 
         <div class="ordonnance" id="ordonnanceForPrint">
-            <div v-for="(ligne, index) in ordonnance" :key="index">
-                
-                <div class="headerOrdonnance">
+            <div>
+
+                <div class="headerOrdonnance" v-if="status==0">
                     <!-- Information du Docteur - Table Id_Doctor & Person-->
                     <p id="doctorContainer">
-                        Dr. {{ person.first_name }} {{ person.last_name }}<br>
-                        Medecin {{ speciality.speciality_name }}<br>
-                        {{ person.phone }}<br>
-                        {{ person.email_address }}<br>
+                        Dr. {{ prescription_for_display.infos_prescription.doctor_infos.first_name }} {{ prescription_for_display.infos_prescription.doctor_infos.last_name }}<br>
+                        Medecin {{ prescription_for_display.infos_prescription.doctor_infos.speciality }}<br>
+                        {{ prescription_for_display.infos_prescription.doctor_infos.phone }}<br>
+                        {{ prescription_for_display.infos_prescription.doctor_infos.mail }}<br>
                     </p>
 
                     <img id="logo_MedicOnTech" src="ressources\MedicOnTech - Logo.png" alt="logo_MedicOnTech">
 
                     <!-- Information du lieu de travail_docteur - Table Id_Doctor & Person-->
                     <p id="workContainer">
-                        {{ doctor.work_place }}<br>
-                        Adresse : {{ doctor.work_name }}<br>
-                        {{ doctor.work_phone }}<br>
-                        {{ doctor.work_email_address }}<br>
+                        {{ prescription_for_display.infos_prescription.doctor_infos.workplace_name }}<br>
+                        {{ prescription_for_display.infos_prescription.doctor_infos.address.road_number }} 
+                        {{ prescription_for_display.infos_prescription.doctor_infos.address.road_name }}<br>
+                        {{ prescription_for_display.infos_prescription.doctor_infos.address.town }}
+                        {{ prescription_for_display.infos_prescription.doctor_infos.address.zip_code }},
+                        {{ prescription_for_display.infos_prescription.doctor_infos.address.country }}<br>
+
+                        <!-- Information non disponible -->
+                        <!-- {{ ligne.infos_prescription.doctor_workplace_mail }}<br> -->
                     </p>
                 </div>
-                
+
+                <div class="headerOrdonnance" v-if="status==1">
+                    <!-- Information du Docteur - Table Id_Doctor & Person-->
+                    <p id="doctorContainer">
+                        Dr. {{ prescription_for_display.infos_prescription.doctor_infos.first_name }} {{ prescription_for_display.infos_prescription.doctor_infos.last_name }}<br>
+                        <!-- Medecin {{ prescription_for_display.infos_prescription.doctor_infos.speciality }}<br> -->
+                        <!-- {{ prescription_for_display.infos_prescription.doctor_infos.phone }}<br> -->
+                        {{ prescription_for_display.infos_prescription.doctor_infos.mail }}<br>
+                    </p>
+
+                    <img id="logo_MedicOnTech" src="ressources\MedicOnTech - Logo.png" alt="logo_MedicOnTech">
+
+                    <!-- Information du lieu de travail_docteur - Table Id_Doctor & Person-->
+                    <p id="workContainer">
+                        {{ prescription_for_display.infos_prescription.doctor_infos.workplace_name }}<br>
+                        <!-- {{ prescription_for_display.infos_prescription.doctor_infos.address.road_number }}  -->
+                        <!-- {{ prescription_for_display.infos_prescription.doctor_infos.address.road_name }}<br> -->
+                        <!-- {{ prescription_for_display.infos_prescription.doctor_infos.address.town }} -->
+                        <!-- {{ prescription_for_display.infos_prescription.doctor_infos.address.zip_code }}, -->
+                        <!-- {{ prescription_for_display.infos_prescription.doctor_infos.address.country }}<br> -->
+
+                        <!-- Information non disponible -->
+                        <!-- {{ ligne.infos_prescription.doctor_workplace_mail }}<br> -->
+                    </p>
+                </div>
+
                 <div class="bodyOrdonnance">
-                    <p>{{ ligne.Id_Prescription }}</p>
+                    <div class="bodyHeaderContainer">
+                        <div class="bodyHeader">
+                            <p>Fait le {{ changeDate(prescription_for_display.infos_prescription.creation_date) }}.</p><br>
 
-                    <p>Fait le {{ ligne.creation_date }}.</p><br>
+                            <!-- Information du Patient - Table Id_Patient & Person-->
+                            <p>M. {{prescription_for_display.infos_patient.first_name}} {{prescription_for_display.infos_patient.last_name}}</p><br>
+                        </div>
 
-                    <!-- Information du Patient - Table Id_Patient & Person-->
-                    <p>M. {{ person.first_name }} {{ person.last_name }}</p><br>
-                
+                        <div class="code_barres_container">
+                            <img id="code_barres" :src="generateBarCode(prescription_for_display.infos_prescription.Id_Prescription )" alt="code_barres">
+                            <!-- <p id="ID">{{ generateBarCodeNumber(prescription_for_display.infos_prescription.Id_Prescription) }}</p> -->
+                        </div>
+                    </div>
+
                     <!-- Information Liste de médicaments - Table Id_Prescription & Drug-->
-                    <p v-for="(drug,index2) in ligne.listDrug" :key="index2">{{ drug.drug_name }} - {{ drug.quantity }}</p><br>
+                    <h5>Médicaments</h5>
+                    <p v-for="(ligne,index_drug) in prescription_for_display.drugs" :key="index_drug">
+                        {{ ligne.drug_name }}
+                    </p><br>
+                    <!-- - {{ ligne.drug_quantity }} ???-->
                     
                     <!-- Information Liste de services - Table Id_Prescription & Service-->
-                    <p v-for="(service,index3) in ligne.listService" :key="index3">{{ service.service_name }} - {{ service.quantity }}</p><br>
-                    <p>Notes : {{ ligne.note }}</p><br>            
-                    <p>Ordonnance renouvelable {{ ligne.number_of_reuses }} fois.</p><br><br>
+                    <h5>Services</h5>
+                    <p v-for="(ligne,index_service) in prescription_for_display.services[0].services" :key="index_service">
+                        {{ ligne.service_name }}
+                    </p><br>
+
+                    <!-- Informtion Ordonnance Note & Renouvelabilité -->
+                    <p>Notes : {{ prescription_for_display.infos_prescription.note }}</p><br>            
+                    <p v-if="prescription_for_display.infos_prescription.number_of_reuses!=0">Ordonnance renouvelable {{ prescription_for_display.infos_prescription.number_of_reuses }} 
+                        fois tous les {{ prescription_for_display.infos_prescription.frequency_of_reuse }} jours.</p><br><br>
 
                     <div class="statutContainer">
                         <div>
-                            <p v-if="ligne.used=='true'">Utilisée le {{ ligne.date_of_use }}.</p>
-                            <p v-if="ligne.validity=='true'">Oronnance valide.</p>
-                            <p v-if="ligne.reported=='true'">Ordonnance signalée.</p><br> 
+                            <p v-if="prescription_for_display.infos_prescription.used==true">Utilisée le {{ changeDate(prescription_for_display.infos_prescription.date_of_use) }}.</p>
+                            <p v-if="prescription_for_display.infos_prescription.validity==true">Oronnance valide.</p>
+                            <p v-if="prescription_for_display.infos_prescription.reported==true">
+                                Ordonnance signalée.<br>
+                                {{prescription_for_display.infos_prescription.report_note}}
+                            </p> 
                         </div>
                         <div class="barCode">
 
                         </div>  
                     </div>  
                 </div> 
-  
+
             </div>
+
+            <!-- Ajouter le cas d'un patient à charge ! -->
+
         </div>
+
+
         
         <button type="button" id="imprimer" @click="print()">Imprimer l'ordonnance</button><hr>   
     </div>
@@ -68,56 +124,49 @@
 <script>
 module.exports = {
     name: 'Ordonnance',
-    data() {
-        return {
-            person: {
-                first_name: 'DUPONT',
-                last_name: 'Thomas',
-                phone: '06-12-34-56-78',
-                email_address: 'test.adresse@gmail.com'
-            },
-            doctor: {
-                work_place: 'Hôpital de la ville',
-                work_name: 'Rue de la ville',
-                work_phone: '06-50-30-01-95',
-                work_email_address: 'hopital.adresse@gmail.com'},
-            speciality: {
-                speciality_name: 'Dentiste',
-            },
-            ordonnance: [{
-                Id_Prescription: 'Prescription 1',
-                creation_date: '01/01/2020',
-                date_of_use: '12/04/2020',
-                number_of_reuses: '1',
-                used: 'true',
-                validity: 'true',
-                note: 'Le médicament est bon',
-                reported: 'true',
-                listDrug: [
-                    {drug_name: 'Medoc1',
-                    quantity: '1'},
-                    {drug_name: 'Medoc2',
-                    quantity: '2'},
-                ],
-                listService: [
-                    {service_name: 'Service1',
-                    quantity: '1'},
-                    {service_name: 'Service2',
-                    quantity: '2'},
-                ],
-            }],
-            
-        }
-    },
     methods: {
-        backHome: function () {
-        this.$router.push("/PatientHome");
+        backHomePatient: function () {
+            this.$router.push("/Patient_home");
+        },
+        backHomeDoctor: function () {
+            this.$router.push("/History_patient");
         },
         print: function () {
             window.print();
+        },
+        generateBarCodeNumber(Id_Prescription){
+            var barcode = Id_Prescription.toString();
+            while (barcode.length < 12) {
+                barcode = "0" + barcode;
+            }
+            return barcode; 
+        },
+        changeDate(date){
+            dateSplit = date.split('-');
+            return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
+        },
+        generateBarCode(ID){
+            var prescription_ID = ID;
+            var barcode = prescription_ID.toString();
+            while (barcode.length < 12) {
+                barcode = "0" + barcode;
+            }
+            console.log(barcode);
+            return "http://bwipjs-api.metafloor.com/?bcid=ean13&text=" + barcode + "&includetext";
         }
     },
+    props:{
+        prescription_for_display: {
+            type: Object,
+            required: true,
+            default: function () {
+                return {};
+            }
+        },
+        status: Number,
+    },
     mounted() {
+        console.log(this.prescription_for_display);
         //Parcourir la liste des Prescription d'un Patient et récupérer les données de la Presciption
         //Afficher les données de la Prescription (tables Prescription, Drug et Service) dans la vue 
         //Afficher les données du Docteur (table Person et Speciality) dans la vue en haut à gauche de l'ordonnance
@@ -157,12 +206,13 @@ module.exports = {
             console.log('failToPrint');
         });
     },
+
 }
 
 </script>
 
 
-<style>
+<style scoped>
     .ordonnanceContainer {
         display: flex;
         flex-direction: column;
@@ -183,6 +233,8 @@ module.exports = {
         background-color: #e0e0e0;
         border-radius: 8px;
         padding: 10px;
+        padding-top: 30px;
+        padding-bottom: 40px;
     }
 
     .headerOrdonnance{
@@ -192,6 +244,7 @@ module.exports = {
         align-items: center;
         margin-left: 5px;
         margin-right: 5px;
+        margin-top: 10px;
     }
 
     #doctorContainer{
@@ -206,23 +259,49 @@ module.exports = {
     }
 
     #logo_MedicOnTech{
-        width: 30%;
+        width: 20%;
         height: auto;
     }
 
     .bodyOrdonnance{
         font-size: 0.9em;
         font-weight: bold;
-        margin-left: 100px;
+        margin-left: 70px;
+        margin-top: 50px;
+    }
+
+    .bodyHeaderContainer{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+    }
+
+    .code_barres_container{
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    #code_barres{
+        margin-right: 60px;
+        height: 100px;
+    }
+
+    #ID{
+        color:grey;
+        letter-spacing: 2px;
     }
 
     #imprimer{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: flex-end;
-    justify-content: flex-end;
-    margin-top: 30px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: flex-end;
+        justify-content: flex-end;
+        margin-top: 30px;
     }
 
     button {
@@ -232,8 +311,7 @@ module.exports = {
         margin-left: 5px;
         margin-right: 5px;
         border-radius: 7px;
-        border: 0.4px solid rgb(49, 49, 49);
-
+        border: none;
     }
 
     button:hover {
@@ -241,4 +319,5 @@ module.exports = {
         transition: background-color 0.5s;
 
     }
+
 </style>

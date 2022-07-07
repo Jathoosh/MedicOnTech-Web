@@ -47,18 +47,15 @@ router.post('/login-authorize', (req, res) => {
       req.session.Id_Person = result[0][0].Id_Person;
       req.session.function = "Patient";
       req.session.function_id = result[0][0].Id_Patient;
-      console.log(configRoutes.MAIN_URL+'/login_retrieve');
-      //redirect to youtube
       res.status(200).redirect(configRoutes.MAIN_URL+'/login_retrieve');
     }
     else{
       sequelize.query(`INSERT INTO postal_address (country) VALUES ("France")`).then(result => {
         sequelize.query(`INSERT INTO Person (first_name, last_name, birth_date, Id_Postal_address) VALUES ('${given_name}', '${family_name}', '${birthdate}', '${result[0]}')`).then(result2 => {
-          sequelize.query(`INSERT INTO patient (Id_Person) VALUES ('${result2[0]}')`).then(result3 => {
+          sequelize.query(`INSERT INTO patient (Id_Person, Id_Mutual_insurance) VALUES ('${result2[0]}', 1)`).then(result3 => {
             req.session.Id_Person = result2[0];
             req.session.function = "Patient";
             req.session.function_id = result3[0];
-            console.log(configRoutes.MAIN_URL+'/login_retrieve');
             res.status(200).redirect(configRoutes.MAIN_URL+'/login_retrieve');
           })
         })
@@ -83,7 +80,7 @@ router.post('/login', (req, res) => {
         }
         else{
           const Id_Person = result2[0][0].Id_Person;
-          sequelize.query(`SELECT first_name, last_name, password, birth_date, email_address, Id_Patient, postal_address.* FROM patient JOIN Person USING(Id_Person) JOIN postal_address USING (Id_Postal_address) WHERE Id_Person = '${Id_Person}'`).then(result3 => {
+          sequelize.query(`SELECT first_name, last_name, password, birth_date, email_address, Id_Patient, postal_address.*, Mutual_insurance.mutual_name FROM patient JOIN Person USING(Id_Person) JOIN Mutual_insurance USING (Id_Mutual_insurance) JOIN postal_address USING (Id_Postal_address) WHERE Id_Person = '${Id_Person}'`).then(result3 => {
             if (bcrypt.compareSync(password, result3[0][0].password || "Blank"))
             {
               req.session.Id_Person = Id_Person;
@@ -97,6 +94,7 @@ router.post('/login', (req, res) => {
                 birth_date : result3[0][0].birth_date,
                 mail : result3[0][0].email_address,
                 workplace_name : {door_number:result3[0][0].door_number, road_number:result3[0][0].number, road_name:result3[0][0].road, zip_code:result3[0][0].zip_code, town:result3[0][0].town, country:result3[0][0].country},
+                mutual_name : result3[0][0].mutual_name,
               }
               res.status(200).json({
                 message: "Connexion réussie",
@@ -130,7 +128,8 @@ router.post('/login', (req, res) => {
             workplace_name : result2[0][0].workplace_name, 
             profession : result2[0][0].Id_Doctor==null?
               {name:"Pharmacist",id:result2[0][0].Id_Pharmacist}:
-              {name:"Doctor",id:result2[0][0].Id_Doctor}
+              {name:"Doctor",id:result2[0][0].Id_Doctor},
+            mail : mail
           }
           res.status(200).json({
             message : 'Connexion réussie',
@@ -147,6 +146,30 @@ router.post('/login', (req, res) => {
   });
 })
 
+router.get('/connected', (req, res) => { //TODO : Cookie
+  if (req.session.Id_Person != null)
+  {
+    console.log(sdatas);
+    res.status(200).json({
+      connected : true,
+      sdatas : sdatas
+    });
+  }
+  else
+  {
+    res.status(200).json({
+      connected : false
+    });
+  }
+})
+
+router.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.status(200).json({
+    connected : false
+  });
+})
+
 //PARTIE OBTENTIONS INFOS PERSONNES
 
 router.get('/retrieve_person', (req, res) => {
@@ -154,7 +177,7 @@ router.get('/retrieve_person', (req, res) => {
   const function_id = req.session.function_id;
   const function_name = req.session.function;
   if (Id_Person != null){
-    sequelize.query(`SELECT * FROM Person JOIN postal_address using (Id_Postal_address) WHERE Id_Person = '${Id_Person}'`).then(result => {
+    sequelize.query(`SELECT * FROM Person JOIN postal_address using (Id_Postal_address) JOIN patient USING (Id_Person) JOIN Mutual_insurance USING (Id_Mutual_insurance) WHERE Id_Person = '${Id_Person}'`).then(result => {
       sdatas = {
         Id_Person: Id_Person,
         first_name : result[0][0].first_name,
@@ -163,6 +186,7 @@ router.get('/retrieve_person', (req, res) => {
         mail : result[0][0].email_address,
         profession: {name:function_name, id:function_id},
         workplace_name : {door_number:result[0][0].door_number, road_number:result[0][0].number, road_name:result[0][0].road, zip_code:result[0][0].zip_code, town:result[0][0].town, country:result[0][0].country},
+        mutual_name : result[0][0].mutual_name,
       }
       res.status(200).json({
         connected : true,
@@ -178,7 +202,7 @@ router.get('/retrieve_person', (req, res) => {
 router.get('/patient_comp_datas', (req,res) => {
   const Id_Patient = req.session.function_id || req.body.Id_Patient;
   sdatas_comp = [];
-  sequelize.query(`SELECT prescription.*, drug.* from prescription right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) WHERE Id_Patient = '${Id_Patient}'`).then(result => {
+  sequelize.query(`SELECT prescription.*, drug.*, professional.workplace_name, person.*, speciality.speciality_name, postal_address.* from prescription right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) join doctor using (Id_Doctor) join doctor_speciality using(Id_Doctor) join speciality using (Id_Speciality) join professional using (Id_Person) join person Using (Id_Person) join postal_address using(Id_Postal_address) WHERE Id_Patient = '${Id_Patient}'`).then(result => {
     
     let Id_Prescriptions = [];
     result[0].forEach((row,n) => {
@@ -198,6 +222,15 @@ router.get('/patient_comp_datas', (req,res) => {
             note : row.note,
             reported : row.reported,
             report_note : row.report_note,
+            doctor_infos : {
+              workplace_name : row.workplace_name,
+              first_name : row.first_name,
+              last_name : row.last_name,
+              speciality : row.speciality_name,
+              mail : row.email_address,
+              phone : row.phone,
+              address : {door_number:row.door_number, road_number:row.number, road_name:row.road, zip_code:row.zip_code, town:row.town, country:row.country},
+            }
           },
           drugs : [],
           services : []
@@ -225,11 +258,38 @@ router.get('/patient_comp_datas', (req,res) => {
   })
 })
 
-router.get('/patient_mdatas', (req,res) => {
+router.get('/patient_comp_datas_services', (req,res) => {
   const Id_Patient = req.session.function_id || req.body.Id_Patient;
+  let toReturn = [];
+  sequelize.query(`SELECT prescription.Id_Prescription, service.* from prescription right join prescription_service Using (Id_Prescription) join service using (Id_Service) WHERE Id_Patient = '${Id_Patient}'`).then(result => {
+    //Separate each service by Id_Prescription
+    let Id_Prescriptions = [];
+    result[0].forEach((row,n) => {
+      if (!Id_Prescriptions.includes(row.Id_Prescription))
+      {
+        Id_Prescriptions.push(row.Id_Prescription);
+        toReturn.push({
+          Id_Prescription : row.Id_Prescription,
+          services : []
+        });
+      }
+      toReturn[Id_Prescriptions.length-1].services.push({
+        Id_Service : row.Id_Service,
+        service_name : row.service_name,
+      });
+    })
+    res.status(200).json({
+      message : 'Données services patients récupérées',
+      datas : toReturn
+    });
+  })
+})
+
+router.get('/patient_mdatas', (req,res) => {
+  const Id_Person = req.session.Id_Person;
   mdatas = [];
 
-  sequelize.query(`SELECT person.*, patient.Id_Patient, prescription.*, drug.* from prescription JOIN patient USING (Id_Patient) JOIN person	USING (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) WHERE Id_Patient IN (SELECT Id_Patient from Patient WHERE Id_Tutor = '${Id_Patient}')`).then(result => {
+  sequelize.query(`SELECT person.*, Mutual_insurance.mutual_name, patient.Id_Patient, prescription.*, drug.*, doctor_infos.email_address doctor_mail, doctor_infos.first_name doctor_first, doctor_infos.last_name doctor_last, doctor_infos.phone doctor_phone, professional.workplace_name, speciality.speciality_name, postal_address.* from prescription JOIN patient USING (Id_Patient) JOIN person USING (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) join doctor Using (Id_Doctor) Join professional on doctor.Id_Person = professional.Id_Person Join person as doctor_infos On professional.Id_Person = doctor_infos.Id_Person Join postal_address on doctor_infos.Id_Postal_address = postal_address.Id_Postal_address join doctor_speciality using(Id_Doctor) join speciality using(Id_Speciality) join Mutual_insurance USING (Id_Mutual_insurance) WHERE Id_Patient IN (SELECT Id_Patient from Patient WHERE Id_Tutor = '${Id_Person}')`).then(result => {
     let Id_Pac = [];
     result[0].forEach(row => {
       if (!Id_Pac.includes(row.Id_Patient))
@@ -243,7 +303,8 @@ router.get('/patient_mdatas', (req,res) => {
             birth_date : row.birth_date,
             email_address : row.email_address,
             phone : row.phone,
-            Id_Postal_address : row.Id_Postal_address
+            Id_Postal_address : row.Id_Postal_address,
+            mutual_name : row.mutual_name,
           },
           prescriptions_pac : []
         });
@@ -255,7 +316,7 @@ router.get('/patient_mdatas', (req,res) => {
       Id_Prescriptions_pac = [];
       result[0].filter(row => row.Id_Patient == Id_Patient_pac).forEach((row,n) => {
         if (!Id_Prescriptions_pac.includes(row.Id_Prescription))
-        {
+        { 
           Id_Prescriptions_pac.push(row.Id_Prescription);
           mdatas[index].prescriptions_pac.push({
             infos_prescription : {
@@ -270,6 +331,15 @@ router.get('/patient_mdatas', (req,res) => {
               note : row.note,
               reported : row.reported,
               report_note : row.report_note,
+              doctor_infos : {
+                workplace_name : row.workplace_name,
+                first_name : row.doctor_first,
+                last_name : row.doctor_last,
+                speciality : row.speciality_name,
+                mail : row.doctor_mail,
+                phone : row.doctor_phone,
+                address : {door_number:row.door_number, road_number:row.number, road_name:row.road, zip_code:row.zip_code, town:row.town, country:row.country},
+              }
             },
             drugs : [],
             services : []
@@ -297,9 +367,35 @@ router.get('/patient_mdatas', (req,res) => {
   })
 })
 
+router.get('/patient_mdatas_services', (req,res) => {
+  const Id_Person = req.session.Id_Person;
+  let toReturn = [];
+  sequelize.query(`SELECT prescription.Id_Prescription, service.* from prescription right join prescription_service Using (Id_Prescription) join service using (Id_Service) WHERE Id_Patient IN (SELECT Id_Patient from Patient WHERE Id_Tutor = '${Id_Person}')`).then(result => {
+    //Separate each service by Id_Prescription
+    let Id_Prescriptions = [];
+    result[0].forEach((row,n) => {
+      if (!Id_Prescriptions.includes(row.Id_Prescription))
+      {
+        Id_Prescriptions.push(row.Id_Prescription);
+        toReturn.push({
+          Id_Prescription : row.Id_Prescription,
+          services : []
+        });
+      }
+      toReturn[Id_Prescriptions.length-1].services.push({
+        Id_Service : row.Id_Service,
+        service_name : row.service_name,
+      });
+    })
+    res.status(200).json({
+      message : 'Données services patients à charges récupérées',
+      datas : toReturn
+    });
+  })
+})
+
 router.get('/doctor_mdatas', (req,res) => {
   const Id_Doctor = req.session.function_id;
-  console.log(Id_Doctor);
   mdatas = [];
   sequelize.query(`SELECT person.*, patient.Id_Patient, prescription.*, drug.* from prescription join patient using (Id_Patient) join person using (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) where Id_Patient IN (SELECT Id_Patient from assigned_doctor where Id_Doctor = '${Id_Doctor}');`).then(result => {
     //Obtain unique Patient
@@ -369,6 +465,247 @@ router.get('/doctor_mdatas', (req,res) => {
     });
   })
 })
+
+router.get('/doctor_mdatas_services', (req,res) => {
+  const Id_Doctor = req.session.function_id;
+  let toReturn = [];
+  sequelize.query(`SELECT prescription.Id_Prescription, service.*, prescription_service.quantity from prescription right join prescription_service Using (Id_Prescription) join service using (Id_Service) WHERE Id_Patient IN (SELECT Id_Patient from assigned_doctor where Id_Doctor = '${Id_Doctor}')`).then(result => {
+    //Separate each service by Id_Prescription
+    let Id_Prescriptions = [];
+    result[0].forEach((row,n) => {
+      if (!Id_Prescriptions.includes(row.Id_Prescription))
+      {
+        Id_Prescriptions.push(row.Id_Prescription);
+        toReturn.push({
+          Id_Prescription : row.Id_Prescription,
+          services : []
+        });
+      }
+      toReturn[Id_Prescriptions.length-1].services.push({
+        Id_Service : row.Id_Service,
+        service_name : row.service_name,
+        quantity : row.quantity
+      });
+    })
+    res.status(200).json({
+      message : 'Données services patients à charges récupérées',
+      datas : toReturn
+    });
+  })
+})
+
+router.get('/pharmacist_mdatas/:prescription/:check_number', (req,res) => {
+  const Id_Prescription = req.params.prescription;
+  const check_number = req.params.check_number;
+  mdatas = [];
+  sequelize.query(`SELECT Id_Patient FROM Patient where social_security_number = '${check_number}'`).then(result => {
+    if (result[0].length == 0)
+    {
+      res.status(200).json({
+        message : 'Patient non trouvé',
+        state : false
+      });
+    }
+    else
+    {
+      sequelize.query(`SELECT person.*, patient.Id_Patient, prescription.*, drug.*, doctor_infos.email_address doctor_mail, doctor_infos.first_name doctor_first, doctor_infos.last_name doctor_last, doctor_infos.phone doctor_phone, professional.workplace_name, speciality.speciality_name, postal_address.* from prescription JOIN patient USING (Id_Patient) JOIN person USING (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) join doctor Using (Id_Doctor) Join professional on doctor.Id_Person = professional.Id_Person Join person as doctor_infos On professional.Id_Person = doctor_infos.Id_Person Join postal_address on doctor_infos.Id_Postal_address = postal_address.Id_Postal_address join doctor_speciality using(Id_Doctor) join speciality using(Id_Speciality) WHERE Id_Prescription = ${Id_Prescription	} and Id_Patient = ${result[0][0].Id_Patient}`).then(result2 => {
+        /*
+        {
+    "infos_prescription": {
+        "Id_Prescription": 7,
+        "creation_date": "2002-08-17",
+        "expiration_date": "2002-11-17",
+        "date_of_use": "2002-11-17",
+        "frequency_of_reuse": 0,
+        "number_of_reuses": 0,
+        "used": 1,
+        "validity": 0,
+        "note": "TODOTEXTE",
+        "reported": 1,
+        "report_note": "REPORTTODO",
+        "doctor_infos": {
+            "workplace_name": "CLINIQUE DU TERTRE ROUGE",
+            "first_name": "Camille",
+            "last_name": "Moreau",
+            "speciality": "Cardiologue",
+            "mail": "moreau.camille@medecin.fr",
+            "phone": "01 84 88 37 10",
+            "address": {
+                "door_number": null,
+                "road_number": "3",
+                "road_name": "Rue Alexandre Dumas",
+                "zip_code": "51110",
+                "town": "Bazancourt",
+                "country": "France"
+            }
+        }
+    },
+    "drugs": [
+        {
+            "Id_Drug": 60549797,
+            "drug_name": "FOSTIMONKIT 150 UI",
+            "drug_format": "poudre et  solvant pour solution injectable",
+            "drug_application": "sous-cutanée",
+            "autorisation_status": "Autorisation active",
+            "comercialised": "Commercialisée",
+            "comercialised_on": "2006-08-09",
+            "warning_stock": 0,
+            "comercialised_by": " IBSA PHARMA SAS",
+            "drug_price": null,
+            "reimbursement_rate": null
+        },
+    ],
+    "services": [
+        {
+            "Id_Prescription": 7,
+            "services": [
+                {
+                    "Id_Service": 10,
+                    "service_name": "Soins dentaires"
+                },
+            ]
+        }
+    ],
+    "infos_patient": {
+        "first_name": "Ross",
+        "last_name": "O'brien"
+    }
+} */
+        result2[0].forEach((row,n) => {
+          //TODO
+        })
+      })
+    }
+  })
+})
+
+// PARTIE FONCTIONNELLE DU SITE
+
+router.get('/recherchePatient/:first_name/:last_name', (req,res) => {
+  const first_name = req.params.first_name == "=" ? "" : req.params.first_name;
+  const last_name = req.params.last_name == "=" ? "" : req.params.last_name;
+  sequelize.query(`select first_name, last_name, social_security_number, birth_date from Person join patient using (Id_Person) where first_name like "${first_name+"%"}" and last_name like "${last_name+"%"}"`).then(result => {
+    res.status(200).json({
+      message : 'Données patients récupérées',
+      datas : result[0]
+    });
+  })
+})
+
+router.put('/modifMutuelle', (req,res) => {
+  const Id_Patient = req.session.function_id;
+  const mutuelle = req.body.mutuelle;
+  sequelize.query(`SELECT Id_Mutual_insurance, mutual_name FROM Mutual_insurance WHERE mutual_name like '%${mutuelle}%' LIMIT 1`).then(result => {
+    if (result[0].length == 0)
+    {
+      res.status(200).json({
+        message : 'Mutuelle inconnue',
+        changed : false
+      });
+    }
+    else{
+      sequelize.query(`update patient set Id_Mutual_insurance = ${result[0][0].Id_Mutual_insurance} where Id_Patient = '${Id_Patient}'`).then(result2 => {
+        if (result2[0].affectedRows == 1)
+        {
+          res.status(200).json({
+            message : 'Mutuelle modifiée',
+            mutual_name : result[0][0].mutual_name,
+            changed : true
+          });
+        }
+        else
+        {
+          res.status(200).json({
+            message : 'Mutuelle non modifiée',
+            changed : false
+          });
+        }
+      }).catch(err => {
+        res.status(500).json({
+          message : 'Erreur lors de la modification de la mutuelle',
+          changed : false
+        });
+      })
+    }
+  });
+})
+
+// Récupérer liste des médicaments quand le docteur cherche un pour ordonnances 
+
+router.get('/drugs/:drug_name', (req,res) => {
+  const drug_name = req.params.drug_name;
+  sequelize.query(`select drug.drug_name from drug where drug_name like '%${drug_name}%'`).then(result => {
+    res.status(200).json({
+      message : 'Données médicaments récupérées',
+      datas : result[0]
+    });
+  })
+})
+
+// Ajouter ordonnances à la bdd
+
+/*
+this.newPrescription.date = this.myDate;
+this.newPrescription.drugs = this.drugs;
+this.newPrescription.notes = this.notes;
+this.newPrescription.reusable = this.reusable;
+this.newPrescription.reuse = this.reuse;
+this.newPrescription.patient_lastname = this.newPatient_lastname;
+this.newPrescription.patient_firstname = this.newPatient_firstname;
+*/
+
+router.post('/sendPrescription', (req,res) => {
+  //Id_Prescription, creation_date, expiration_date, date_of_use, frequency_of_reuse, number_of_reuses, used, validity, note, reported, report_note, barcode_svg, Id_Doctor, Id_Patient
+  const Id_Doctor = req.session.function_id;
+  const patient = {last_name : req.body.patient_lastname, first_name : req.body.patient_firstname};
+  const drugs = req.body.drugs;
+  const notes = req.body.notes;
+  const reusable = req.body.reusable;
+  const reuse = req.body.reuse;
+  const date = req.body.date;
+
+  sequelize.query(`select Id_Patient from patient where last_name = '${patient.last_name}' and first_name = '${patient.first_name}'`).then(result => {
+    if (result[0].length == 0)
+    {
+      res.status(200).json({
+        message : 'Patient inconnu',
+        changed : false
+      });
+    }
+    else
+    {
+      const Id_Patient = result[0][0].Id_Patient;
+      sequelize.query(`insert into prescription (creation_date, expiration_date, frequency_of_reuse, number_of_reuses, used, validity, note, reported, barcode_svg, Id_Doctor, Id_Patient) values ('${date}', '${date}', '${reusable}', '${reuse}', '0', '1', '${notes}', '0', '', '${Id_Doctor}', '${Id_Patient}')`).then(result2 => {
+        if (result2[0].affectedRows == 1)
+        {
+          const Id_Prescription = result2[0].insertId;
+          drugs.forEach(drug => {
+            sequelize.query(`insert into prescription_drug (Id_Prescription, Id_Drug) values ('${Id_Prescription}', '${drug.Id_Drug}')`);
+          });
+          res.status(200).json({
+            message : 'Ordonnance envoyée',
+            changed : true
+          });
+        }
+        else
+        {
+          res.status(200).json({
+            message : 'Ordonnance non envoyée',
+            changed : false
+          });
+        }
+      }).catch(err => {
+        res.status(500).json({
+          message : 'Erreur lors de l\'envoi de l\'ordonnance',
+          changed : false
+        });
+      }
+      )
+    }
+  })
+})
+
+// Récupérer ordonnance en tant que pharmacien avec les inputs (vérifier le numéro de sécurité)
 
 // PARTIE APPLICATION
 
@@ -447,5 +784,60 @@ router.get("/motapp/charge/:id", (req, res) => {
       res.status(200).json({ result: result[0] });
     });
 });
+
+router.get("/motapp/getdeviceid", (req, res) => { //Give first time unique id for the device
+  sequelize.query("SELECT Id_Device FROM patient ORDER BY Id_Device DESC LIMIT 1").then((result) => {
+    //add 1 to the last id
+    res.status(200).json({ result: result[0][0].Id_Device + 1 });
+  });
+})
+
+router.get("/motapp/first_time/:device_id", (req, res) => { //Lien de connexion pour la première connexion mobile
+  device_id = req.params.device_id;
+  req.session.device_id = device_id;
+  res.status(200).redirect(configRoutes.MAIN_URL+'/mobile_login');
+})
+
+router.post("/motapp/setconnexion", (req, res) => { // accés depuis la page de connexion depuis l'inapp browser
+  const device_id = req.session.device_id;
+  const Id_Patient = req.body.Id_Patient;
+  if (device_id == undefined) {
+    res.status(200).json({
+      message: "Erreur de connexion",
+    });
+  }
+  else {
+    sequelize.query(`UPDATE patient SET Id_Device = '${device_Id}' WHERE Id_Patient = ${Id_Patient}`).then(result => {
+      if(result[0].length == 0) {
+        res.status(200).json({
+          message: "Erreur de connexion",
+        });
+      }
+      else {
+        res.status(200).json({
+          message: "Lien établi",
+        });
+      }
+    })
+  }
+})
+
+router.post("/motapp/checkconnexion", (req, res) => { // Pour le fetch de l'application
+  const device_id = req.body.device_id;
+  sequelize.query(`select Id_Patient from patient where device_id = "${device_id}"`).then(result => {
+    if(result[0].length == 0) {
+      res.status(200).json({
+        message: "Erreur de connexion",
+      });
+    }
+    else {
+      res.status(200).json({
+        message: "Lien établi",
+        Id_Patient : result[0][0].Id_Patient
+      });
+    }
+  });
+})
+
 
 module.exports = router;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Bonjour</h1>
+    <h1>Bonjour Dr {{sdatas.first_name}} {{sdatas.last_name}} ! </h1>
     <h4>Mes patients</h4>
     <hr />
     <div id="global"> 
@@ -18,7 +18,7 @@
               <tr v-for="(d, index) in mdatas" :key="index">
                 <td>{{ d.infos_patient.last_name}} {{d.infos_patient.first_name}}</td>
                 <td>{{displayLastPrescriptionDateOf(index)}}
-                <button class="btn btn-outline-secondary" style="float:right;" @click="redirectionToHistoryPatient(index)">Historique</button></td>
+                <button  style="float:right;" @click="redirectionToHistoryPatient(index)">Historique</button></td>
               </tr>
               
             </tbody>
@@ -102,7 +102,8 @@ module.exports = {
       Dates.sort(function(a, b){return b-a});
       //return first date among dates
       // display Dates info
-      return Dates[0].getDate() + "/" + (Dates[0].getMonth()+1) + "/" + Dates[0].getFullYear();
+      return  (Dates[0].getDate()+1<10? "0"+(Dates[0].getDate()+1) : Dates[0].getDate()+1) + "/"  + (Dates[0].getMonth()+1<10? "0"+(Dates[0].getMonth()+1) : Dates[0].getMonth()+1) + "/" + Dates[0].getFullYear();
+
     },
   },
   mounted() {
@@ -113,7 +114,7 @@ module.exports = {
 };
 </script>
 
-<style>
+<style scoped>
 h4 {
   padding-top: 15px;
 }
@@ -147,7 +148,7 @@ button {
   margin-left: 5px;
   margin-right: 5px;
   border-radius: 7px;
-  border: 0.4px solid rgb(49, 49, 49);
+  border: none;
 }
 
 button:hover {
