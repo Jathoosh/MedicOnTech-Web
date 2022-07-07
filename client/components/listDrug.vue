@@ -2,16 +2,14 @@
   <div>
     <table class="table">
       <thead>
-              <tr>
-                <th scope="col">Nom</th>
-              </tr>
+        <tr>
+          <th scope="col">Nom</th>
+        </tr>
       </thead>
       <tbody>
         <tr v-for="(d, index) in liste_drug_search" :key="index">
         <td>{{ d.drug_name }} <button class="btn btn-outline-secondary" style="float:right;" @click="sendDrug(index)">Selectionner</button></td>
-        
         </tr>
-              
       </tbody>
     </table>
   </div>
@@ -39,7 +37,7 @@ module.exports=  {
 
 <style scoped>
 .table {
-    flex-wrap: nowrap;
-    max-width: 50%;
+  flex-wrap: nowrap;
+  max-width: 50%;
 }
 </style>

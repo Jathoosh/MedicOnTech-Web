@@ -12,13 +12,22 @@
       </div>
     </div>
       
-      <p id="search_adv">Recherche avancée</p>
-      <div class="container">
+    <p id="search_adv">Recherche avancée</p>
+    <div class="container">
+      <p style="max-height:5px; align-self :center;">A partir du : </p>
+      <input placeholder="Select date" v-model="input_date" type="date" class="form-control" style="max-width:12%; margin-left:5px;">
+    </div>
+    <br>
 
-          <p style="max-height:5px; align-self :center;">A partir du : </p>
-          <input placeholder="Select date" v-model="input_date" type="date" class="form-control" style="max-width:12%; margin-left:5px;">
-
+    <div class="prescription_info" v-for="(d, index) in filteredData" :key="index"> 
+      <div class="detail">
+        <h2>Fait le {{changeDate(d.infos_prescription.creation_date)}} - expire le {{changeDate(d.infos_prescription.expiration_date)}}</h2>
+        <p><strong>Etat ordonnance : {{statePres(d.infos_prescription.validity)}}</strong></p>
+        <p>Nombre de réutilisations : {{d.infos_prescription.frequency_of_reuse}}</p>
+        <p>Ordonnance signalée : {{reportedPres(d.infos_prescription.reported)}}</p>
+        <p v-if="d.infos_prescription.reported == true">  Raisons du signalement : {{d.infos_prescription.report_note}}</p>
       </div>
+
 
   <br>
 
@@ -34,8 +43,8 @@
     <div class="buttonRedirect">
         <button @click="redirectionToOrdonnance(index)">Voir le détail</button> 
     </div>
-  </div>
-  <br>
+    <br>
+
   </div>
 </template>
 
@@ -68,31 +77,26 @@ module.exports = {
       input_date: "",
     };
   },
+
   methods: {
     back: function () {
       this.$router.push("/Doctor_home");
     },
+
     redirectionToOrdonnance: function (index) {
       this.$emit('save_ordonnance_doctor', {prescription : this.mdatas[this.index_history_patient].prescriptions[index], infos_patient : {first_name : this.mdatas[this.index_history_patient].infos_patient.first_name, last_name : this.mdatas[this.index_history_patient].infos_patient.last_name}, doctor_infos : this.sdatas});
       this.$emit('status_doctor');
     },
-    redirectionToPatientInCharge: function () {
-      this.$router.push("/PatientInCharge");
-    },
+
     redirectToPac: function () {
       this.$router.push("/Profil_PAC");
     },
+
     changeDate(date){
       dateSplit = date.split('-');
       return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
     },
-    generateBarCodeNumber(Id_Prescription){
-      var barcode = Id_Prescription.toString();
-      while (barcode.length < 12) {
-          barcode = "0" + barcode;
-      }
-      return barcode; 
-    },
+
     reportedPres(reported){
       if(reported == 1){
         return "Oui";
@@ -101,6 +105,7 @@ module.exports = {
         return "Non";
       }
     },
+
     statePres(validity){
       if(validity == 1){
         return "Valide";
@@ -109,6 +114,7 @@ module.exports = {
         return "Invalide";
       }
     },
+
     currentAge(birthDate) {
       var today = new Date();
       var birth = new Date(birthDate);
@@ -119,14 +125,10 @@ module.exports = {
         age--;
       }
       return age;
-      
-      
-    },
+    }
 
-    testTypeofBirthDate(birthDate){
-      console.log(typeof birthDate);
-    },
   },
+
   computed: {
     filteredData() {
       var select_date = this.input_date;
@@ -140,14 +142,12 @@ module.exports = {
           return new Date(d.infos_prescription.creation_date).getTime() >= date;
         });
       }
-      
     }
   }
 }
 </script>
 
 <style scoped>
-/*recherche avancéd */
 #search_adv {
   border-bottom: 5px solid #01AA88;
   max-width: 10%;
@@ -158,7 +158,6 @@ module.exports = {
 .prescription_info {
   display: flex;
   flex-direction: row;
-  
   border-radius: 20px;
   background-color: #D8D8D8;
   opacity: 0.9;
@@ -173,7 +172,6 @@ module.exports = {
   align-self:center;
   margin-left : 10px;
 }
-
 
 /*bouton voir detail */
 button {
@@ -191,7 +189,6 @@ button:hover {
   transition: background-color 0.5s;
 }
 
-
 /*Recherche avancée */
 .container {
   max-width: 100%;
@@ -204,10 +201,8 @@ input[type=text] {
   max-width: 80%;
 }
 
-/*head */
 .head {
   display: flex;
   justify-content: space-between;
 }
-
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
   <div class="main_container">
-    <div class = "test"> <!-- TTTTTEEEEESSSSTTTT -->
+    <div class = "test">
       <p class="title_profil"> Votre profil </p>
 
       <div >
@@ -116,7 +116,6 @@ module.exports = {
         return String;
       }
     }
-   
 }
 </script>
 

@@ -123,7 +123,6 @@ module.exports = {
         return {
             reusable : false,
             reuse : 1,
-            // prescriptionNotes:"",
             myDate : new Date().toISOString().slice(0,10),
             drugs: [ // tableau des médicaments
                 {drug_name:"", drug_quantity: "", drug_notes: "", hideQuantity: true},
@@ -167,7 +166,7 @@ module.exports = {
             this.newDrug_notes = "";
         },
         removeDrug(drug){
-            // suppression dans la liste de la vue les mediacaments ajoutés
+            // suppression dans la liste des médicaments d'un médicament
             this.drugs.splice(this.drugs.indexOf(drug), 1);
         },
         editQuantity(index){
@@ -202,14 +201,14 @@ module.exports = {
                 this.newPrescription.patient_firstname = this.newPatient_firstname;
                 this.sendMessage = true;
                 this.boolerror = false;
+
                 this.$emit('sendprescription', this.newPrescription);
-                // setTimeout(() => {
-                //     this.$router.push('/Doctor_home');
-                // }, 2000);
+                setTimeout(() => {
+                    this.$router.push('/Doctor_home');
+                }, 2000);
             }
         },
         searchpatient(){
-           
             if(this.newPatient_lastname != "" || this.newPatient_firstname != ""){
                 this.$emit('search_patient', {last_name:(this.newPatient_lastname == "" ? "=" : this.newPatient_lastname), first_name:(this.newPatient_firstname  == "" ? "=" : this.newPatient_firstname)});
                 this.print_list_patient = true;
@@ -239,13 +238,11 @@ module.exports = {
         }
     }, 
     created: function(){
-                this.drugs = [];
-                this.newDrug_name = "";
-                this.newDrug_quantity = "";
-                this.newDrug_notes = "";
-                },
-    
-
+        this.drugs = [];
+        this.newDrug_name = "";
+        this.newDrug_quantity = "";
+        this.newDrug_notes = "";
+    }
 }
 </script>
 
@@ -255,10 +252,10 @@ module.exports = {
     justify-content: space-between;
     align-items: center;
 }
+
 .global {
     display: flex;
     flex-direction: column;
-    /*max-width: 90%;*/
     box-shadow: 5px 5px 15px #eeecec, -5px 5px 5px #eeecec;
     background-color: white;
     margin-left: auto;
@@ -274,7 +271,6 @@ module.exports = {
     display: flex;
     justify-content: space-between;
     margin-bottom:3px;
-
 }
 
 .date_container {
@@ -282,14 +278,13 @@ module.exports = {
     flex-direction: row;
 }
 
-
 table,td {
     border: 1px solid #333;
 }
 
 #inputName{
-  border: 1px solid rgb(7, 7, 7);
-  border-radius: 5px;
+    border: 1px solid rgb(7, 7, 7);
+    border-radius: 5px;
 }
 
 button{
@@ -309,7 +304,7 @@ button:hover {
     background-color: #b1b1b1;
     transition: background-color 0.5s;
 }
-/*tableau de medicaments*/
+
 table{
     border-collapse:collapse;
     width: 100%;
@@ -318,12 +313,15 @@ table{
 .table-striped tbody tr:nth-of-type(odd){
     background-color:rgba(0,0,0,.08)
 }
+
 .table-bordered{
     border:1px solid #dee2e6
 }
+
 .table-bordered td,.table-bordered th{
     border:1px solid #dee2e6
 }
+
 .table-bordered thead td, .table-bordered thead th{
     border-bottom-width:2px
 }
@@ -343,8 +341,9 @@ input[type="number"] {
     padding: 5px;
     margin-right: 5px;
 }
+
 #reuse{
-width: 20%;
+    width: 20%;
 }
 
 .input_medicament_info {
@@ -353,19 +352,20 @@ width: 20%;
 
 #notes_input {
     width:300px;
-
     margin-bottom:20px;
 }
+
 #container_drug {
     display: flex;
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
-
 }
+
 #form_add {
     width: 100%;
 }
+
 #drug_table {
     width: 100%;
 }
@@ -373,6 +373,7 @@ width: 20%;
 #message{
     margin-top: 20px;
 }
+
 #message_error{
     color: red;
     padding-top: 15px;
