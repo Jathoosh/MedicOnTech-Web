@@ -84,7 +84,7 @@
                     
                     <!-- Information Liste de services - Table Id_Prescription & Service-->
                     <h5>Services</h5>
-                    <p v-for="(ligne,index_service) in prescription_for_display.services[0].services" :key="index_service">
+                    <p v-for="(ligne,index_service) in listeservice" :key="index_service">
                         {{ ligne.service_name }}
                     </p><br>
 
@@ -124,6 +124,13 @@
 <script>
 module.exports = {
     name: 'Ordonnance',
+    computed: {
+        listeservice: function() {
+            let temp = this.prescription_for_display.services;
+            //ternaire : condition ? si vrai : si faux
+            return temp.length > 0 ? temp[0].services : [];
+        }
+    },
     methods: {
         backHomePatient: function () {
             this.$router.push("/Patient_home");

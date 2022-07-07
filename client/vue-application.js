@@ -184,7 +184,8 @@ var app = new Vue( {
         const res2 = await axios.get('api/doctor_mdatas_services');
         res.data.datas.forEach(element => {
           element.prescriptions.forEach(prescription => {
-            prescription.services = res2.data.datas.filter(service => service.Id_Prescription == prescription.infos_prescription.Id_Prescription)[0].services;
+            let forservice = res2.data.datas.filter(service => service.Id_Prescription == prescription.infos_prescription.Id_Prescription);
+            prescription.services = forservice.length > 0 ? forservice[0].services : [];
           });
         });
         return res.data.datas;
@@ -300,8 +301,9 @@ var app = new Vue( {
     
     async sendprescription(data){
       const res = await axios.post('api/sendPrescription', data);
+      console.log(res.data);
       if(res.data.sent == true){
-        console.log("Je suis dans le vue application, c'est envoyé l'ordonnance");
+        this.reloadData();
       }
       else{
         console.log("Je suis dans le vue application, c'est pas envoyé l'ordonnance");

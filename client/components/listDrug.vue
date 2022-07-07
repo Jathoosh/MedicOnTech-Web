@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p>je suis ton drug</p>
     <table class="table">
       <thead>
               <tr>

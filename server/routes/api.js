@@ -628,9 +628,7 @@ router.put('/modifMutuelle', (req,res) => {
       })
     }
   });
-})
-
-// Récupérer liste des médicaments quand le docteur cherche un pour ordonnances 
+}) 
 
 router.get('/drugs/:drug_name', (req,res) => {
   const drug_name = req.params.drug_name;
@@ -661,10 +659,16 @@ router.post('/sendPrescription', (req,res) => {
   const drugs = req.body.drugs;
   const notes = req.body.notes;
   const reusable = req.body.reusable;
+  const frequency_of_reuse = reusable ? 10 : 0;
   const reuse = req.body.reuse;
-  const date = req.body.date;
+  const date = new Date(req.body.date);
+  const date_exp = reusable ? new Date(date.getTime() + (reuse*frequency_of_reuse)*24*60*60*1000) : new Date(date.getTime() + 2592000000);
+  
+  //convert date to YYYY/MM/DD
+  const date_gf = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+  const date_exp_gf = date_exp.getFullYear() + "-" + (date_exp.getMonth()+1) + "-" + date_exp.getDate();
 
-  sequelize.query(`select Id_Patient from patient where last_name = '${patient.last_name}' and first_name = '${patient.first_name}'`).then(result => {
+  sequelize.query(`select Id_Patient from patient JOIN Person Using (Id_Person) where last_name = '${patient.last_name}' and first_name = '${patient.first_name}'`).then(result => {
     if (result[0].length == 0)
     {
       res.status(200).json({
@@ -675,29 +679,44 @@ router.post('/sendPrescription', (req,res) => {
     else
     {
       const Id_Patient = result[0][0].Id_Patient;
-      sequelize.query(`insert into prescription (creation_date, expiration_date, frequency_of_reuse, number_of_reuses, used, validity, note, reported, barcode_svg, Id_Doctor, Id_Patient) values ('${date}', '${date}', '${reusable}', '${reuse}', '0', '1', '${notes}', '0', '', '${Id_Doctor}', '${Id_Patient}')`).then(result2 => {
-        if (result2[0].affectedRows == 1)
+      sequelize.query(`insert into prescription (creation_date, expiration_date, frequency_of_reuse, number_of_reuses, used, validity, note, reported, barcode_svg, Id_Doctor, Id_Patient) values ('${date_gf}', '${date_exp_gf}', '${frequency_of_reuse}', '${reuse}', '0', '1', '${notes}', '0', '', '${Id_Doctor}', '${Id_Patient}')`).then(result2 => {
+        if (result2[0] > 0)
         {
-          const Id_Prescription = result2[0].insertId;
+          const Id_Prescription = result2[0];
+          var query = `insert into prescription_drug (Id_Prescription, Id_Drug, quantity) values `;
           drugs.forEach(drug => {
-            sequelize.query(`insert into prescription_drug (Id_Prescription, Id_Drug) values ('${Id_Prescription}', '${drug.Id_Drug}')`);
+            query += `(${Id_Prescription}, (SELECT Id_Drug from drug where drug_name = '${drug.drug_name}' limit 1), ${drug.drug_quantity}),`;
           });
-          res.status(200).json({
-            message : 'Ordonnance envoyée',
-            changed : true
+          query = query.slice(0, -1);
+          sequelize.query(query).then(result3 => {
+            if (result3[0].affectedRows == drugs.length || result3[0] > 0)
+            {
+              res.status(200).json({
+                message : 'Ordonnance envoyée',
+                sent : true,
+                Id_Prescription : Id_Prescription
+              });
+            }
+            else
+            {
+              res.status(200).json({
+                message : 'Ordonnance non envoyée',
+                sent : false,
+              });
+            }
           });
         }
         else
         {
           res.status(200).json({
             message : 'Ordonnance non envoyée',
-            changed : false
+            sent : false
           });
         }
       }).catch(err => {
         res.status(500).json({
           message : 'Erreur lors de l\'envoi de l\'ordonnance',
-          changed : false
+          sent : false
         });
       }
       )
@@ -707,19 +726,9 @@ router.post('/sendPrescription', (req,res) => {
 
 // Récupérer ordonnance en tant que pharmacien avec les inputs (vérifier le numéro de sécurité)
 
-// PARTIE APPLICATION
 
-router.get("/motapp", (req, res) => {
-  res.status(200).json([
-    {
-      message: "Tu as réussi, hésite pas à me mp le code 59745 sur Discord",
-      id: 1,
-    },
-    { message: "Hola Camron, como esta ?!", id: 2 },
-    { message: "Hey, i can also talk english, what about you ?", id: 3 },
-    { message: "WeshWesh, jai plus dinspi", id: 4 },
-  ]);
-});
+
+// PARTIE APPLICATION
 
 router.get("/motapp/ordonnance/:id", (req, res) => {
   id = req.params.id;

@@ -191,7 +191,11 @@ module.exports = {
             else {
                 this.newPrescription.date = this.myDate;
                 this.newPrescription.drugs = this.drugs;
-                this.newPrescription.notes = this.notes;
+                this.newPrescription.notes = "Notes pour les médicaments : \n";
+                this.drugs.forEach(drug => {
+                    this.newPrescription.notes += drug.drug_name + ":" + drug.drug_notes + "\n";
+                });
+                this.newPrescription.notes += "\nNotes supplémentaires :\n" + this.notes;
                 this.newPrescription.reusable = this.reusable;
                 this.newPrescription.reuse = this.reuse;
                 this.newPrescription.patient_lastname = this.newPatient_lastname;
