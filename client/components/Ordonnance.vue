@@ -215,7 +215,7 @@ module.exports = {
         });
         //failToPrint
         window.addEventListener('failtoprint', function () {
-            console.log('failToPrint');
+            alert("Veuillez réessayer");
         });
     },
 

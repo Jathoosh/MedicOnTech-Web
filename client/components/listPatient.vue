@@ -36,7 +36,6 @@ module.exports = {
    watch: {
     liste_patient_search: function (newValue) {
       this.table_patient = newValue;
-      console.log(this.table_patient);
     }
    },
   data() {

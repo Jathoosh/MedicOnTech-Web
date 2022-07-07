@@ -81,6 +81,8 @@ var app = new Vue( {
     mutual_change_state: "false",
     liste_drug_search: [],
     scanprescription_bool: false,
+    validate_prescription_bool: false,
+    ordonnance_signalee_bool: false,
   },
   components: 
   {
@@ -304,18 +306,12 @@ var app = new Vue( {
       if(res.data.sent == true){
         this.reloadData();
       }
-      else{
-        console.log("Je suis dans le vue application, c'est pas envoyé l'ordonnance");
-      }
     },
 
     async sendpac(data){
       const res = await axios.post('api/sendPac', data);
       if(res.data.sent == true){
         this.reloadData();
-      }
-      else{
-        console.log("Je suis dans le vue application, c'est pas envoyé le pac");
       }
     },
 
@@ -327,6 +323,32 @@ var app = new Vue( {
       }
       else{
         this.scanprescription_bool = false;
+      }
+    },
+
+    async validate_prescription(data){
+      const res = await axios.post('api/validatePrescription', data);
+      if(res.data.validated == true){
+        const res2 = await axios.get('api/pharmacist/'+data.Id_Prescription+'/'+data.check_security);
+        if (res2.data.state == true){
+          this.prescription_for_display = res2.data.prescription_for_display;
+        }
+      }
+      else{
+        this.validate_prescription_bool = false;
+      }
+    },
+
+    async ordonnance_signalee(data){
+      const res = await axios.post('api/ordonnanceSignalee', data);
+      if(res.data.reported == true){
+        const res2 = await axios.get('api/pharmacist/'+data.Id_Prescription+'/'+data.check_security);
+        if (res2.data.state == true){
+          this.prescription_for_display = res2.data.prescription_for_display;
+        }
+      }
+      else{
+        this.ordonnance_signalee_bool = false;
       }
     },
 

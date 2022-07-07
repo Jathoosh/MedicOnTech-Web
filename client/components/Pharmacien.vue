@@ -25,7 +25,7 @@
             <h4> Signalement </h4> 
 
             <form> 
-                <textarea class="form-control" placeholder="Cause du signalement, ... ">  </textarea> 
+                <textarea class="form-control" placeholder="Cause du signalement, ... " v-model="signalement_text">  </textarea> 
             </form>
 
             <div class="buttonSignaler"> 
@@ -84,6 +84,7 @@ module.exports = {
         return{
             Id_Ordonnance: '',
             check_security: '',
+            signalement_text: '',
         }
     },
     methods: {
@@ -103,13 +104,19 @@ module.exports = {
             }
         },
         validerOrdonnance: function(){
-            //this.$emit("ordonannce validée", this.id_prescription);
-            alert("Ordonnance validée");
+            //Décrémenter de 1 number_of_reuse et si number_of_reuse == 0, passer validity à 0
+            if (this.prescription_for_display.infos_prescription.used === 1 || this.prescription_for_display.infos_prescription.validity === 0)
+            {
+                alert("L'ordonnance est déjà validée");
+            }
+            else
+            {
+                this.$emit('validate_prescription', {Id_Prescription:this.prescription_for_display.infos_prescription.Id_Prescription, check_security: this.check_security});
+            }
         },
         signalerOrdonnance: function(){
-            var idOrdonnanceSignalee = document.getElementById("signaler").value;
-            //sera à modifier pour qu'on puisse récupérer l'id de l'ordonnance => backend
-            alert(idOrdonnanceSignalee);
+            this.$emit("ordonnance_signalee", {Id_Prescription:this.prescription_for_display.infos_prescription.Id_Prescription, check_security: this.check_security,report_note : this.signalement_text});
+            alert("Cette ordonnance a été signalée");
         },
         checkEAN13Digits(str){ //Le str est le code barre en nombre, faites attention à ce qu'il n'y ait que des nombres
             let sum1 = 0;

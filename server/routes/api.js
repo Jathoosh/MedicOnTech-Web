@@ -149,7 +149,6 @@ router.post('/login', (req, res) => {
 router.get('/connected', (req, res) => { //TODO : Cookie
   if (req.session.Id_Person != null)
   {
-    console.log(sdatas);
     res.status(200).json({
       connected : true,
       sdatas : sdatas
@@ -578,6 +577,55 @@ router.get('/pharmacist/:prescription/:check_number', (req,res) => {
   })
 })
 
+router.post('/validatePrescription', (req,res) => {
+  const Id_Prescription = req.body.Id_Prescription;
+  sequelize.query(`SELECT number_of_reuses FROM prescription WHERE Id_Prescription = ${Id_Prescription}`).then(result => {
+    if (result[0][0].number_of_reuses == 0){
+      sequelize.query(`UPDATE prescription SET used = 1 WHERE Id_Prescription = ${Id_Prescription}`).then(result2 => {
+        res.status(200).json({
+          message : 'Prescription validée',
+          validated : true
+        });
+      })
+    }
+    else{
+      sequelize.query(`UPDATE prescription SET number_of_reuses = number_of_reuses - 1 WHERE Id_Prescription = ${Id_Prescription}`).then(result2 => {
+        sequelize.query(`select number_of_reuses from prescription where Id_Prescription = ${Id_Prescription}`).then(result3 => {
+          if (result3[0][0].number_of_reuses == 0){
+            sequelize.query(`UPDATE prescription SET used = 1 WHERE Id_Prescription = ${Id_Prescription}`).then(result4 => {
+              res.status(200).json({
+                message : 'Prescription validée',
+                validated : true
+              });
+            })
+          }
+          else{
+            res.status(200).json({
+              message : 'Prescription validée',
+              validated : true
+            });
+          }
+        });
+      })
+    }
+  })
+  
+})
+
+router.post('/ordonnanceSignalee', (req,res) => {
+  const Id_Prescription = req.body.Id_Prescription;
+  sequelize.query(`UPDATE prescription SET reported = 1 WHERE Id_Prescription = ${Id_Prescription}`).then(result => {
+    sequelize.query(`UPDATE prescription SET report_note = '${req.body.report_note}' WHERE Id_Prescription = ${Id_Prescription}`).then(result2 => {
+      sequelize.query(`UPDATE prescription SET validity = 0 WHERE Id_Prescription = ${Id_Prescription}`).then(result3 => {
+        res.status(200).json({
+          message : 'Prescription signalée',
+          reported : true
+        });
+      })
+    })
+  })
+})
+
 // PARTIE FONCTIONNELLE DU SITE
 
 router.get('/recherchePatient/:first_name/:last_name', (req,res) => {
@@ -688,7 +736,6 @@ router.post('/sendPrescription', (req,res) => {
           });
           query = query.slice(0, -1);
           sequelize.query(query).then(result3 => {
-            console.log(result3)
             if (result3[0].affectedRows == drugs.length || result3[0] > 0)
             {
               res.status(200).json({
@@ -740,7 +787,6 @@ router.get("/motapp/ordonnance/:id", (req, res) => {
       `SELECT pp.last_name as patient_lastname, pp.first_name as patient_firstname, dp.last_name as doctor_lastname, dp.first_name as doctor_firstname, creation_date, Id_Prescription from prescription join patient using(Id_Patient) join doctor using (Id_Doctor) join person dp ON dp.Id_Person = Doctor.Id_Person Join person pp on pp.Id_Person = patient.Id_Person where  used= false and Id_Patient = ${id}`
     )
     .then((result) => {
-      console.log(result[0]);
       res.status(200).json({ result: result[0] });
     });
 });
@@ -755,7 +801,6 @@ router.get("/motapp/prescription/:id", (req, res) => {
       where Id_Prescription = ${id}`
     )
     .then((result) => {
-      console.log(result[0]);
       res.status(200).json({ result: result[0] });
     });
 });
@@ -767,7 +812,6 @@ router.get("/motapp/historique/:id", (req, res) => {
       `SELECT pp.last_name as patient_lastname, pp.first_name as patient_firstname, dp.last_name as doctor_lastname, dp.first_name as doctor_firstname, creation_date, Id_Prescription from prescription join patient using(Id_Patient) join doctor using (Id_Doctor) join person dp ON dp.Id_Person = Doctor.Id_Person Join person pp on pp.Id_Person = patient.Id_Person where  used= true and Id_Patient = ${id}`
     )
     .then((result) => {
-      console.log(result[0]);
       res.status(200).json({ result: result[0] });
     });
 });
@@ -780,7 +824,6 @@ router.get("/motapp/doctor/:id", (req, res) => {
     )
     
     .then((result) => {
-      console.log(result[0]);
       res.status(200).json({ result: result[0] });
     });
 });
@@ -792,7 +835,6 @@ router.get("/motapp/charge/:id", (req, res) => {
       `SELECT * from Patient Join person Using (Id_Person) where Id_Tutor = (Select Id_Person from patient where Id_Patient = ${id})`
     )
     .then((result) => {
-      console.log(result[0]);
       res.status(200).json({ result: result[0] });
     });
 });
@@ -838,7 +880,6 @@ router.post("/motapp/setconnexion", (req, res) => { // accés depuis la page de 
 router.post("/motapp/checkconnexion", (req, res) => { // Pour le fetch de l'application
   const device_id = req.body.device_id;
   sequelize.query(`select Id_Patient from patient where device_id = "${device_id}"`).then(result => {
-    console.log(result[0]);
     if(result[0].length == 0) {
       res.status(200).json({
         message: "Erreur de connexion",
