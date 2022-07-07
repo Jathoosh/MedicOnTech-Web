@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-
     <div class="rectangle"> 
       <p id="title_profil"> A propos de nous </p>
     </div>    
@@ -50,9 +49,11 @@
           <div class="bg-white rounded shadow-sm py-5 px-4"><img src="ressources\profils\profil_Guillaume.jpg" alt="" width="100" class="img-fluid rounded-circle mb-2 img-thumbnail shadow-sm">
             <h5 class="mb-0">Guillaume JACQUET</h5>
           </div>
-        </div> 
-      </div>
+        </div>
+        
+      </div> 
     </div>
+  </div>
 </template>
 
 <script>
@@ -108,6 +109,7 @@ module.exports = {
     width: 100%;
     height: auto;
   }
+
   .row {
     --bs-gutter-x: 1.5rem;
   }

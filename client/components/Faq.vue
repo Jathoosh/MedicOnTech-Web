@@ -7,7 +7,7 @@
       
       <div> 
         <p class="texte_faq"> Ici, vous retrouverez les questions les plus posées. 
-          Si votre question ne s’y trouve pas, n’hésitez pas à nous contacter. <br>Nous serons ravis de vous répondre :)
+          Si votre question ne s’y trouve pas, n’hésitez pas à nous contacter. <br>Nous serons ravi.e.s de vous répondre :)
         </p>
       </div>
     </div>

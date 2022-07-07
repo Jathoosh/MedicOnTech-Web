@@ -1,53 +1,53 @@
 <template>
     <div class="card">
-        <!-- affichage des données d'une personne -->
-        <div class="card-image">
-          <div>
-            <div class="image_profil">
-              <p id="nom_img_profil"> {{ initialesPatient() }} </p>
-            </div>
+      <div class="card-image">
+        <div>
+          <div class="image_profil">
+            <p id="nom_img_profil"> {{ initialesPatient() }} </p>
           </div>
         </div>
-        
-        <div class="card-body">
-            <p>{{ sdatas.first_name }} {{ sdatas.last_name }}</p>
-            <p v-if="sdatas.profession.name === 'Patient'">Né le {{ changeDate(sdatas.birth_date) }}</p>
-            <p>{{ sdatas.mail }}</p>
-            <p v-if="sdatas.mutuelle!=null">Mutuelle : {{ sdatas.mutuelle }}</p>
-            <button @click="modifyProfil" v-if="sdatas.profession.name === 'Patient' && button_actionne == false"><strong>Modifier profil</strong></button>
-            
-        </div>
+      </div>
+      
+      <div class="card-body">
+          <p>{{ sdatas.first_name }} {{ sdatas.last_name }}</p>
+          <p v-if="sdatas.profession.name === 'Patient'">Né.e le {{ changeDate(sdatas.birth_date) }}</p>
+          <p>{{ sdatas.mail }}</p>
+          <p v-if="sdatas.mutuelle!=null">Mutuelle : {{ sdatas.mutuelle }}</p>
+          <button @click="modifyProfil" v-if="sdatas.profession.name === 'Patient' && button_actionne == false"><strong>Modifier profil</strong></button>  
+      </div>
+
     </div>
 </template>
 
 <script>
 module.exports = {
-    name: 'info-card',
-    props: {
-      sdatas: {
-        type: Object,
-        required: false,
-        default: function () {
-          return {};
-        },
+  name: 'info-card',
+  
+  props: {
+    sdatas: {
+      type: Object,
+      required: false,
+      default: function () {
+        return {};
       },
-      button_actionne: Boolean
     },
-    methods:{
-      modifyProfil: function(){
-        this.$emit("disapear");
-        this.$router.push("/Profil");
-      },
-      initialesPatient: function(){
-        var String = this.sdatas.first_name[0] + this.sdatas.last_name[0];
-        return String;
-      },
-      changeDate(date){
-        dateSplit = date.split('-');
-        return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
-      }
+    button_actionne: Boolean
+  },
+  
+  methods:{
+    modifyProfil: function(){
+      this.$emit("disapear");
+      this.$router.push("/Profil");
+    },
+    initialesPatient: function(){
+      var String = this.sdatas.first_name[0] + this.sdatas.last_name[0];
+      return String;
+    },
+    changeDate(date){
+      dateSplit = date.split('-');
+      return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
     }
-   
+  }   
 }
 </script>
 
@@ -75,10 +75,6 @@ module.exports = {
     transform: translate(-50%, -50%);
   }
 
-  .card-title{
-    font-weight: bold;
-  }
-
   .card-body {
     text-align: center; 
     padding: 15px 20px; 
@@ -95,23 +91,6 @@ module.exports = {
   button:hover {
     background-color: #b1b1b1;
     transition: background-color 0.5s;
-  }
-
-  .image_formulaire{
-    position : relative;
-    width: 175px; 
-    height: auto;
-  }
-
-  .position_formulaire{
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 20px;
-  }
-
-  .flex-row{
-    justify-content: center;
-    align-items: center;
   }
 
   .image_profil {

@@ -299,7 +299,8 @@ var app = new Vue( {
 
     gotoprofil(){
       this.button_actionne = true;
-    }
+    },
+    
     OrdonnanceTutor()
     {
       this.tutor_true();

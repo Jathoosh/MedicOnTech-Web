@@ -1,104 +1,106 @@
 <template>
   <div>
-  <div class="main_container">
-    <div class = "test"> <!-- TTTTTEEEEESSSSTTTT -->
-      <p class="title_profil"> Votre profil </p>
+    <div>
+      <div class = "main_container">
+        <p class="title_profil"> Votre profil </p>
+        <div>
+          <button @click="retourPagePrincipale" class="btn btn-outline-dark ml-2" type="submit">Retour</button>
+        </div>
+      </div>
 
-      <div >
-        <button @click="retourPagePrincipale" class="btn btn-outline-dark ml-2" type="submit">Retour</button>
+      <div class="container">
+        <div class = "card_patient">
+          <p id = "informations" class="rectangle"> Vos informations </p>
+
+          <div class="content_container">       
+            <div>
+              <p class="image_profil text-center" id="nom_profil"> {{ initialesPatient() }} </p>
+            </div>
+            
+            <div>
+              <!-- données du patient -->
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <th scope="row">Nom de famille</th>
+                    <td>{{sdatas.last_name}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Prénom</th>
+                    <td>{{sdatas.first_name}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Date de naissance</th>
+                    <td>{{sdatas.birth_date}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Adresse mail</th>
+                    <td>{{sdatas.mail}}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Mutuelle</th>
+                    <td><input v-model="sdatas.mutuelle"></td>
+                  </tr>
+                </tbody>
+              </table> 
+            </div>
+
+            <div class="position_formulaire">
+              <img class = "image_formulaire rounded" src="ressources/formulaire.jpg" alt="Image">
+            </div>
+          </div>
+
+          <div class="buttonModify">
+            <button @click="modifyInformationsProfil" class="btn btn-outline-dark ml-2" type="submit">Modifier</button>
+          </div>
+        </div> 
+
       </div>
     </div>
-
-  <div class="container">
-    <div class = "card_patient">
-      <p id = "informations" class="rectangle"> Vos informations </p>
-      <div class="content_container">       
-        <div>
-          <p class="image_profil text-center" id="nom_profil"> {{ initialesPatient() }} </p>
-        </div>
-        
-        <div>
-        <!-- données du patient -->
-        <table class="table">
-          <tbody>
-              <tr>
-                <th scope="row">Nom de famille</th>
-                <td>{{sdatas.last_name}}</td>
-              </tr>
-
-            <tr>
-              <th scope="row">Prénom</th>
-              <td>{{sdatas.first_name}}</td>
-            </tr>
-            <tr>
-              <th scope="row">Date de naissance</th>
-              <td>{{sdatas.birth_date}}</td>
-            </tr>
-            <tr>
-              <th scope="row">Adresse mail</th>
-              <td>{{sdatas.mail}}</td>
-            </tr>
-            <tr>
-              <th scope="row">Mutuelle</th>
-              <td><input v-model="sdatas.mutuelle"></td>
-            </tr>
-          </tbody>
-        </table> 
-        </div>
-        <div class="position_formulaire">
-          <img class = "image_formulaire rounded" src="ressources/formulaire.jpg" alt="Image">
-        </div>
-
-      </div>
-      <div class="buttonModify">
-        <button @click="modifyInformationsProfil" class="btn btn-outline-dark ml-2" type="submit">Modifier</button>
-      </div>
-    </div> 
-    
+    <br>
   </div>
-  </div>
-  <br>
-</div>
 </template>
 
 <script>
 module.exports = {
-    name: 'modify-card',
-    props: {
-      sdatas: {
-        type: Object,
-        required: false,
-        default: function () {
-          return {};
-        },
+  name: 'modify-card',
+  props: {
+    sdatas: {
+      type: Object,
+      required: false,
+      default: function () {
+        return {};
       },
-    },
-    methods:{
-      modifyInformationsProfil: function(){
-        this.$emit("modify", this.sdatas);
-        //console.log(this.sdatas); //renvoie nouvelles informations Patient
-      },
-      retourPagePrincipale: function(){
-        this.$emit("retour page principale");
-        this.$router.push("/Patient_home");
-      }, 
-      initialesPatient: function(){
-        var String = this.sdatas.first_name[0] + this.sdatas.last_name[0];
-        return String;
-      }
     }
-   
+  },
+  
+  methods:{
+    modifyInformationsProfil: function(){
+      this.$emit("modify", this.sdatas);
+    },
+    retourPagePrincipale: function(){
+      this.$emit("retour page principale");
+      this.$router.push("/Patient_home");
+    }, 
+    initialesPatient: function(){
+      var String = this.sdatas.first_name[0] + this.sdatas.last_name[0];
+      return String;
+    }
+  }
 }
+
 </script>
 
 <style scoped>
-  .test {
+  .main_container {
     display: flex;
     justify-content: space-between ;
   }
+  
   .d-flex {
     align-content: center;
   }
+  
   .content_container {
     display: flex;
     flex-direction: row;
@@ -106,6 +108,7 @@ module.exports = {
     align-items: center;
     flex-wrap: nowrap;
   }
+
   .title_profil{
     margin-top: 12px;
     font-size: 24px;
@@ -124,13 +127,13 @@ module.exports = {
   }
 
   .title_profil{
-  border-bottom: 4px solid green;
-  width: fit-content;
+    border-bottom: 4px solid green;
+    width: fit-content;
   }
+
   .card_patient{
     background: rgba(216, 216, 216, 0.5);
     border-radius: 20px;
-
     display: flex;
     flex-direction: column;
   }
@@ -186,6 +189,5 @@ module.exports = {
     margin-top: -39px;
     margin-left: 29px;
   }
-
 
 </style>
