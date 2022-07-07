@@ -80,6 +80,7 @@ var app = new Vue( {
     check_connexion_mobile: false,
     mutual_change_state: "false",
     liste_drug_search: [],
+    scanprescription_bool: false,
   },
   components: 
   {
@@ -143,7 +144,7 @@ var app = new Vue( {
       this.reloadData();
     },
     async checkconnexionmobile(){
-      const res = await axios.get('/api/motapp/setconnexion');
+      const res = await axios.post('/api/motapp/setconnexion',{Id_Patient : 10});//TODO TEMP
       this.check_connexion_mobile = res.status === 200? true : false;
     },
 
@@ -254,7 +255,7 @@ var app = new Vue( {
     {
       var current_url = window.location.href;
       current_url = current_url.substring(current_url.lastIndexOf('/'), current_url.length);
-      if (current_url.toLowerCase() != '/faq' && current_url.toLowerCase() != '/a_propos' && current_url.toLowerCase() != '/contact'){
+      if (current_url.toLowerCase() != '/faq' && current_url.toLowerCase() != '/a_propos' && current_url.toLowerCase() != '/contact' && current_url.toLowerCase() != '/mobile_login'){
         const res = await axios.get('api/connected');
         if(res.data.connected)
         {
@@ -315,6 +316,17 @@ var app = new Vue( {
       }
       else{
         console.log("Je suis dans le vue application, c'est pas envoyé le pac");
+      }
+    },
+
+    async scanprescription(data){
+      const res = await axios.get('api/pharmacist/'+data.prescription+'/'+data.check_security);
+      if (res.data.state == true){
+        this.prescription_for_display = res.data.prescription_for_display;
+        this.scanprescription_bool = true;
+      }
+      else{
+        this.scanprescription_bool = false;
       }
     },
 

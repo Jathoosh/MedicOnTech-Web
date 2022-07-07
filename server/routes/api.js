@@ -494,10 +494,11 @@ router.get('/doctor_mdatas_services', (req,res) => {
   })
 })
 
-router.get('/pharmacist_mdatas/:prescription/:check_number', (req,res) => {
-  const Id_Prescription = req.params.prescription;
+router.get('/pharmacist/:prescription/:check_number', (req,res) => {
+  //transform prescription (string with 13 digits) into integer without leading 0 and without trailing 0 and delete 13th digit
+  const Id_Prescription = req.params.prescription.replace(/^0+/g, '').slice(0, -1);
   const check_number = req.params.check_number;
-  mdatas = [];
+  var toreturn = {};
   sequelize.query(`SELECT Id_Patient FROM Patient where social_security_number = '${check_number}'`).then(result => {
     if (result[0].length == 0)
     {
@@ -509,71 +510,69 @@ router.get('/pharmacist_mdatas/:prescription/:check_number', (req,res) => {
     else
     {
       sequelize.query(`SELECT person.*, patient.Id_Patient, prescription.*, drug.*, doctor_infos.email_address doctor_mail, doctor_infos.first_name doctor_first, doctor_infos.last_name doctor_last, doctor_infos.phone doctor_phone, professional.workplace_name, speciality.speciality_name, postal_address.* from prescription JOIN patient USING (Id_Patient) JOIN person USING (Id_Person) right join prescription_drug Using (Id_Prescription) join drug using (Id_Drug) join doctor Using (Id_Doctor) Join professional on doctor.Id_Person = professional.Id_Person Join person as doctor_infos On professional.Id_Person = doctor_infos.Id_Person Join postal_address on doctor_infos.Id_Postal_address = postal_address.Id_Postal_address join doctor_speciality using(Id_Doctor) join speciality using(Id_Speciality) WHERE Id_Prescription = ${Id_Prescription	} and Id_Patient = ${result[0][0].Id_Patient}`).then(result2 => {
-        /*
-        {
-    "infos_prescription": {
-        "Id_Prescription": 7,
-        "creation_date": "2002-08-17",
-        "expiration_date": "2002-11-17",
-        "date_of_use": "2002-11-17",
-        "frequency_of_reuse": 0,
-        "number_of_reuses": 0,
-        "used": 1,
-        "validity": 0,
-        "note": "TODOTEXTE",
-        "reported": 1,
-        "report_note": "REPORTTODO",
-        "doctor_infos": {
-            "workplace_name": "CLINIQUE DU TERTRE ROUGE",
-            "first_name": "Camille",
-            "last_name": "Moreau",
-            "speciality": "Cardiologue",
-            "mail": "moreau.camille@medecin.fr",
-            "phone": "01 84 88 37 10",
-            "address": {
-                "door_number": null,
-                "road_number": "3",
-                "road_name": "Rue Alexandre Dumas",
-                "zip_code": "51110",
-                "town": "Bazancourt",
-                "country": "France"
+        //Obtain unique prescription
+        let Id_Prescriptions = [];
+        result2[0].forEach(row => {
+          if (!Id_Prescriptions.includes(row.Id_Prescription))
+          {
+            Id_Prescriptions.push(row.Id_Prescription);
+            toreturn.infos_prescription = {
+              Id_Prescription : row.Id_Prescription,
+              creation_date : row.creation_date,
+              expiration_date : row.expiration_date,
+              date_of_use : row.date_of_use,
+              frequency_of_reuse : row.frequency_of_reuse,
+              number_of_reuses : row.number_of_reuses,
+              used : row.used,
+              validity : row.validity,
+              note : row.note,
+              reported : row.reported,
+              report_note : row.report_note,
+              doctor_infos : {
+                mail : row.doctor_mail,
+                first_name : row.doctor_first,
+                last_name : row.doctor_last,
+                phone : row.doctor_phone,
+                workplace_name : row.workplace_name,
+                speciality_name : row.speciality_name,
+                address : {
+                  //door_number, number, road, zip_code, town, country
+                  door_number : row.door_number,
+                  number : row.number,
+                  road : row.road,
+                  zip_code : row.zip_code,
+                  town : row.town,
+                  country : row.country
+                  
+                }
+              }
             }
-        }
-    },
-    "drugs": [
-        {
-            "Id_Drug": 60549797,
-            "drug_name": "FOSTIMONKIT 150 UI",
-            "drug_format": "poudre et  solvant pour solution injectable",
-            "drug_application": "sous-cutanée",
-            "autorisation_status": "Autorisation active",
-            "comercialised": "Commercialisée",
-            "comercialised_on": "2006-08-09",
-            "warning_stock": 0,
-            "comercialised_by": " IBSA PHARMA SAS",
-            "drug_price": null,
-            "reimbursement_rate": null
-        },
-    ],
-    "services": [
-        {
-            "Id_Prescription": 7,
-            "services": [
-                {
-                    "Id_Service": 10,
-                    "service_name": "Soins dentaires"
-                },
-            ]
-        }
-    ],
-    "infos_patient": {
-        "first_name": "Ross",
-        "last_name": "O'brien"
-    }
-} */
-        result2[0].forEach((row,n) => {
-          //TODO
+            toreturn.drugs = [];
+            toreturn.services = [];
+            toreturn.infos_patient = {
+              first_patient : row.first_name,
+              last_patient : row.last_name,
+            }
+          }
+          toreturn.drugs.push({
+            Id_Drug : row.Id_Drug,
+            drug_name : row.drug_name,
+            drug_format : row.drug_format,
+            drug_application : row.drug_application,
+            autorisation_status : row.autorisation_status,
+            comercialised : row.comercialised,
+            comercialised_on : row.comercialised_on,
+            warning_stock : row.warning_stock,
+            comercialised_by : row.comercialised_by,
+            drug_price : row.drug_price,
+            reimbursement_rate : row.reimbursement_rate
+          })
         })
+        res.status(200).json({
+          message : 'Données récupérées',
+          state : true,
+          prescription_for_display : toreturn
+        });
       })
     }
   })
@@ -814,13 +813,14 @@ router.get("/motapp/first_time/:device_id", (req, res) => { //Lien de connexion 
 router.post("/motapp/setconnexion", (req, res) => { // accés depuis la page de connexion depuis l'inapp browser
   const device_id = req.session.device_id;
   const Id_Patient = req.body.Id_Patient;
+  console.log("SetConnexion", device_id);
   if (device_id == undefined) {
     res.status(200).json({
       message: "Erreur de connexion",
     });
   }
   else {
-    sequelize.query(`UPDATE patient SET Id_Device = '${device_Id}' WHERE Id_Patient = ${Id_Patient}`).then(result => {
+    sequelize.query(`UPDATE patient SET Id_Device = '${device_id}' WHERE Id_Patient = ${Id_Patient}`).then(result => {
       if(result[0].length == 0) {
         res.status(200).json({
           message: "Erreur de connexion",
@@ -838,6 +838,7 @@ router.post("/motapp/setconnexion", (req, res) => { // accés depuis la page de 
 router.post("/motapp/checkconnexion", (req, res) => { // Pour le fetch de l'application
   const device_id = req.body.device_id;
   sequelize.query(`select Id_Patient from patient where device_id = "${device_id}"`).then(result => {
+    console.log(result[0]);
     if(result[0].length == 0) {
       res.status(200).json({
         message: "Erreur de connexion",

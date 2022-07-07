@@ -1,5 +1,5 @@
 const configRoutes = {
-    MAIN_URL: 'http://localhost:3030/#',
+    MAIN_URL: 'http://10.23.201.19:3030/#',
 
   };
   

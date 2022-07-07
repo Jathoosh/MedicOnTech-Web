@@ -5,15 +5,15 @@
         <div class="rectangle"> <p id="title_profil"> Recherche avancée </p> </div>    
         
         <div id="searchContainer"> 
-            <input class="searchBar" type="search" id="search" placeholder="ID ordonnance" size="28"/>
-            <input class="searchBar" type="search" id="search" placeholder="N° sécurité sociale" size="28"/>
+            <input class="searchBar" type="search" id="search" placeholder="ID ordonnance" v-model="Id_Ordonnance" size="28"/>
+            <input class="searchBar" type="search" id="search" placeholder="N° sécurité sociale" v-model="check_security" size="28"/>
             <button @click="rechercherID()" id="buttonRechercher">Rechercher</button>              
         </div>
 
         <!-- Affichage de l'ordonnance seulement si la fonction scanPrescription renvoit true -->
-        <!-- <div v-if="scanPrescription == true"> -->
+        <div v-if="scanprescription_bool == true">
 
-            <ordonnance></ordonnance>
+            <ordonnance :prescription_for_display="prescription_for_display"></ordonnance>
 
             <div class="buttonValider">
                 <button @click="validerOrdonnance" type="submit">Valider ordonnance</button>
@@ -29,7 +29,7 @@
             <div class="buttonSignaler"> 
                 <button @click="signalerOrdonnance" type="submit">Signaler</button> 
             </div> 
-        <!-- </div> -->
+        </div>
 
     </div>
 </template>
@@ -41,13 +41,13 @@ module.exports = {
         Ordonnance,
     },
     props:{
-        mdatas: {
-            type: Array,
-            required: true,
-            default: function () {
-                return [];
-            }
-        },
+        // mdatas: {
+        //     type: Array,
+        //     required: true,
+        //     default: function () {
+        //         return [];
+        //     }
+        // },
         sdatas: {
             type: Object,
             required: true,
@@ -61,15 +61,19 @@ module.exports = {
             default: function () {
                 return {};
             }
-        }
+        },
+        scanprescription_bool: {
+            type: Boolean,
+            required: true,
+            default: function () {
+                return false;
+            }
+        },
     },
     data(){
         return{
-            // pharmacist: {
-            //     id_pharmacist: 1, 
-            //     last_name: 'Last Name',
-            //     first_name: 'First Name '            
-            // }
+            Id_Ordonnance: '',
+            check_security: '',
         }
     },
     methods: {
@@ -78,10 +82,14 @@ module.exports = {
             return String;
         },
         rechercherID: function(){
-            var idOrdonnance = document.getElementById("search").value;
-            //sera à modifier pour qu'on puisse récupérer l'id de l'ordonnance => backend
-            alert(idOrdonnance);
-            this.checkEAN13Digits(idOrdonnance);
+            if(this.checkEAN13Digits(this.Id_Ordonnance.toString()))
+            {
+            this.$emit('scanprescription', {prescription : this.Id_Ordonnance, check_security : this.check_security});
+            }
+            else
+            {
+                alert("Le code barre n'est pas valide");
+            }
         },
         validerOrdonnance: function(){
             //this.$emit("ordonannce validée", this.id_prescription);
@@ -95,7 +103,7 @@ module.exports = {
         checkEAN13Digits(str){ //Le str est le code barre en nombre, faites attention à ce qu'il n'y ait que des nombres
             let sum1 = 0;
             let sum2 = 0;
-            for (let i = 0; i<str.length()-1;i++){
+            for (let i = 0; i<str.length-1;i++){
                 if (i%2 == 0){
                     sum1 = sum1 + sum1
                 }
@@ -103,7 +111,8 @@ module.exports = {
                     sum2 = sum2 + sum2
                 }
             }
-            return str[str.length()-1] == ((sum1*3 + sum2)%10 == 0)? 0 : (10 - (sum1*3 + sum2)%10)
+            console.log(((sum1*3 + sum2)%10 == 0)? 0 : (10 - (sum1*3 + sum2)%10));
+            return str[str.length-1] == ((sum1*3 + sum2)%10 == 0)? 0 : (10 - (sum1*3 + sum2)%10)
         } 
     },
     mounted(){
