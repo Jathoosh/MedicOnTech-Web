@@ -1,26 +1,100 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="utf-8">
-        <title>MedicOnTech</title>
-        <!-- Load Vue followed by Vue Router -->
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/http-vue-loader/src/httpVueLoader.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    </head>
-    <body>
-        <div id="app">
-          <header>
-            <h1>MedicOnTech</h1>
-            <nav>
-              <router-link to='/annexe'>Page Annexe</router-link>
-            </nav>
-          </header>
-          <main>
-            <router-view></router-view>
-          </main>
-        </div>
-        <script src="/vue-application.js"></script>
-    </body>
+
+<head>
+  <meta charset="utf-8">
+  <title>MedicOnTech</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="./ressources/MedicOnTech - Logo.png">
+
+  <!-- Load Vue followed by Vue Router -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/http-vue-loader/src/httpVueLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <!--Style CSS Temporaire TODO-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="ressources\fonts\stylesheet.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+</head>
+
+<body class="font-cera">
+  <div id="app">
+    <header id="header">
+      <!-- TODO Partie DEVELOPMMENT, à supprimer -->
+      <head_comp
+      :sdatas="sdatas"
+      :mdatas="mdatas"
+      :tutor_bool="tutor_bool"
+      @tutor_true="tutor_true"
+      @login = "login"
+      @logout = "logout"
+      @gotoprofil ="gotoprofil"
+      :button_actionne ="button_actionne"
+      ></head_comp>
+      <!-- FIN TODO -->
+      <!-- <Head_comp></Head_comp> -->
+    </header>
+    <main id="main">
+      <router-view
+      @checkconnexionmobile = "checkconnexionmobile"
+      :check_connexion_mobile="check_connexion_mobile"
+      @fc-method = "FCMethod"
+      @login = "login"
+      :mdatas = "mdatas"
+      :sdatas = "sdatas"
+      :sdatas_comp = "sdatas_comp"
+      @load_data_fc = "loadDataFcCallback"
+      @infos_patient = "infos_patient"
+      :index_history_patient = "index_history_patient"
+      @save_index_pac = "save_index_pac"
+      :index_pac = "index_pac"
+      @tutor_false = "tutor_false"
+      @tutor_true = "tutor_true"
+      :tutor_bool = "tutor_bool"
+      @status_doctor = "status_doctor"
+      @status_patient = "status_patient"
+      @status_pharmacist = "status_pharmacist"
+      :status = "status"
+      @save_ordonnance = "save_ordonnance"
+      @save_ordonnance_doctor = "save_ordonnance_doctor"
+      :index_ordonnance = "index_ordonnance"
+      :prescription_for_display = "prescription_for_display"
+      @search_patient = "recherchePatient"
+      :liste_patient_search = "liste_patient_search"
+      @modify_profil = "modify_profil"
+      :hide_length = "mutual_change_state"
+      @search_drug = "search_drug"
+      :liste_drug_search = "liste_drug_search"
+      @sendprescription = "sendprescription"
+      @sendpac = "sendpac"
+      @scanprescription = "scanprescription"
+      :scanprescription_bool = "scanprescription_bool"
+      @validate_prescription = "validate_prescription"
+      @ordonnance_signalee = "ordonnance_signalee"
+      ></router-view>
+      <!-- @getPrescriptions = "getPrescriptions"
+      :index_patient = "index_patient"
+      :heya = "heya"
+      :solo_data = "solo_data"
+      @sendPrescription = "sendPrescription" -->
+    </main>
+
+    <footer id="footer">
+      <Foot_comp
+      @footertobottom = "footertobottom"
+      ></Foot_comp>
+    </footer>
+  </div>
+  <script src="/vue-application.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+</body>
+
 </html>
