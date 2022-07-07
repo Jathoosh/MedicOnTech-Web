@@ -19,30 +19,23 @@
     </div>
     <br>
 
+    <br>
+
     <div class="prescription_info" v-for="(d, index) in filteredData" :key="index"> 
       <div class="detail">
         <h2>Fait le {{changeDate(d.infos_prescription.creation_date)}} - expire le {{changeDate(d.infos_prescription.expiration_date)}}</h2>
         <p><strong>Etat ordonnance : {{statePres(d.infos_prescription.validity)}}</strong></p>
         <p>Nombre de réutilisations : {{d.infos_prescription.frequency_of_reuse}}</p>
         <p>Ordonnance signalée : {{reportedPres(d.infos_prescription.reported)}}</p>
-        <p v-if="d.infos_prescription.reported == true">  Raisons du signalement : {{d.infos_prescription.report_note}}</p>
+        <p  v-if="d.infos_prescription.reported == true">  Raisons du signalement : {{d.infos_prescription.report_note}}</p>
       </div>
-
-
-  <br>
-
-  <div class="prescription_info" v-for="(d, index) in filteredData" :key="index"> 
-    <div class="detail">
-      <h2>Fait le {{changeDate(d.infos_prescription.creation_date)}} - expire le {{changeDate(d.infos_prescription.expiration_date)}}</h2>
-      <p><strong>Etat ordonnance : {{statePres(d.infos_prescription.validity)}}</strong></p>
-      <p>Nombre de réutilisations : {{d.infos_prescription.frequency_of_reuse}}</p>
-      <p>Ordonnance signalée : {{reportedPres(d.infos_prescription.reported)}}</p>
-      <p  v-if="d.infos_prescription.reported == true">  Raisons du signalement : {{d.infos_prescription.report_note}}</p>
+      
+      <div class="buttonRedirect">
+          <button @click="redirectionToOrdonnance(index)">Voir le détail</button> 
+      </div>
+      <br>
     </div>
 
-    <div class="buttonRedirect">
-        <button @click="redirectionToOrdonnance(index)">Voir le détail</button> 
-    </div>
     <br>
 
   </div>
@@ -170,7 +163,7 @@ module.exports = {
 
 .buttonRedirect {
   align-self:center;
-  margin-left : 10px;
+  margin-left: inherit;
 }
 
 /*bouton voir detail */
