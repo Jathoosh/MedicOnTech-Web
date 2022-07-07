@@ -689,6 +689,7 @@ router.post('/sendPrescription', (req,res) => {
           });
           query = query.slice(0, -1);
           sequelize.query(query).then(result3 => {
+            console.log(result3)
             if (result3[0].affectedRows == drugs.length || result3[0] > 0)
             {
               res.status(200).json({
@@ -718,8 +719,7 @@ router.post('/sendPrescription', (req,res) => {
           message : 'Erreur lors de l\'envoi de l\'ordonnance',
           sent : false
         });
-      }
-      )
+      })
     }
   })
 })
@@ -727,6 +727,10 @@ router.post('/sendPrescription', (req,res) => {
 // Récupérer ordonnance en tant que pharmacien avec les inputs (vérifier le numéro de sécurité)
 
 
+
+router.post('/sendPac', (req,res) => {
+  console.log("pAs Implémenté");
+})
 
 // PARTIE APPLICATION
 

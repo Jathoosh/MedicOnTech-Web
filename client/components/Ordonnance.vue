@@ -78,18 +78,19 @@
                     <!-- Information Liste de médicaments - Table Id_Prescription & Drug-->
                     <h5>Médicaments</h5>
                     <p v-for="(ligne,index_drug) in prescription_for_display.drugs" :key="index_drug">
-                        {{ ligne.drug_name }}
+                    - {{ ligne.drug_name }}
                     </p><br>
                     <!-- - {{ ligne.drug_quantity }} ???-->
                     
                     <!-- Information Liste de services - Table Id_Prescription & Service-->
                     <h5>Services</h5>
                     <p v-for="(ligne,index_service) in listeservice" :key="index_service">
-                        {{ ligne.service_name }}
+                    - {{ ligne.service_name }}
                     </p><br>
 
                     <!-- Informtion Ordonnance Note & Renouvelabilité -->
-                    <p>Notes : {{ prescription_for_display.infos_prescription.note }}</p><br>            
+                    <h5>Notes</h5>
+                    <p>{{ prescription_for_display.infos_prescription.note }}</p><br>            
                     <p v-if="prescription_for_display.infos_prescription.number_of_reuses!=0">Ordonnance renouvelable {{ prescription_for_display.infos_prescription.number_of_reuses }} 
                         fois tous les {{ prescription_for_display.infos_prescription.frequency_of_reuse }} jours.</p><br><br>
 
@@ -158,7 +159,6 @@ module.exports = {
             while (barcode.length < 12) {
                 barcode = "0" + barcode;
             }
-            console.log(barcode);
             return "http://bwipjs-api.metafloor.com/?bcid=ean13&text=" + barcode + "&includetext";
         }
     },
@@ -173,7 +173,6 @@ module.exports = {
         status: Number,
     },
     mounted() {
-        console.log(this.prescription_for_display);
         //Parcourir la liste des Prescription d'un Patient et récupérer les données de la Presciption
         //Afficher les données de la Prescription (tables Prescription, Drug et Service) dans la vue 
         //Afficher les données du Docteur (table Person et Speciality) dans la vue en haut à gauche de l'ordonnance
@@ -184,6 +183,7 @@ module.exports = {
         window.addEventListener('beforeprint', function () {
             const header = document.getElementById('header');
             const footer = document.getElementById('footer');
+            const main = document.getElementById('main');
             const toDisapearForPrint = document.getElementById('toDisapearForPrint');
             const imprimer = document.getElementById('imprimer');
             header.style.display = 'none';
@@ -193,11 +193,14 @@ module.exports = {
 
             const ordonnanceForPrint = document.getElementById('ordonnanceForPrint');
             ordonnanceForPrint.style.width = '100%';
+            ordonnanceForPrint.style.backgroundColor = 'white';
+            main.style.width = '100%';
         });
         //afterPrint
         window.addEventListener('afterprint', function () {
             const header = document.getElementById('header');
             const footer = document.getElementById('footer');
+            const main = document.getElementById('main');
             const toDisapearForPrint = document.getElementById('toDisapearForPrint');
             const imprimer = document.getElementById('imprimer');
             header.style.display = 'block';
@@ -207,6 +210,8 @@ module.exports = {
 
             const ordonnanceForPrint = document.getElementById('ordonnanceForPrint');
             ordonnanceForPrint.style.width = '80%';
+            ordonnanceForPrint.style.backgroundColor = 'rgb(224, 224, 224)';
+            main.style.width = '90%';
         });
         //failToPrint
         window.addEventListener('failtoprint', function () {
@@ -220,6 +225,11 @@ module.exports = {
 
 
 <style scoped>
+    .bodyOrdonnance > h5 {
+        border-bottom: 2px solid black;
+        padding-bottom: 10px;
+        font-size: 1.5em;
+    }
     .ordonnanceContainer {
         display: flex;
         flex-direction: column;
@@ -255,12 +265,12 @@ module.exports = {
     }
 
     #doctorContainer{
-        font-size: 1em;
+        font-size: 1.25em;
         font-weight: bold;
     }
 
     #workContainer{
-        font-size: 1em;
+        font-size: 1.25em;
         font-weight: bold;
         text-align: right;
     }
@@ -271,9 +281,10 @@ module.exports = {
     }
 
     .bodyOrdonnance{
-        font-size: 0.9em;
+        font-size: 1.20em;
         font-weight: bold;
         margin-left: 70px;
+        margin-right: 70px;
         margin-top: 50px;
     }
 
@@ -291,9 +302,8 @@ module.exports = {
         margin-top: 10px;
         margin-bottom: 10px;
     }
-
+    /*1.25 données header 1.5 h5  1.20 contenu*/ 
     #code_barres{
-        margin-right: 60px;
         height: 100px;
     }
 

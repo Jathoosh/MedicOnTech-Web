@@ -1,16 +1,16 @@
 <template>
   <div>
     <div class="main_container">
-        <div id="retour_container">
-          <button id="button" @click="redirectToHistoryPatient()" type="submit">Retour</button>
-        </div>
+      <div id="retour_container">
+        <button id="button" @click="redirectToHistoryPatient()" type="submit">Retour</button>
       </div>
+    </div>
       
-      
+    <br>
 
     <div class="container">
       <div class = "card_patient">
-        <p id = "informations" class="rectangle">Ajout d'une personne à charge pour {{mdatas[index_history_patient].infos_patient.last_name}} {{mdatas[index_history_patient].infos_patient.first_name}}</p>
+        <p id = "informations" class="rectangle">Ajout d'une personne à charge pour {{mdatas[index_history_patient].infos_patient.first_name}} {{mdatas[index_history_patient].infos_patient.last_name}}</p>
         <div class="content_container">
 
           <div class="d-flex flex-row">
@@ -128,8 +128,7 @@ module.exports = {
           this.patient.birth_date = this.newBirth_date;
           this.patient.mutuelle = this.newMutuelle;
           this.boolerror = false;
-          this.$emit("sendPac", this.patient);
-          console.log(this.patient);
+          this.$emit("sendpac", this.patient);
 
           // vider les champs remplis
           

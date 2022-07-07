@@ -15,13 +15,13 @@
     <p id="search_adv">Recherche avancée</p>
     <div class="container">
       <p style="max-height:5px; align-self :center;">A partir du : </p>
-      <input placeholder="Select date" v-model="input_date" type="date" class="form-control" style="max-width:12%; margin-left:5px;">
+      <input placeholder="Select date" v-model="input_date" type="date" class="form-control" style="max-width:fit-content; margin-left:5px;">
     </div>
     <br>
 
     <br>
 
-    <div class="prescription_info" v-for="(d, index) in filteredData" :key="index"> 
+    <div class="prescription_info" v-for="(d, index) in orderedDate" :key="index"> 
       <div class="detail">
         <h2>Fait le {{changeDate(d.infos_prescription.creation_date)}} - expire le {{changeDate(d.infos_prescription.expiration_date)}}</h2>
         <p><strong>Etat ordonnance : {{statePres(d.infos_prescription.validity)}}</strong></p>
@@ -135,6 +135,11 @@ module.exports = {
           return new Date(d.infos_prescription.creation_date).getTime() >= date;
         });
       }
+    },
+    orderedDate() {
+      return this.filteredData.sort(function (a, b) {
+        return new Date(b.infos_prescription.creation_date).getTime() - new Date(a.infos_prescription.creation_date).getTime();
+      });
     }
   }
 }
@@ -143,7 +148,7 @@ module.exports = {
 <style scoped>
 #search_adv {
   border-bottom: 5px solid #01AA88;
-  max-width: 10%;
+  max-width: fit-content;
   inline-size: fit-content;
 }
 

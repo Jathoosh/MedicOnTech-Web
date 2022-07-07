@@ -4,8 +4,7 @@
             <h3>Bonjour {{sdatas.first_name}} {{sdatas.last_name}} !</h3>
         </div>
 
-        <h4>Filtres</h4>
-        <hr>
+        <p id="search_adv">Recherche avancée</p>
         <div class="filtre">
             <h4>Date</h4>
             <input class="filter_date" type="date" v-model="input_date" placeholder="Date" size="28" />
@@ -27,7 +26,7 @@
                         <div class="statePrescription">
                             <p v-if="ligne.infos_prescription.used==true">Ordonnance utilisée le {{ changeDate(ligne.infos_prescription.date_of_use) }}.</p>
                             <p v-if="ligne.infos_prescription.validity==false">Oronnance invalide.</p>
-                            <p v-if="ligne.infos_prescription.reported==true">
+                            <p v-if="ligne.infos_prescription.reported==true" class="presc_reported">
                                 Ordonnance signalée :<br>
                                 {{ligne.infos_prescription.report_note}}
                             </p>  
@@ -55,7 +54,7 @@
                         <div class="statePrescription">
                             <p v-if="ligne.infos_prescription.used==true">Ordonnance utilisée le {{ changeDate(ligne.infos_prescription.date_of_use) }}.</p>
                             <p v-if="ligne.infos_prescription.validity==false">Oronnance invalide.</p>
-                            <p v-if="ligne.infos_prescription.reported==true">
+                            <p v-if="ligne.infos_prescription.reported==true" class="presc_reported">
                                 Ordonnance signalée.<br>
                                 {{ligne.infos_prescription.report_note}}
                             </p>  
@@ -176,6 +175,15 @@ module.exports = {
 </script>
 
 <style scoped>
+    .presc_reported
+    {
+        color: red;
+    }
+    #search_adv {
+    border-bottom: 5px solid #01AA88;
+    max-width: fit-content;
+    inline-size: fit-content;
+    }
     .topContainer {
         display: flex;
         justify-content: space-between;

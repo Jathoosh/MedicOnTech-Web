@@ -70,6 +70,9 @@ module.exports = {
       return  (Dates[0].getDate()+1<10? "0"+(Dates[0].getDate()+1) : Dates[0].getDate()+1) + "/"  + (Dates[0].getMonth()+1<10? "0"+(Dates[0].getMonth()+1) : Dates[0].getMonth()+1) + "/" + Dates[0].getFullYear();
     },
   },
+  computed: {
+    
+  },
 
   mounted() {
     document.getElementById("main").style.width = "90%";

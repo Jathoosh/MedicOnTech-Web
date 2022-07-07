@@ -1,5 +1,4 @@
 const Home = window.httpVueLoader('./components/Home.vue')
-const Annexe = window.httpVueLoader('./components/Annexe.vue')
 const PatientHome = window.httpVueLoader('./components/PatientHome.vue')
 const Ordonnance = window.httpVueLoader('./components/Ordonnance.vue')
 const Doctor_home = window.httpVueLoader('./components/Doctor_home.vue') //Verifier TODO
@@ -30,7 +29,6 @@ const mobileLogin = window.httpVueLoader('./pages/mobilelogin.vue');
 
 const routes = [
   { path: '/login', component: Home },
-  { path: '/annexe', name:'Annexe', component: Annexe },
   { path: '/patient_home', name:'PatientHome', component: PatientHome }, //Verifier TODO
   { path: '/doctor_home', name:'Doctor', component: Doctor_home }, //Verifier TODO
   { path: '/history_patient', name:'History_patient', component: History_patient }, //Verifier TODO
@@ -254,20 +252,21 @@ var app = new Vue( {
     },
     async checkConnexion()
     {
-      const res = await axios.get('api/connected');
-      if(res.data.connected)
-      {
-        this.sdatas = res.data.sdatas;
-        this.reloadData();
-      }
-      else
-      {
-        var current_url = window.location.href;
-        current_url = current_url.substring(current_url.lastIndexOf('/'), current_url.length);
-        if(current_url != '/mobile_login'){
-          this.goToPage('/login');
+      var current_url = window.location.href;
+      current_url = current_url.substring(current_url.lastIndexOf('/'), current_url.length);
+      if (current_url.toLowerCase() != '/faq' && current_url.toLowerCase() != '/a_propos' && current_url.toLowerCase() != '/contact'){
+        const res = await axios.get('api/connected');
+        if(res.data.connected)
+        {
+          this.sdatas = res.data.sdatas;
+          this.reloadData();
         }
-        
+        else
+        {
+          if(current_url != '/mobile_login'){
+            this.goToPage('/login');
+          }
+        }
       }
     },
 
@@ -291,7 +290,7 @@ var app = new Vue( {
     {
       const res = await axios.put('api/modifMutuelle', data);
       if(res.data.changed == true){
-        this.sdatas.mutual_name = res.mutual_name;
+        this.sdatas.mutual_name = res.data.mutual_name;
         this.mutual_change_state = "changed";
       }
       else{
@@ -301,12 +300,21 @@ var app = new Vue( {
     
     async sendprescription(data){
       const res = await axios.post('api/sendPrescription', data);
-      console.log(res.data);
       if(res.data.sent == true){
         this.reloadData();
       }
       else{
         console.log("Je suis dans le vue application, c'est pas envoyé l'ordonnance");
+      }
+    },
+
+    async sendpac(data){
+      const res = await axios.post('api/sendPac', data);
+      if(res.data.sent == true){
+        this.reloadData();
+      }
+      else{
+        console.log("Je suis dans le vue application, c'est pas envoyé le pac");
       }
     },
 

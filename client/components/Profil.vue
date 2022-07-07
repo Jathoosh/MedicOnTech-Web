@@ -30,7 +30,7 @@
               </tr>
               <tr>
                 <th scope="row">Date de naissance</th>
-                <td>{{sdatas.birth_date}}</td>
+                <td>{{changeDate(sdatas.birth_date)}}</td>
               </tr>
               <tr>
                 <th scope="row">Adresse mail</th>
@@ -112,7 +112,11 @@ module.exports = {
       initialesPatient: function(){
         var String = this.sdatas.first_name[0] + this.sdatas.last_name[0];
         return String;
-      }
+      },
+      changeDate(date){
+        dateSplit = date.split('-');
+        return dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
+      },
     }
 }
 

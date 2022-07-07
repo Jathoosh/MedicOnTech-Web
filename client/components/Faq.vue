@@ -170,6 +170,12 @@
 </script>
 
 <style scoped>  
+@media (min-width: 768px) {
+    .box_faq{
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
   .container{
     width: 100%;
     display: flex;
