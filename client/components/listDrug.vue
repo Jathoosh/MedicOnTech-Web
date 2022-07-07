@@ -1,18 +1,15 @@
 <template>
   <div>
-    <p>je suis ton drug</p>
     <table class="table">
       <thead>
-              <tr>
-                <th scope="col">Nom</th>
-              </tr>
+        <tr>
+          <th scope="col">Nom</th>
+        </tr>
       </thead>
       <tbody>
-        <tr v-for="(d, index) in table_drug" :key="index">
-        <td>{{ d.name}} <button class="btn btn-outline-secondary" style="float:right;" @click="sendDrug(index)">Selectionner</button></td>
-        
+        <tr v-for="(d, index) in liste_drug_search" :key="index">
+        <td>{{ d.drug_name }} <button class="btn btn-outline-secondary" style="float:right;" @click="sendDrug(index)">Selectionner</button></td>
         </tr>
-              
       </tbody>
     </table>
   </div>
@@ -22,60 +19,17 @@
 module.exports=  {
     name: 'listDrug',
     props: {
-    // Kdo pour jathoosh
-      //  infos_drug: {
-      //   type: Array,
-      //   required: true,
-      //   default: function () {
-      //     return [];
-      //   }
-      // },
-   },
-    data() {
-      return {
-        table_drug: [
-          {
-            name: "Doliprane",
-          },
-          {
-            name: "Eufon",
-          },
-          {
-            name: "Eufon",
-          },
-          {
-            name: "Eufon",
-          },
-          {
-            name: "Eufon",
-          },
-          {
-            name: "Eufon",
-          },
-          {
-            name: "Eufon",
-          },
-          {
-            name: "Eufon",
-          },
-          {
-            name: "Eufon",
-          },
-          {
-            name: "Eufon",
-          },
-          {
-            name: "Eufon",
-          },
-          {
-            name: "Eufon",
-          }
-        ],
-      };
+      liste_drug_search: {
+        type: Array,
+        required: true,
+        default: function () {
+          return [];
+        }
+      },
     },
     methods: {
       sendDrug(index) {
-        this.$emit('fillinputdrug', [this.table_drug[index]]);
+        this.$emit('fillinputdrug', this.liste_drug_search[index].drug_name);
       }
     }
 }
@@ -83,7 +37,7 @@ module.exports=  {
 
 <style scoped>
 .table {
-    flex-wrap: nowrap;
-    max-width: 50%;
+  flex-wrap: nowrap;
+  max-width: 50%;
 }
 </style>

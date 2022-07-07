@@ -44,6 +44,8 @@
     </header>
     <main id="main">
       <router-view
+      @checkconnexionmobile = "checkconnexionmobile"
+      :check_connexion_mobile="check_connexion_mobile"
       @fc-method = "FCMethod"
       @login = "login"
       :mdatas = "mdatas"
@@ -57,11 +59,21 @@
       @tutor_false = "tutor_false"
       @tutor_true = "tutor_true"
       :tutor_bool = "tutor_bool"
+      @status_doctor = "status_doctor"
+      @status_patient = "status_patient"
+      @status_pharmacist = "status_pharmacist"
+      :status = "status"
       @save_ordonnance = "save_ordonnance"
+      @save_ordonnance_doctor = "save_ordonnance_doctor"
       :index_ordonnance = "index_ordonnance"
       :prescription_for_display = "prescription_for_display"
       @search_patient = "recherchePatient"
       :liste_patient_search = "liste_patient_search"
+      @modify_profil = "modify_profil"
+      :hide_length = "mutual_change_state"
+      @search_drug = "search_drug"
+      :liste_drug_search = "liste_drug_search"
+      @sendprescription = "sendprescription"
       ></router-view>
       <!-- @getPrescriptions = "getPrescriptions"
       :index_patient = "index_patient"

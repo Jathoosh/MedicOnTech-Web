@@ -6,16 +6,13 @@
             <p id="nom_img_profil"> {{ initialesPatient() }} </p>
           </div>
         </div>
-      </div>
-      
-      <div class="card-body">
-          <p>{{ sdatas.first_name }} {{ sdatas.last_name }}</p>
-          <p v-if="sdatas.profession.name === 'Patient'">Né.e le {{ changeDate(sdatas.birth_date) }}</p>
-          <p>{{ sdatas.mail }}</p>
-          <p v-if="sdatas.mutuelle!=null">Mutuelle : {{ sdatas.mutuelle }}</p>
-          <button @click="modifyProfil" v-if="sdatas.profession.name === 'Patient' && button_actionne == false"><strong>Modifier profil</strong></button>  
-      </div>
-
+        <div class="card-body">
+            <p>{{ sdatas.first_name }} {{ sdatas.last_name }}</p>
+            <p v-if="sdatas.profession.name === 'Patient'">Né le {{ changeDate(sdatas.birth_date) }}</p>
+            <p>{{ sdatas.mail }}</p>
+            <p v-if="sdatas.mutual_name!='Pas de Mutuelle'">Mutuelle : {{ sdatas.mutual_name }}</p>
+            <button @click="modifyProfil" v-if="sdatas.profession.name === 'Patient' && button_actionne == false"><strong>Modifier profil</strong></button>
+        </div>
     </div>
 </template>
 

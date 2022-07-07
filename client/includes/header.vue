@@ -11,23 +11,25 @@
       </div>
 
       <div class="nav-block">
-        <nav>
-          <router-link to="/login" v-if="sdatas.profession.name===''">Connexion</router-link>
-          <router-link to="/pharmacist_home" v-if="sdatas.profession.name===''">Page Pharmacien</router-link>
-          <router-link to="/doctor_home" v-if="sdatas.profession.name===''">Page Médecin</router-link>
-          <router-link to="/patient_home" v-if="sdatas.profession.name===''">Page Patient</router-link>
-          <button v-if="sdatas.profession.name!==''" @click="logout">Deconnexion</button>
-          <router-link to="/doctor_home" v-if="sdatas.profession.name==='Doctor'">Mes patients</router-link>
-          <router-link to="/edit_prescription" v-if="sdatas.profession.name==='Doctor'">Rédiger Ordonnance</router-link>
-          <router-link to="/Patient_home" v-if="sdatas.profession.name==='Patient'  && tutor_bool === true">Mes Ordonnances</router-link>
-          <button v-if="sdatas.profession.name==='Patient' && tutor_bool === false" @click="OrdonnanceTutor">Mes Ordonnances</button>
-          <router-link to="/PatientInCharge" v-if="sdatas.profession.name==='Patient'">Personnes à charges</router-link>
-          <router-link to="/" v-if="sdatas.profession.name==='Pharmacist'">Scanner Ordonnance</router-link>
-          <router-link to="/" v-if="sdatas.profession.name==='Pharmacist'">Autre ?????</router-link>
-        </nav>
+         <nav>
+            <router-link to="/login" v-if="sdatas.profession.name===''">Connexion</router-link>
+            <router-link to="/pharmacist_home" v-if="sdatas.profession.name===''">Page Pharmacien</router-link>
+            <router-link to="/doctor_home" v-if="sdatas.profession.name===''">Page Médecin</router-link>
+            <router-link to="/patient_home" v-if="sdatas.profession.name===''">Page Patient</router-link>
+            <a v-if="sdatas.profession.name!==''" @click="logout">Deconnexion</a>
+            <router-link to="/Doctor_home" v-if="sdatas.profession.name==='Doctor'">Mes patients</router-link>
+            <router-link to="/edit_prescription" v-if="sdatas.profession.name==='Doctor'">Rédiger Ordonnance</router-link>
+            <router-link to="/Patient_home" v-if="sdatas.profession.name==='Patient'  && tutor_bool === true">Mes Ordonnances</router-link>
+            <button v-if="sdatas.profession.name==='Patient' && tutor_bool === false" @click="OrdonnanceTutor">Mes Ordonnances</button>
+            <router-link to="/PatientInCharge" v-if="sdatas.profession.name==='Patient'">Personnes à charges</router-link>
+            <router-link to="/" v-if="sdatas.profession.name==='Pharmacist'">Scanner Ordonnance</router-link>
+            <router-link to="/" v-if="sdatas.profession.name==='Pharmacist'">Autre ?????</router-link>
+          </nav>
 
-        <p v-if="sdatas.Id_Person > 0" class="image_profil text-center" id="nom_img_profil" @click="activateCard()"> {{ initialesPatient() }} </p>
-      </div>     
+          <p v-if="sdatas.Id_Person > 0" class="image_profil text-center" 
+            id="nom_img_profil" 
+            @click="activateCard()"> {{ initialesPatient() }} </p>
+        </div>
     </div>
 
     <button @click="login({mail:'moreau.camille@medecin.fr',password:'123'})" >connexion docteur (1) Camille Moreau</button>

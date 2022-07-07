@@ -86,9 +86,11 @@ module.exports = {
         toOrdonnance: function (index) {
             if (this.tutor_bool==true) {
                 this.$emit('save_ordonnance', {prescription : this.sdatas_comp[index], infos_patient : {first_name : this.sdatas.first_name, last_name : this.sdatas.last_name}});
+                this.$emit('status_patient');
             }
             else {
                 this.$emit('save_ordonnance', {prescription : this.mdatas[this.index_pac].prescriptions_pac[index], infos_patient : {first_name : this.mdatas[this.index_pac].infos_pac.first_name, last_name : this.mdatas[this.index_pac].infos_pac.last_name}});
+                this.$emit('status_patient');
             }
         },
         generateBarCodeNumber(Id_Prescription){
