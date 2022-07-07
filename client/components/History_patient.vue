@@ -74,6 +74,7 @@ module.exports = {
     },
     redirectionToOrdonnance: function (index) {
       this.$emit('save_ordonnance_doctor', {prescription : this.mdatas[this.index_history_patient].prescriptions[index], infos_patient : {first_name : this.mdatas[this.index_history_patient].infos_patient.first_name, last_name : this.mdatas[this.index_history_patient].infos_patient.last_name}, doctor_infos : this.sdatas});
+      this.$emit('status_doctor');
     },
     redirectionToPatientInCharge: function () {
       this.$router.push("/PatientInCharge");
